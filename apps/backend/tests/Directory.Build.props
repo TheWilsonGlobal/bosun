@@ -1,0 +1,8 @@
+<Project>
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
+  <PropertyGroup Condition="'$(IncludeLive)' != 'true'">
+    <!-- dotnet test skips tests tagged Category=Live (they spend real Gemini tokens): default.runsettings filters them out.
+         A command-line filter is ANDed with it, so the live run opts out with -p:IncludeLive=true (see pnpm run test:live). -->
+    <RunSettingsFilePath>$(MSBuildThisFileDirectory)default.runsettings</RunSettingsFilePath>
+  </PropertyGroup>
+</Project>

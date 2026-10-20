@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Bosun.Agent\Bosun.Agent.csproj" />
+    <ProjectReference Include="..\Bosun.Extraction\Bosun.Extraction.csproj" />
+    <ProjectReference Include="..\Bosun.Infrastructure\Bosun.Infrastructure.csproj" />
+    <ProjectReference Include="..\Bosun.Migrations.Sqlite\Bosun.Migrations.Sqlite.csproj" />
+    <PackageReference Include="YamlDotNet" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- The same price table the API uses (estimates), so eval costs and /api/ai/usage agree. -->
+    <Content Include="..\Bosun.Api\llm-pricing.json" Link="llm-pricing.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

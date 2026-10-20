@@ -1,0 +1,2182 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Count 4 /Kids [6 0 R 8 0 R 10 0 R 12 0 R] >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Length 18626 >>
+stream
+BT /F2 12 Tf 36 563 Td (I/O LIST - ENGINE ROOM) Tj ET
+BT /F1 8 Tf 36 549 Td (Document IO-002 Rev A - repeated header, merged Type and Unit cells) Tj ET
+BT /F2 7.5 Tf 426.29 525.6 Td (Range) Tj ET
+0.5 w 393 522 m 483 522 l S
+BT /F2 7.5 Tf 547.47 525.6 Td (Alarm limits) Tj ET
+0.5 w 485 522 m 651 522 l S
+BT /F2 7.5 Tf 39 512.6 Td (Tag) Tj ET
+BT /F2 7.5 Tf 131 512.6 Td (Description) Tj ET
+BT /F2 7.5 Tf 321 512.6 Td (Type) Tj ET
+BT /F2 7.5 Tf 355 512.6 Td (Unit) Tj ET
+BT /F2 7.5 Tf 420.42 512.6 Td (Low) Tj ET
+BT /F2 7.5 Tf 464.65 512.6 Td (High) Tj ET
+BT /F2 7.5 Tf 511.52 512.6 Td (HH) Tj ET
+BT /F2 7.5 Tf 559.26 512.6 Td (H) Tj ET
+BT /F2 7.5 Tf 602.58 512.6 Td (L) Tj ET
+BT /F2 7.5 Tf 640.16 512.6 Td (LL) Tj ET
+BT /F2 7.5 Tf 660.49 512.6 Td (Delay s) Tj ET
+0.9 w 36 509 m 690 509 l S
+BT /F1 7.5 Tf 39 499.6 Td (ME-TAC1-TT03) Tj ET
+BT /F1 7.5 Tf 131 499.6 Td (Turning gear bearing temperature 3) Tj ET
+BT /F1 7.5 Tf 321 499.6 Td (AI) Tj ET
+BT /F1 7.5 Tf 355 499.6 Td (∞C) Tj ET
+BT /F1 7.5 Tf 430.83 499.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 499.6 Td (150) Tj ET
+BT /F1 7.5 Tf 510.49 499.6 Td (144) Tj ET
+BT /F1 7.5 Tf 552.49 499.6 Td (128) Tj ET
+BT /F1 7.5 Tf 682.83 499.6 Td (5) Tj ET
+0.3 w 36 496 m 128 496 l S
+0.3 w 128 496 m 318 496 l S
+0.3 w 392 496 m 438 496 l S
+0.3 w 438 496 m 484 496 l S
+0.3 w 484 496 m 526 496 l S
+0.3 w 526 496 m 568 496 l S
+0.3 w 568 496 m 610 496 l S
+0.3 w 610 496 m 652 496 l S
+0.3 w 652 496 m 690 496 l S
+BT /F1 7.5 Tf 39 486.6 Td (AE-CLR1-TT01) Tj ET
+BT /F1 7.5 Tf 131 486.6 Td (Charge air cooler outlet temperature 1) Tj ET
+BT /F1 7.5 Tf 430.83 486.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 486.6 Td (120) Tj ET
+BT /F1 7.5 Tf 504.24 486.6 Td (105.6) Tj ET
+BT /F1 7.5 Tf 556.66 486.6 Td (96) Tj ET
+BT /F1 7.5 Tf 682.83 486.6 Td (5) Tj ET
+0.3 w 36 483 m 128 483 l S
+0.3 w 128 483 m 318 483 l S
+0.3 w 392 483 m 438 483 l S
+0.3 w 438 483 m 484 483 l S
+0.3 w 484 483 m 526 483 l S
+0.3 w 526 483 m 568 483 l S
+0.3 w 568 483 m 610 483 l S
+0.3 w 610 483 m 652 483 l S
+0.3 w 652 483 m 690 483 l S
+BT /F1 7.5 Tf 39 473.6 Td (AE-CLR1-TT02) Tj ET
+BT /F1 7.5 Tf 131 473.6 Td (Charge air cooler outlet temperature 2) Tj ET
+BT /F1 7.5 Tf 430.83 473.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 473.6 Td (120) Tj ET
+BT /F1 7.5 Tf 504.24 473.6 Td (115.2) Tj ET
+BT /F1 7.5 Tf 556.66 473.6 Td (96) Tj ET
+BT /F1 7.5 Tf 678.66 473.6 Td (30) Tj ET
+0.3 w 36 470 m 128 470 l S
+0.3 w 128 470 m 318 470 l S
+0.3 w 392 470 m 438 470 l S
+0.3 w 438 470 m 484 470 l S
+0.3 w 484 470 m 526 470 l S
+0.3 w 526 470 m 568 470 l S
+0.3 w 568 470 m 610 470 l S
+0.3 w 610 470 m 652 470 l S
+0.3 w 652 470 m 690 470 l S
+BT /F1 7.5 Tf 39 460.6 Td (AE-CLR1-TT03) Tj ET
+BT /F1 7.5 Tf 131 460.6 Td (Charge air cooler outlet temperature 3) Tj ET
+BT /F1 7.5 Tf 430.83 460.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 460.6 Td (120) Tj ET
+BT /F1 7.5 Tf 510.49 460.6 Td (110) Tj ET
+BT /F1 7.5 Tf 556.66 460.6 Td (90) Tj ET
+BT /F1 7.5 Tf 678.66 460.6 Td (10) Tj ET
+0.3 w 36 457 m 128 457 l S
+0.3 w 128 457 m 318 457 l S
+0.3 w 392 457 m 438 457 l S
+0.3 w 438 457 m 484 457 l S
+0.3 w 484 457 m 526 457 l S
+0.3 w 526 457 m 568 457 l S
+0.3 w 568 457 m 610 457 l S
+0.3 w 610 457 m 652 457 l S
+0.3 w 652 457 m 690 457 l S
+BT /F1 7.5 Tf 39 447.6 Td (AE-CLR1-TT04) Tj ET
+BT /F1 7.5 Tf 131 447.6 Td (Charge air cooler outlet temperature 4) Tj ET
+BT /F1 7.5 Tf 430.83 447.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 447.6 Td (120) Tj ET
+BT /F1 7.5 Tf 504.24 447.6 Td (115.2) Tj ET
+BT /F1 7.5 Tf 552.49 447.6 Td (102) Tj ET
+BT /F1 7.5 Tf 678.66 447.6 Td (30) Tj ET
+0.3 w 36 444 m 128 444 l S
+0.3 w 128 444 m 318 444 l S
+0.3 w 352 444 m 392 444 l S
+0.3 w 392 444 m 438 444 l S
+0.3 w 438 444 m 484 444 l S
+0.3 w 484 444 m 526 444 l S
+0.3 w 526 444 m 568 444 l S
+0.3 w 568 444 m 610 444 l S
+0.3 w 610 444 m 652 444 l S
+0.3 w 652 444 m 690 444 l S
+BT /F1 7.5 Tf 39 434.6 Td (AE-CLR1-PT01) Tj ET
+BT /F1 7.5 Tf 131 434.6 Td (Charge air pressure 1) Tj ET
+BT /F1 7.5 Tf 355 434.6 Td (bar) Tj ET
+BT /F1 7.5 Tf 430.83 434.6 Td (0) Tj ET
+BT /F1 7.5 Tf 476.83 434.6 Td (6) Tj ET
+BT /F1 7.5 Tf 596.58 434.6 Td (0.9) Tj ET
+BT /F1 7.5 Tf 678.66 434.6 Td (30) Tj ET
+0.3 w 36 431 m 128 431 l S
+0.3 w 128 431 m 318 431 l S
+0.3 w 392 431 m 438 431 l S
+0.3 w 438 431 m 484 431 l S
+0.3 w 484 431 m 526 431 l S
+0.3 w 526 431 m 568 431 l S
+0.3 w 568 431 m 610 431 l S
+0.3 w 610 431 m 652 431 l S
+0.3 w 652 431 m 690 431 l S
+BT /F1 7.5 Tf 39 421.6 Td (AE-CLR1-PT02) Tj ET
+BT /F1 7.5 Tf 131 421.6 Td (Charge air pressure 2) Tj ET
+BT /F1 7.5 Tf 430.83 421.6 Td (0) Tj ET
+BT /F1 7.5 Tf 476.83 421.6 Td (6) Tj ET
+BT /F1 7.5 Tf 596.58 421.6 Td (0.9) Tj ET
+BT /F1 7.5 Tf 678.66 421.6 Td (10) Tj ET
+0.3 w 36 418 m 128 418 l S
+0.3 w 128 418 m 318 418 l S
+0.3 w 352 418 m 392 418 l S
+0.3 w 392 418 m 438 418 l S
+0.3 w 438 418 m 484 418 l S
+0.3 w 484 418 m 526 418 l S
+0.3 w 526 418 m 568 418 l S
+0.3 w 568 418 m 610 418 l S
+0.3 w 610 418 m 652 418 l S
+0.3 w 652 418 m 690 418 l S
+BT /F1 7.5 Tf 39 408.6 Td (AE-CLR1-FT01) Tj ET
+BT /F1 7.5 Tf 131 408.6 Td (Cooler sea water flow) Tj ET
+BT /F1 7.5 Tf 355 408.6 Td (m3/h) Tj ET
+BT /F1 7.5 Tf 430.83 408.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 408.6 Td (400) Tj ET
+BT /F1 7.5 Tf 594.49 408.6 Td (100) Tj ET
+BT /F1 7.5 Tf 640.66 408.6 Td (44) Tj ET
+BT /F1 7.5 Tf 678.66 408.6 Td (15) Tj ET
+0.3 w 36 405 m 128 405 l S
+0.3 w 128 405 m 318 405 l S
+0.3 w 318 405 m 352 405 l S
+0.3 w 352 405 m 392 405 l S
+0.3 w 392 405 m 438 405 l S
+0.3 w 438 405 m 484 405 l S
+0.3 w 484 405 m 526 405 l S
+0.3 w 526 405 m 568 405 l S
+0.3 w 568 405 m 610 405 l S
+0.3 w 610 405 m 652 405 l S
+0.3 w 652 405 m 690 405 l S
+BT /F1 7.5 Tf 39 395.6 Td (AE-CLR1-XS01) Tj ET
+BT /F1 7.5 Tf 131 395.6 Td (Cooler pump 1 running) Tj ET
+BT /F1 7.5 Tf 321 395.6 Td (DI) Tj ET
+0.3 w 36 392 m 128 392 l S
+0.3 w 128 392 m 318 392 l S
+0.3 w 352 392 m 392 392 l S
+0.3 w 392 392 m 438 392 l S
+0.3 w 438 392 m 484 392 l S
+0.3 w 484 392 m 526 392 l S
+0.3 w 526 392 m 568 392 l S
+0.3 w 568 392 m 610 392 l S
+0.3 w 610 392 m 652 392 l S
+0.3 w 652 392 m 690 392 l S
+BT /F1 7.5 Tf 39 382.6 Td (AE-CLR1-XS02) Tj ET
+BT /F1 7.5 Tf 131 382.6 Td (Cooler pump 2 running) Tj ET
+0.3 w 36 379 m 128 379 l S
+0.3 w 128 379 m 318 379 l S
+0.3 w 318 379 m 352 379 l S
+0.3 w 352 379 m 392 379 l S
+0.3 w 392 379 m 438 379 l S
+0.3 w 438 379 m 484 379 l S
+0.3 w 484 379 m 526 379 l S
+0.3 w 526 379 m 568 379 l S
+0.3 w 568 379 m 610 379 l S
+0.3 w 610 379 m 652 379 l S
+0.3 w 652 379 m 690 379 l S
+BT /F1 7.5 Tf 39 369.6 Td (AE-AFS1-TT01) Tj ET
+BT /F1 7.5 Tf 131 369.6 Td (Auxiliary fuel temperature 1) Tj ET
+BT /F1 7.5 Tf 321 369.6 Td (AI) Tj ET
+BT /F1 7.5 Tf 355 369.6 Td (∞C) Tj ET
+BT /F1 7.5 Tf 430.83 369.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 369.6 Td (160) Tj ET
+BT /F1 7.5 Tf 504.24 369.6 Td (147.2) Tj ET
+BT /F1 7.5 Tf 552.49 369.6 Td (136) Tj ET
+BT /F1 7.5 Tf 682.83 369.6 Td (0) Tj ET
+0.3 w 36 366 m 128 366 l S
+0.3 w 128 366 m 318 366 l S
+0.3 w 392 366 m 438 366 l S
+0.3 w 438 366 m 484 366 l S
+0.3 w 484 366 m 526 366 l S
+0.3 w 526 366 m 568 366 l S
+0.3 w 568 366 m 610 366 l S
+0.3 w 610 366 m 652 366 l S
+0.3 w 652 366 m 690 366 l S
+BT /F1 7.5 Tf 39 356.6 Td (AE-AFS1-TT02) Tj ET
+BT /F1 7.5 Tf 131 356.6 Td (Auxiliary fuel temperature 2) Tj ET
+BT /F1 7.5 Tf 430.83 356.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 356.6 Td (160) Tj ET
+BT /F1 7.5 Tf 504.24 356.6 Td (153.6) Tj ET
+BT /F1 7.5 Tf 552.49 356.6 Td (120) Tj ET
+BT /F1 7.5 Tf 678.66 356.6 Td (15) Tj ET
+0.3 w 36 353 m 128 353 l S
+0.3 w 128 353 m 318 353 l S
+0.3 w 392 353 m 438 353 l S
+0.3 w 438 353 m 484 353 l S
+0.3 w 484 353 m 526 353 l S
+0.3 w 526 353 m 568 353 l S
+0.3 w 568 353 m 610 353 l S
+0.3 w 610 353 m 652 353 l S
+0.3 w 652 353 m 690 353 l S
+BT /F1 7.5 Tf 39 343.6 Td (AE-AFS1-TT03) Tj ET
+BT /F1 7.5 Tf 131 343.6 Td (Auxiliary fuel temperature 3) Tj ET
+BT /F1 7.5 Tf 430.83 343.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 343.6 Td (160) Tj ET
+BT /F1 7.5 Tf 510.49 343.6 Td (154) Tj ET
+BT /F1 7.5 Tf 552.49 343.6 Td (136) Tj ET
+BT /F1 7.5 Tf 678.66 343.6 Td (10) Tj ET
+0.3 w 36 340 m 128 340 l S
+0.3 w 128 340 m 318 340 l S
+0.3 w 352 340 m 392 340 l S
+0.3 w 392 340 m 438 340 l S
+0.3 w 438 340 m 484 340 l S
+0.3 w 484 340 m 526 340 l S
+0.3 w 526 340 m 568 340 l S
+0.3 w 568 340 m 610 340 l S
+0.3 w 610 340 m 652 340 l S
+0.3 w 652 340 m 690 340 l S
+BT /F1 7.5 Tf 39 330.6 Td (AE-AFS1-PT01) Tj ET
+BT /F1 7.5 Tf 131 330.6 Td (Auxiliary fuel pressure 1) Tj ET
+BT /F1 7.5 Tf 355 330.6 Td (bar) Tj ET
+BT /F1 7.5 Tf 430.83 330.6 Td (0) Tj ET
+BT /F1 7.5 Tf 472.66 330.6 Td (16) Tj ET
+BT /F1 7.5 Tf 596.58 330.6 Td (2.4) Tj ET
+BT /F1 7.5 Tf 638.58 330.6 Td (1.3) Tj ET
+BT /F1 7.5 Tf 682.83 330.6 Td (5) Tj ET
+0.3 w 36 327 m 128 327 l S
+0.3 w 128 327 m 318 327 l S
+0.3 w 392 327 m 438 327 l S
+0.3 w 438 327 m 484 327 l S
+0.3 w 484 327 m 526 327 l S
+0.3 w 526 327 m 568 327 l S
+0.3 w 568 327 m 610 327 l S
+0.3 w 610 327 m 652 327 l S
+0.3 w 652 327 m 690 327 l S
+BT /F1 7.5 Tf 39 317.6 Td (AE-AFS1-PT02) Tj ET
+BT /F1 7.5 Tf 131 317.6 Td (Auxiliary fuel pressure 2) Tj ET
+BT /F1 7.5 Tf 430.83 317.6 Td (0) Tj ET
+BT /F1 7.5 Tf 472.66 317.6 Td (16) Tj ET
+BT /F1 7.5 Tf 596.58 317.6 Td (3.2) Tj ET
+BT /F1 7.5 Tf 638.58 317.6 Td (1.8) Tj ET
+BT /F1 7.5 Tf 678.66 317.6 Td (10) Tj ET
+0.3 w 36 314 m 128 314 l S
+0.3 w 128 314 m 318 314 l S
+0.3 w 392 314 m 438 314 l S
+0.3 w 438 314 m 484 314 l S
+0.3 w 484 314 m 526 314 l S
+0.3 w 526 314 m 568 314 l S
+0.3 w 568 314 m 610 314 l S
+0.3 w 610 314 m 652 314 l S
+0.3 w 652 314 m 690 314 l S
+BT /F1 7.5 Tf 39 304.6 Td (AE-AFS1-PT03) Tj ET
+BT /F1 7.5 Tf 131 304.6 Td (Auxiliary fuel pressure 3) Tj ET
+BT /F1 7.5 Tf 430.83 304.6 Td (0) Tj ET
+BT /F1 7.5 Tf 472.66 304.6 Td (16) Tj ET
+BT /F1 7.5 Tf 596.58 304.6 Td (2.4) Tj ET
+BT /F1 7.5 Tf 638.58 304.6 Td (1.3) Tj ET
+BT /F1 7.5 Tf 682.83 304.6 Td (2) Tj ET
+0.3 w 36 301 m 128 301 l S
+0.3 w 128 301 m 318 301 l S
+0.3 w 352 301 m 392 301 l S
+0.3 w 392 301 m 438 301 l S
+0.3 w 438 301 m 484 301 l S
+0.3 w 484 301 m 526 301 l S
+0.3 w 526 301 m 568 301 l S
+0.3 w 568 301 m 610 301 l S
+0.3 w 610 301 m 652 301 l S
+0.3 w 652 301 m 690 301 l S
+BT /F1 7.5 Tf 39 291.6 Td (AE-AFS1-FT01) Tj ET
+BT /F1 7.5 Tf 131 291.6 Td (Auxiliary fuel consumption 1) Tj ET
+BT /F1 7.5 Tf 355 291.6 Td (kg/h) Tj ET
+BT /F1 7.5 Tf 430.83 291.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 291.6 Td (800) Tj ET
+0.3 w 36 288 m 128 288 l S
+0.3 w 128 288 m 318 288 l S
+0.3 w 392 288 m 438 288 l S
+0.3 w 438 288 m 484 288 l S
+0.3 w 484 288 m 526 288 l S
+0.3 w 526 288 m 568 288 l S
+0.3 w 568 288 m 610 288 l S
+0.3 w 610 288 m 652 288 l S
+0.3 w 652 288 m 690 288 l S
+BT /F1 7.5 Tf 39 278.6 Td (AE-AFS1-FT02) Tj ET
+BT /F1 7.5 Tf 131 278.6 Td (Auxiliary fuel consumption 2) Tj ET
+BT /F1 7.5 Tf 430.83 278.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 278.6 Td (800) Tj ET
+0.3 w 36 275 m 128 275 l S
+0.3 w 128 275 m 318 275 l S
+0.3 w 352 275 m 392 275 l S
+0.3 w 392 275 m 438 275 l S
+0.3 w 438 275 m 484 275 l S
+0.3 w 484 275 m 526 275 l S
+0.3 w 526 275 m 568 275 l S
+0.3 w 568 275 m 610 275 l S
+0.3 w 610 275 m 652 275 l S
+0.3 w 652 275 m 690 275 l S
+BT /F1 7.5 Tf 39 265.6 Td (AE-AFS1-LT01) Tj ET
+BT /F1 7.5 Tf 131 265.6 Td (Auxiliary day tank level) Tj ET
+BT /F1 7.5 Tf 355 265.6 Td (%) Tj ET
+BT /F1 7.5 Tf 430.83 265.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 265.6 Td (100) Tj ET
+BT /F1 7.5 Tf 556.66 265.6 Td (75) Tj ET
+BT /F1 7.5 Tf 598.66 265.6 Td (15) Tj ET
+BT /F1 7.5 Tf 640.66 265.6 Td (11) Tj ET
+BT /F1 7.5 Tf 682.83 265.6 Td (5) Tj ET
+0.3 w 36 262 m 128 262 l S
+0.3 w 128 262 m 318 262 l S
+0.3 w 352 262 m 392 262 l S
+0.3 w 392 262 m 438 262 l S
+0.3 w 438 262 m 484 262 l S
+0.3 w 484 262 m 526 262 l S
+0.3 w 526 262 m 568 262 l S
+0.3 w 568 262 m 610 262 l S
+0.3 w 610 262 m 652 262 l S
+0.3 w 652 262 m 690 262 l S
+BT /F1 7.5 Tf 39 252.6 Td (AE-GBX1-TT01) Tj ET
+BT /F1 7.5 Tf 131 252.6 Td (Reduction gear bearing temperature 1) Tj ET
+BT /F1 7.5 Tf 355 252.6 Td (∞C) Tj ET
+BT /F1 7.5 Tf 430.83 252.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 252.6 Td (130) Tj ET
+BT /F1 7.5 Tf 504.24 252.6 Td (114.4) Tj ET
+BT /F1 7.5 Tf 550.41 252.6 Td (97.5) Tj ET
+BT /F1 7.5 Tf 678.66 252.6 Td (15) Tj ET
+0.3 w 36 249 m 128 249 l S
+0.3 w 128 249 m 318 249 l S
+0.3 w 392 249 m 438 249 l S
+0.3 w 438 249 m 484 249 l S
+0.3 w 484 249 m 526 249 l S
+0.3 w 526 249 m 568 249 l S
+0.3 w 568 249 m 610 249 l S
+0.3 w 610 249 m 652 249 l S
+0.3 w 652 249 m 690 249 l S
+BT /F1 7.5 Tf 39 239.6 Td (AE-GBX1-TT02) Tj ET
+BT /F1 7.5 Tf 131 239.6 Td (Reduction gear bearing temperature 2) Tj ET
+BT /F1 7.5 Tf 430.83 239.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 239.6 Td (130) Tj ET
+BT /F1 7.5 Tf 510.49 239.6 Td (125) Tj ET
+BT /F1 7.5 Tf 552.49 239.6 Td (110) Tj ET
+BT /F1 7.5 Tf 678.66 239.6 Td (10) Tj ET
+0.3 w 36 236 m 128 236 l S
+0.3 w 128 236 m 318 236 l S
+0.3 w 392 236 m 438 236 l S
+0.3 w 438 236 m 484 236 l S
+0.3 w 484 236 m 526 236 l S
+0.3 w 526 236 m 568 236 l S
+0.3 w 568 236 m 610 236 l S
+0.3 w 610 236 m 652 236 l S
+0.3 w 652 236 m 690 236 l S
+BT /F1 7.5 Tf 39 226.6 Td (AE-GBX1-TT03) Tj ET
+BT /F1 7.5 Tf 131 226.6 Td (Reduction gear bearing temperature 3) Tj ET
+BT /F1 7.5 Tf 430.83 226.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 226.6 Td (130) Tj ET
+BT /F1 7.5 Tf 504.24 226.6 Td (124.8) Tj ET
+BT /F1 7.5 Tf 552.49 226.6 Td (104) Tj ET
+BT /F1 7.5 Tf 678.66 226.6 Td (10) Tj ET
+0.3 w 36 223 m 128 223 l S
+0.3 w 128 223 m 318 223 l S
+0.3 w 392 223 m 438 223 l S
+0.3 w 438 223 m 484 223 l S
+0.3 w 484 223 m 526 223 l S
+0.3 w 526 223 m 568 223 l S
+0.3 w 568 223 m 610 223 l S
+0.3 w 610 223 m 652 223 l S
+0.3 w 652 223 m 690 223 l S
+BT /F1 7.5 Tf 39 213.6 Td (AE-GBX1-TT04) Tj ET
+BT /F1 7.5 Tf 131 213.6 Td (Reduction gear bearing temperature 4) Tj ET
+BT /F1 7.5 Tf 430.83 213.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 213.6 Td (130) Tj ET
+BT /F1 7.5 Tf 510.49 213.6 Td (120) Tj ET
+BT /F1 7.5 Tf 552.49 213.6 Td (104) Tj ET
+BT /F1 7.5 Tf 682.83 213.6 Td (0) Tj ET
+0.3 w 36 210 m 128 210 l S
+0.3 w 128 210 m 318 210 l S
+0.3 w 352 210 m 392 210 l S
+0.3 w 392 210 m 438 210 l S
+0.3 w 438 210 m 484 210 l S
+0.3 w 484 210 m 526 210 l S
+0.3 w 526 210 m 568 210 l S
+0.3 w 568 210 m 610 210 l S
+0.3 w 610 210 m 652 210 l S
+0.3 w 652 210 m 690 210 l S
+BT /F1 7.5 Tf 39 200.6 Td (AE-GBX1-PT01) Tj ET
+BT /F1 7.5 Tf 131 200.6 Td (Reduction gear oil pressure 1) Tj ET
+BT /F1 7.5 Tf 355 200.6 Td (bar) Tj ET
+BT /F1 7.5 Tf 430.83 200.6 Td (0) Tj ET
+BT /F1 7.5 Tf 472.66 200.6 Td (10) Tj ET
+BT /F1 7.5 Tf 596.58 200.6 Td (2.5) Tj ET
+BT /F1 7.5 Tf 638.58 200.6 Td (0.8) Tj ET
+BT /F1 7.5 Tf 678.66 200.6 Td (10) Tj ET
+0.3 w 36 197 m 128 197 l S
+0.3 w 128 197 m 318 197 l S
+0.3 w 392 197 m 438 197 l S
+0.3 w 438 197 m 484 197 l S
+0.3 w 484 197 m 526 197 l S
+0.3 w 526 197 m 568 197 l S
+0.3 w 568 197 m 610 197 l S
+0.3 w 610 197 m 652 197 l S
+0.3 w 652 197 m 690 197 l S
+BT /F1 7.5 Tf 39 187.6 Td (AE-GBX1-PT02) Tj ET
+BT /F1 7.5 Tf 131 187.6 Td (Reduction gear oil pressure 2) Tj ET
+BT /F1 7.5 Tf 430.83 187.6 Td (0) Tj ET
+BT /F1 7.5 Tf 472.66 187.6 Td (10) Tj ET
+BT /F1 7.5 Tf 596.58 187.6 Td (1.5) Tj ET
+BT /F1 7.5 Tf 638.58 187.6 Td (0.5) Tj ET
+BT /F1 7.5 Tf 682.83 187.6 Td (2) Tj ET
+0.3 w 36 184 m 128 184 l S
+0.3 w 128 184 m 318 184 l S
+0.3 w 352 184 m 392 184 l S
+0.3 w 392 184 m 438 184 l S
+0.3 w 438 184 m 484 184 l S
+0.3 w 484 184 m 526 184 l S
+0.3 w 526 184 m 568 184 l S
+0.3 w 568 184 m 610 184 l S
+0.3 w 610 184 m 652 184 l S
+0.3 w 652 184 m 690 184 l S
+BT /F1 7.5 Tf 39 174.6 Td (AE-GBX1-VT01) Tj ET
+BT /F1 7.5 Tf 131 174.6 Td (Reduction gear vibration 1) Tj ET
+BT /F1 7.5 Tf 355 174.6 Td (mm/s) Tj ET
+BT /F1 7.5 Tf 430.83 174.6 Td (0) Tj ET
+BT /F1 7.5 Tf 472.66 174.6 Td (30) Tj ET
+BT /F1 7.5 Tf 508.41 174.6 Td (27.6) Tj ET
+BT /F1 7.5 Tf 556.66 174.6 Td (24) Tj ET
+BT /F1 7.5 Tf 682.83 174.6 Td (0) Tj ET
+0.3 w 36 171 m 128 171 l S
+0.3 w 128 171 m 318 171 l S
+0.3 w 392 171 m 438 171 l S
+0.3 w 438 171 m 484 171 l S
+0.3 w 484 171 m 526 171 l S
+0.3 w 526 171 m 568 171 l S
+0.3 w 568 171 m 610 171 l S
+0.3 w 610 171 m 652 171 l S
+0.3 w 652 171 m 690 171 l S
+BT /F1 7.5 Tf 39 161.6 Td (AE-GBX1-VT02) Tj ET
+BT /F1 7.5 Tf 131 161.6 Td (Reduction gear vibration 2) Tj ET
+BT /F1 7.5 Tf 430.83 161.6 Td (0) Tj ET
+BT /F1 7.5 Tf 472.66 161.6 Td (30) Tj ET
+BT /F1 7.5 Tf 508.41 161.6 Td (28.8) Tj ET
+BT /F1 7.5 Tf 550.41 161.6 Td (25.5) Tj ET
+BT /F1 7.5 Tf 682.83 161.6 Td (2) Tj ET
+0.3 w 36 158 m 128 158 l S
+0.3 w 128 158 m 318 158 l S
+0.3 w 352 158 m 392 158 l S
+0.3 w 392 158 m 438 158 l S
+0.3 w 438 158 m 484 158 l S
+0.3 w 484 158 m 526 158 l S
+0.3 w 526 158 m 568 158 l S
+0.3 w 568 158 m 610 158 l S
+0.3 w 610 158 m 652 158 l S
+0.3 w 652 158 m 690 158 l S
+BT /F1 7.5 Tf 39 148.6 Td (BLR-ECO1-TT01) Tj ET
+BT /F1 7.5 Tf 131 148.6 Td (Economiser gas temperature 1) Tj ET
+BT /F1 7.5 Tf 355 148.6 Td (∞C) Tj ET
+BT /F1 7.5 Tf 430.83 148.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 148.6 Td (400) Tj ET
+BT /F1 7.5 Tf 510.49 148.6 Td (368) Tj ET
+BT /F1 7.5 Tf 552.49 148.6 Td (340) Tj ET
+BT /F1 7.5 Tf 682.83 148.6 Td (3) Tj ET
+0.3 w 36 145 m 128 145 l S
+0.3 w 128 145 m 318 145 l S
+0.3 w 392 145 m 438 145 l S
+0.3 w 438 145 m 484 145 l S
+0.3 w 484 145 m 526 145 l S
+0.3 w 526 145 m 568 145 l S
+0.3 w 568 145 m 610 145 l S
+0.3 w 610 145 m 652 145 l S
+0.3 w 652 145 m 690 145 l S
+BT /F1 7.5 Tf 39 135.6 Td (BLR-ECO1-TT02) Tj ET
+BT /F1 7.5 Tf 131 135.6 Td (Economiser gas temperature 2) Tj ET
+BT /F1 7.5 Tf 430.83 135.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 135.6 Td (400) Tj ET
+BT /F1 7.5 Tf 510.49 135.6 Td (368) Tj ET
+BT /F1 7.5 Tf 552.49 135.6 Td (300) Tj ET
+BT /F1 7.5 Tf 682.83 135.6 Td (5) Tj ET
+0.3 w 36 132 m 128 132 l S
+0.3 w 128 132 m 318 132 l S
+0.3 w 392 132 m 438 132 l S
+0.3 w 438 132 m 484 132 l S
+0.3 w 484 132 m 526 132 l S
+0.3 w 526 132 m 568 132 l S
+0.3 w 568 132 m 610 132 l S
+0.3 w 610 132 m 652 132 l S
+0.3 w 652 132 m 690 132 l S
+BT /F1 7.5 Tf 39 122.6 Td (BLR-ECO1-TT03) Tj ET
+BT /F1 7.5 Tf 131 122.6 Td (Economiser gas temperature 3) Tj ET
+BT /F1 7.5 Tf 430.83 122.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 122.6 Td (400) Tj ET
+BT /F1 7.5 Tf 510.49 122.6 Td (384) Tj ET
+BT /F1 7.5 Tf 552.49 122.6 Td (340) Tj ET
+BT /F1 7.5 Tf 682.83 122.6 Td (0) Tj ET
+0.3 w 36 119 m 128 119 l S
+0.3 w 128 119 m 318 119 l S
+0.3 w 318 119 m 352 119 l S
+0.3 w 352 119 m 392 119 l S
+0.3 w 392 119 m 438 119 l S
+0.3 w 438 119 m 484 119 l S
+0.3 w 484 119 m 526 119 l S
+0.3 w 526 119 m 568 119 l S
+0.3 w 568 119 m 610 119 l S
+0.3 w 610 119 m 652 119 l S
+0.3 w 652 119 m 690 119 l S
+0.3 w 36 509 m 36 119 l S
+0.3 w 128 509 m 128 119 l S
+0.3 w 318 509 m 318 119 l S
+0.3 w 352 509 m 352 119 l S
+0.3 w 392 509 m 392 119 l S
+0.3 w 438 509 m 438 119 l S
+0.3 w 484 509 m 484 119 l S
+0.3 w 526 509 m 526 119 l S
+0.3 w 568 509 m 568 119 l S
+0.3 w 610 509 m 610 119 l S
+0.3 w 652 509 m 652 119 l S
+0.3 w 690 509 m 690 119 l S
+0.6 w 36 522 m 690 522 l S
+BT /F1 7 Tf 36 24 Td (MV Example - I/O list IO-001 Rev B) Tj ET
+BT /F1 7 Tf 654.2 24 Td (Page 1 of 4) Tj ET
+
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 842 595] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 5 0 R >>
+endobj
+7 0 obj
+<< /Length 18935 >>
+stream
+BT /F2 12 Tf 36 563 Td (I/O LIST - ENGINE ROOM) Tj ET
+BT /F1 8 Tf 36 549 Td (Document IO-002 Rev A - repeated header, merged Type and Unit cells) Tj ET
+BT /F2 7.5 Tf 426.29 525.6 Td (Range) Tj ET
+0.5 w 393 522 m 483 522 l S
+BT /F2 7.5 Tf 547.47 525.6 Td (Alarm limits) Tj ET
+0.5 w 485 522 m 651 522 l S
+BT /F2 7.5 Tf 39 512.6 Td (Tag) Tj ET
+BT /F2 7.5 Tf 131 512.6 Td (Description) Tj ET
+BT /F2 7.5 Tf 321 512.6 Td (Type) Tj ET
+BT /F2 7.5 Tf 355 512.6 Td (Unit) Tj ET
+BT /F2 7.5 Tf 420.42 512.6 Td (Low) Tj ET
+BT /F2 7.5 Tf 464.65 512.6 Td (High) Tj ET
+BT /F2 7.5 Tf 511.52 512.6 Td (HH) Tj ET
+BT /F2 7.5 Tf 559.26 512.6 Td (H) Tj ET
+BT /F2 7.5 Tf 602.58 512.6 Td (L) Tj ET
+BT /F2 7.5 Tf 640.16 512.6 Td (LL) Tj ET
+BT /F2 7.5 Tf 660.49 512.6 Td (Delay s) Tj ET
+0.9 w 36 509 m 690 509 l S
+BT /F1 7.5 Tf 39 499.6 Td (BLR-ECO1-TT04) Tj ET
+BT /F1 7.5 Tf 131 499.6 Td (Economiser gas temperature 4) Tj ET
+BT /F1 7.5 Tf 321 499.6 Td (AI) Tj ET
+BT /F1 7.5 Tf 355 499.6 Td (∞C) Tj ET
+BT /F1 7.5 Tf 430.83 499.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 499.6 Td (400) Tj ET
+BT /F1 7.5 Tf 510.49 499.6 Td (352) Tj ET
+BT /F1 7.5 Tf 552.49 499.6 Td (300) Tj ET
+BT /F1 7.5 Tf 678.66 499.6 Td (10) Tj ET
+0.3 w 36 496 m 128 496 l S
+0.3 w 128 496 m 318 496 l S
+0.3 w 352 496 m 392 496 l S
+0.3 w 392 496 m 438 496 l S
+0.3 w 438 496 m 484 496 l S
+0.3 w 484 496 m 526 496 l S
+0.3 w 526 496 m 568 496 l S
+0.3 w 568 496 m 610 496 l S
+0.3 w 610 496 m 652 496 l S
+0.3 w 652 496 m 690 496 l S
+BT /F1 7.5 Tf 39 486.6 Td (BLR-ECO1-PT01) Tj ET
+BT /F1 7.5 Tf 131 486.6 Td (Economiser water pressure 1) Tj ET
+BT /F1 7.5 Tf 355 486.6 Td (bar) Tj ET
+BT /F1 7.5 Tf 430.83 486.6 Td (0) Tj ET
+BT /F1 7.5 Tf 472.66 486.6 Td (20) Tj ET
+BT /F1 7.5 Tf 556.66 486.6 Td (15) Tj ET
+BT /F1 7.5 Tf 602.83 486.6 Td (3) Tj ET
+BT /F1 7.5 Tf 678.66 486.6 Td (10) Tj ET
+0.3 w 36 483 m 128 483 l S
+0.3 w 128 483 m 318 483 l S
+0.3 w 392 483 m 438 483 l S
+0.3 w 438 483 m 484 483 l S
+0.3 w 484 483 m 526 483 l S
+0.3 w 526 483 m 568 483 l S
+0.3 w 568 483 m 610 483 l S
+0.3 w 610 483 m 652 483 l S
+0.3 w 652 483 m 690 483 l S
+BT /F1 7.5 Tf 39 473.6 Td (BLR-ECO1-PT02) Tj ET
+BT /F1 7.5 Tf 131 473.6 Td (Economiser water pressure 2) Tj ET
+BT /F1 7.5 Tf 430.83 473.6 Td (0) Tj ET
+BT /F1 7.5 Tf 472.66 473.6 Td (20) Tj ET
+BT /F1 7.5 Tf 556.66 473.6 Td (15) Tj ET
+BT /F1 7.5 Tf 602.83 473.6 Td (3) Tj ET
+BT /F1 7.5 Tf 682.83 473.6 Td (5) Tj ET
+0.3 w 36 470 m 128 470 l S
+0.3 w 128 470 m 318 470 l S
+0.3 w 352 470 m 392 470 l S
+0.3 w 392 470 m 438 470 l S
+0.3 w 438 470 m 484 470 l S
+0.3 w 484 470 m 526 470 l S
+0.3 w 526 470 m 568 470 l S
+0.3 w 568 470 m 610 470 l S
+0.3 w 610 470 m 652 470 l S
+0.3 w 652 470 m 690 470 l S
+BT /F1 7.5 Tf 39 460.6 Td (BLR-ECO1-AT01) Tj ET
+BT /F1 7.5 Tf 131 460.6 Td (Flue gas oxygen content) Tj ET
+BT /F1 7.5 Tf 355 460.6 Td (%) Tj ET
+BT /F1 7.5 Tf 430.83 460.6 Td (0) Tj ET
+BT /F1 7.5 Tf 472.66 460.6 Td (25) Tj ET
+BT /F1 7.5 Tf 596.58 460.6 Td (3.8) Tj ET
+BT /F1 7.5 Tf 644.83 460.6 Td (2) Tj ET
+BT /F1 7.5 Tf 678.66 460.6 Td (10) Tj ET
+0.3 w 36 457 m 128 457 l S
+0.3 w 128 457 m 318 457 l S
+0.3 w 352 457 m 392 457 l S
+0.3 w 392 457 m 438 457 l S
+0.3 w 438 457 m 484 457 l S
+0.3 w 484 457 m 526 457 l S
+0.3 w 526 457 m 568 457 l S
+0.3 w 568 457 m 610 457 l S
+0.3 w 610 457 m 652 457 l S
+0.3 w 652 457 m 690 457 l S
+BT /F1 7.5 Tf 39 447.6 Td (BLR-ECO1-FT01) Tj ET
+BT /F1 7.5 Tf 131 447.6 Td (Economiser circulation flow) Tj ET
+BT /F1 7.5 Tf 355 447.6 Td (t/h) Tj ET
+BT /F1 7.5 Tf 430.83 447.6 Td (0) Tj ET
+BT /F1 7.5 Tf 472.66 447.6 Td (30) Tj ET
+BT /F1 7.5 Tf 638.58 447.6 Td (3.3) Tj ET
+BT /F1 7.5 Tf 682.83 447.6 Td (5) Tj ET
+0.3 w 36 444 m 128 444 l S
+0.3 w 128 444 m 318 444 l S
+0.3 w 352 444 m 392 444 l S
+0.3 w 392 444 m 438 444 l S
+0.3 w 438 444 m 484 444 l S
+0.3 w 484 444 m 526 444 l S
+0.3 w 526 444 m 568 444 l S
+0.3 w 568 444 m 610 444 l S
+0.3 w 610 444 m 652 444 l S
+0.3 w 652 444 m 690 444 l S
+BT /F1 7.5 Tf 39 434.6 Td (BLR-FDB1-LT01) Tj ET
+BT /F1 7.5 Tf 131 434.6 Td (Boiler feed tank level 1) Tj ET
+BT /F1 7.5 Tf 355 434.6 Td (%) Tj ET
+BT /F1 7.5 Tf 430.83 434.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 434.6 Td (100) Tj ET
+BT /F1 7.5 Tf 514.66 434.6 Td (88) Tj ET
+BT /F1 7.5 Tf 556.66 434.6 Td (80) Tj ET
+BT /F1 7.5 Tf 598.66 434.6 Td (20) Tj ET
+BT /F1 7.5 Tf 640.66 434.6 Td (11) Tj ET
+BT /F1 7.5 Tf 682.83 434.6 Td (5) Tj ET
+0.3 w 36 431 m 128 431 l S
+0.3 w 128 431 m 318 431 l S
+0.3 w 392 431 m 438 431 l S
+0.3 w 438 431 m 484 431 l S
+0.3 w 484 431 m 526 431 l S
+0.3 w 526 431 m 568 431 l S
+0.3 w 568 431 m 610 431 l S
+0.3 w 610 431 m 652 431 l S
+0.3 w 652 431 m 690 431 l S
+BT /F1 7.5 Tf 39 421.6 Td (BLR-FDB1-LT02) Tj ET
+BT /F1 7.5 Tf 131 421.6 Td (Boiler feed tank level 2) Tj ET
+BT /F1 7.5 Tf 430.83 421.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 421.6 Td (100) Tj ET
+BT /F1 7.5 Tf 514.66 421.6 Td (92) Tj ET
+BT /F1 7.5 Tf 556.66 421.6 Td (80) Tj ET
+BT /F1 7.5 Tf 598.66 421.6 Td (25) Tj ET
+BT /F1 7.5 Tf 640.66 421.6 Td (11) Tj ET
+BT /F1 7.5 Tf 678.66 421.6 Td (15) Tj ET
+0.3 w 36 418 m 128 418 l S
+0.3 w 128 418 m 318 418 l S
+0.3 w 392 418 m 438 418 l S
+0.3 w 438 418 m 484 418 l S
+0.3 w 484 418 m 526 418 l S
+0.3 w 526 418 m 568 418 l S
+0.3 w 568 418 m 610 418 l S
+0.3 w 610 418 m 652 418 l S
+0.3 w 652 418 m 690 418 l S
+BT /F1 7.5 Tf 39 408.6 Td (BLR-FDB1-LT03) Tj ET
+BT /F1 7.5 Tf 131 408.6 Td (Boiler feed tank level 3) Tj ET
+BT /F1 7.5 Tf 430.83 408.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 408.6 Td (100) Tj ET
+BT /F1 7.5 Tf 514.66 408.6 Td (88) Tj ET
+BT /F1 7.5 Tf 556.66 408.6 Td (80) Tj ET
+BT /F1 7.5 Tf 598.66 408.6 Td (20) Tj ET
+BT /F1 7.5 Tf 640.66 408.6 Td (11) Tj ET
+BT /F1 7.5 Tf 682.83 408.6 Td (0) Tj ET
+0.3 w 36 405 m 128 405 l S
+0.3 w 128 405 m 318 405 l S
+0.3 w 352 405 m 392 405 l S
+0.3 w 392 405 m 438 405 l S
+0.3 w 438 405 m 484 405 l S
+0.3 w 484 405 m 526 405 l S
+0.3 w 526 405 m 568 405 l S
+0.3 w 568 405 m 610 405 l S
+0.3 w 610 405 m 652 405 l S
+0.3 w 652 405 m 690 405 l S
+BT /F1 7.5 Tf 39 395.6 Td (BLR-FDB1-PT01) Tj ET
+BT /F1 7.5 Tf 131 395.6 Td (Feed pump discharge pressure 1) Tj ET
+BT /F1 7.5 Tf 355 395.6 Td (bar) Tj ET
+BT /F1 7.5 Tf 430.83 395.6 Td (0) Tj ET
+BT /F1 7.5 Tf 472.66 395.6 Td (30) Tj ET
+BT /F1 7.5 Tf 508.41 395.6 Td (27.6) Tj ET
+BT /F1 7.5 Tf 556.66 395.6 Td (24) Tj ET
+BT /F1 7.5 Tf 602.83 395.6 Td (6) Tj ET
+BT /F1 7.5 Tf 638.58 395.6 Td (3.3) Tj ET
+BT /F1 7.5 Tf 678.66 395.6 Td (30) Tj ET
+0.3 w 36 392 m 128 392 l S
+0.3 w 128 392 m 318 392 l S
+0.3 w 392 392 m 438 392 l S
+0.3 w 438 392 m 484 392 l S
+0.3 w 484 392 m 526 392 l S
+0.3 w 526 392 m 568 392 l S
+0.3 w 568 392 m 610 392 l S
+0.3 w 610 392 m 652 392 l S
+0.3 w 652 392 m 690 392 l S
+BT /F1 7.5 Tf 39 382.6 Td (BLR-FDB1-PT02) Tj ET
+BT /F1 7.5 Tf 131 382.6 Td (Feed pump discharge pressure 2) Tj ET
+BT /F1 7.5 Tf 430.83 382.6 Td (0) Tj ET
+BT /F1 7.5 Tf 472.66 382.6 Td (30) Tj ET
+BT /F1 7.5 Tf 508.41 382.6 Td (27.6) Tj ET
+BT /F1 7.5 Tf 550.41 382.6 Td (25.5) Tj ET
+BT /F1 7.5 Tf 596.58 382.6 Td (7.5) Tj ET
+BT /F1 7.5 Tf 638.58 382.6 Td (3.3) Tj ET
+BT /F1 7.5 Tf 678.66 382.6 Td (30) Tj ET
+0.3 w 36 379 m 128 379 l S
+0.3 w 128 379 m 318 379 l S
+0.3 w 352 379 m 392 379 l S
+0.3 w 392 379 m 438 379 l S
+0.3 w 438 379 m 484 379 l S
+0.3 w 484 379 m 526 379 l S
+0.3 w 526 379 m 568 379 l S
+0.3 w 568 379 m 610 379 l S
+0.3 w 610 379 m 652 379 l S
+0.3 w 652 379 m 690 379 l S
+BT /F1 7.5 Tf 39 369.6 Td (BLR-FDB1-TT01) Tj ET
+BT /F1 7.5 Tf 131 369.6 Td (Feed water temperature 1) Tj ET
+BT /F1 7.5 Tf 355 369.6 Td (∞C) Tj ET
+BT /F1 7.5 Tf 430.83 369.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 369.6 Td (150) Tj ET
+BT /F1 7.5 Tf 552.49 369.6 Td (128) Tj ET
+BT /F1 7.5 Tf 598.66 369.6 Td (30) Tj ET
+BT /F1 7.5 Tf 678.66 369.6 Td (10) Tj ET
+0.3 w 36 366 m 128 366 l S
+0.3 w 128 366 m 318 366 l S
+0.3 w 392 366 m 438 366 l S
+0.3 w 438 366 m 484 366 l S
+0.3 w 484 366 m 526 366 l S
+0.3 w 526 366 m 568 366 l S
+0.3 w 568 366 m 610 366 l S
+0.3 w 610 366 m 652 366 l S
+0.3 w 652 366 m 690 366 l S
+BT /F1 7.5 Tf 39 356.6 Td (BLR-FDB1-TT02) Tj ET
+BT /F1 7.5 Tf 131 356.6 Td (Feed water temperature 2) Tj ET
+BT /F1 7.5 Tf 430.83 356.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 356.6 Td (150) Tj ET
+BT /F1 7.5 Tf 552.49 356.6 Td (120) Tj ET
+BT /F1 7.5 Tf 598.66 356.6 Td (30) Tj ET
+BT /F1 7.5 Tf 682.83 356.6 Td (3) Tj ET
+0.3 w 36 353 m 128 353 l S
+0.3 w 128 353 m 318 353 l S
+0.3 w 318 353 m 352 353 l S
+0.3 w 352 353 m 392 353 l S
+0.3 w 392 353 m 438 353 l S
+0.3 w 438 353 m 484 353 l S
+0.3 w 484 353 m 526 353 l S
+0.3 w 526 353 m 568 353 l S
+0.3 w 568 353 m 610 353 l S
+0.3 w 610 353 m 652 353 l S
+0.3 w 652 353 m 690 353 l S
+BT /F1 7.5 Tf 39 343.6 Td (BLR-FDB1-XA01) Tj ET
+BT /F1 7.5 Tf 131 343.6 Td (Feed pump 1 trip) Tj ET
+BT /F1 7.5 Tf 321 343.6 Td (DI) Tj ET
+0.3 w 36 340 m 128 340 l S
+0.3 w 128 340 m 318 340 l S
+0.3 w 352 340 m 392 340 l S
+0.3 w 392 340 m 438 340 l S
+0.3 w 438 340 m 484 340 l S
+0.3 w 484 340 m 526 340 l S
+0.3 w 526 340 m 568 340 l S
+0.3 w 568 340 m 610 340 l S
+0.3 w 610 340 m 652 340 l S
+0.3 w 652 340 m 690 340 l S
+BT /F1 7.5 Tf 39 330.6 Td (BLR-FDB1-XA02) Tj ET
+BT /F1 7.5 Tf 131 330.6 Td (Feed pump 2 trip) Tj ET
+0.3 w 36 327 m 128 327 l S
+0.3 w 128 327 m 318 327 l S
+0.3 w 352 327 m 392 327 l S
+0.3 w 392 327 m 438 327 l S
+0.3 w 438 327 m 484 327 l S
+0.3 w 484 327 m 526 327 l S
+0.3 w 526 327 m 568 327 l S
+0.3 w 568 327 m 610 327 l S
+0.3 w 610 327 m 652 327 l S
+0.3 w 652 327 m 690 327 l S
+BT /F1 7.5 Tf 39 317.6 Td (BLR-FDB1-XA03) Tj ET
+BT /F1 7.5 Tf 131 317.6 Td (Feed pump 3 trip) Tj ET
+0.3 w 36 314 m 128 314 l S
+0.3 w 128 314 m 318 314 l S
+0.3 w 318 314 m 352 314 l S
+0.3 w 352 314 m 392 314 l S
+0.3 w 392 314 m 438 314 l S
+0.3 w 438 314 m 484 314 l S
+0.3 w 484 314 m 526 314 l S
+0.3 w 526 314 m 568 314 l S
+0.3 w 568 314 m 610 314 l S
+0.3 w 610 314 m 652 314 l S
+0.3 w 652 314 m 690 314 l S
+BT /F1 7.5 Tf 39 304.6 Td (BLR-BRN1-TT01) Tj ET
+BT /F1 7.5 Tf 131 304.6 Td (Burner flame temperature 1) Tj ET
+BT /F1 7.5 Tf 321 304.6 Td (AI) Tj ET
+BT /F1 7.5 Tf 355 304.6 Td (∞C) Tj ET
+BT /F1 7.5 Tf 430.83 304.6 Td (0) Tj ET
+BT /F1 7.5 Tf 464.32 304.6 Td (1200) Tj ET
+BT /F1 7.5 Tf 506.32 304.6 Td (1056) Tj ET
+BT /F1 7.5 Tf 552.49 304.6 Td (900) Tj ET
+BT /F1 7.5 Tf 682.83 304.6 Td (0) Tj ET
+0.3 w 36 301 m 128 301 l S
+0.3 w 128 301 m 318 301 l S
+0.3 w 392 301 m 438 301 l S
+0.3 w 438 301 m 484 301 l S
+0.3 w 484 301 m 526 301 l S
+0.3 w 526 301 m 568 301 l S
+0.3 w 568 301 m 610 301 l S
+0.3 w 610 301 m 652 301 l S
+0.3 w 652 301 m 690 301 l S
+BT /F1 7.5 Tf 39 291.6 Td (BLR-BRN1-TT02) Tj ET
+BT /F1 7.5 Tf 131 291.6 Td (Burner flame temperature 2) Tj ET
+BT /F1 7.5 Tf 430.83 291.6 Td (0) Tj ET
+BT /F1 7.5 Tf 464.32 291.6 Td (1200) Tj ET
+BT /F1 7.5 Tf 506.32 291.6 Td (1056) Tj ET
+BT /F1 7.5 Tf 552.49 291.6 Td (960) Tj ET
+BT /F1 7.5 Tf 682.83 291.6 Td (0) Tj ET
+0.3 w 36 288 m 128 288 l S
+0.3 w 128 288 m 318 288 l S
+0.3 w 392 288 m 438 288 l S
+0.3 w 438 288 m 484 288 l S
+0.3 w 484 288 m 526 288 l S
+0.3 w 526 288 m 568 288 l S
+0.3 w 568 288 m 610 288 l S
+0.3 w 610 288 m 652 288 l S
+0.3 w 652 288 m 690 288 l S
+BT /F1 7.5 Tf 39 278.6 Td (BLR-BRN1-TT03) Tj ET
+BT /F1 7.5 Tf 131 278.6 Td (Burner flame temperature 3) Tj ET
+BT /F1 7.5 Tf 430.83 278.6 Td (0) Tj ET
+BT /F1 7.5 Tf 464.32 278.6 Td (1200) Tj ET
+BT /F1 7.5 Tf 506.32 278.6 Td (1152) Tj ET
+BT /F1 7.5 Tf 548.32 278.6 Td (1020) Tj ET
+BT /F1 7.5 Tf 678.66 278.6 Td (15) Tj ET
+0.3 w 36 275 m 128 275 l S
+0.3 w 128 275 m 318 275 l S
+0.3 w 352 275 m 392 275 l S
+0.3 w 392 275 m 438 275 l S
+0.3 w 438 275 m 484 275 l S
+0.3 w 484 275 m 526 275 l S
+0.3 w 526 275 m 568 275 l S
+0.3 w 568 275 m 610 275 l S
+0.3 w 610 275 m 652 275 l S
+0.3 w 652 275 m 690 275 l S
+BT /F1 7.5 Tf 39 265.6 Td (BLR-BRN1-PT01) Tj ET
+BT /F1 7.5 Tf 131 265.6 Td (Burner atomising pressure 1) Tj ET
+BT /F1 7.5 Tf 355 265.6 Td (mbar) Tj ET
+BT /F1 7.5 Tf 430.83 265.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 265.6 Td (100) Tj ET
+BT /F1 7.5 Tf 598.66 265.6 Td (25) Tj ET
+BT /F1 7.5 Tf 640.66 265.6 Td (11) Tj ET
+BT /F1 7.5 Tf 678.66 265.6 Td (15) Tj ET
+0.3 w 36 262 m 128 262 l S
+0.3 w 128 262 m 318 262 l S
+0.3 w 392 262 m 438 262 l S
+0.3 w 438 262 m 484 262 l S
+0.3 w 484 262 m 526 262 l S
+0.3 w 526 262 m 568 262 l S
+0.3 w 568 262 m 610 262 l S
+0.3 w 610 262 m 652 262 l S
+0.3 w 652 262 m 690 262 l S
+BT /F1 7.5 Tf 39 252.6 Td (BLR-BRN1-PT02) Tj ET
+BT /F1 7.5 Tf 131 252.6 Td (Burner atomising pressure 2) Tj ET
+BT /F1 7.5 Tf 430.83 252.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 252.6 Td (100) Tj ET
+BT /F1 7.5 Tf 598.66 252.6 Td (20) Tj ET
+BT /F1 7.5 Tf 644.83 252.6 Td (8) Tj ET
+BT /F1 7.5 Tf 682.83 252.6 Td (5) Tj ET
+0.3 w 36 249 m 128 249 l S
+0.3 w 128 249 m 318 249 l S
+0.3 w 352 249 m 392 249 l S
+0.3 w 392 249 m 438 249 l S
+0.3 w 438 249 m 484 249 l S
+0.3 w 484 249 m 526 249 l S
+0.3 w 526 249 m 568 249 l S
+0.3 w 568 249 m 610 249 l S
+0.3 w 610 249 m 652 249 l S
+0.3 w 652 249 m 690 249 l S
+BT /F1 7.5 Tf 39 239.6 Td (BLR-BRN1-ST01) Tj ET
+BT /F1 7.5 Tf 131 239.6 Td (Burner fan speed 1) Tj ET
+BT /F1 7.5 Tf 355 239.6 Td (rpm) Tj ET
+BT /F1 7.5 Tf 430.83 239.6 Td (0) Tj ET
+BT /F1 7.5 Tf 464.32 239.6 Td (3600) Tj ET
+BT /F1 7.5 Tf 506.32 239.6 Td (3456) Tj ET
+BT /F1 7.5 Tf 548.32 239.6 Td (2880) Tj ET
+BT /F1 7.5 Tf 678.66 239.6 Td (10) Tj ET
+0.3 w 36 236 m 128 236 l S
+0.3 w 128 236 m 318 236 l S
+0.3 w 392 236 m 438 236 l S
+0.3 w 438 236 m 484 236 l S
+0.3 w 484 236 m 526 236 l S
+0.3 w 526 236 m 568 236 l S
+0.3 w 568 236 m 610 236 l S
+0.3 w 610 236 m 652 236 l S
+0.3 w 652 236 m 690 236 l S
+BT /F1 7.5 Tf 39 226.6 Td (BLR-BRN1-ST02) Tj ET
+BT /F1 7.5 Tf 131 226.6 Td (Burner fan speed 2) Tj ET
+BT /F1 7.5 Tf 430.83 226.6 Td (0) Tj ET
+BT /F1 7.5 Tf 464.32 226.6 Td (3600) Tj ET
+BT /F1 7.5 Tf 506.32 226.6 Td (3168) Tj ET
+BT /F1 7.5 Tf 548.32 226.6 Td (3060) Tj ET
+BT /F1 7.5 Tf 682.83 226.6 Td (2) Tj ET
+0.3 w 36 223 m 128 223 l S
+0.3 w 128 223 m 318 223 l S
+0.3 w 352 223 m 392 223 l S
+0.3 w 392 223 m 438 223 l S
+0.3 w 438 223 m 484 223 l S
+0.3 w 484 223 m 526 223 l S
+0.3 w 526 223 m 568 223 l S
+0.3 w 568 223 m 610 223 l S
+0.3 w 610 223 m 652 223 l S
+0.3 w 652 223 m 690 223 l S
+BT /F1 7.5 Tf 39 213.6 Td (BLR-BRN1-FT01) Tj ET
+BT /F1 7.5 Tf 131 213.6 Td (Burner fuel flow 1) Tj ET
+BT /F1 7.5 Tf 355 213.6 Td (kg/h) Tj ET
+BT /F1 7.5 Tf 430.83 213.6 Td (0) Tj ET
+BT /F1 7.5 Tf 458.07 213.6 Td (1500.5) Tj ET
+BT /F1 7.5 Tf 548.32 213.6 Td (1200) Tj ET
+BT /F1 7.5 Tf 682.83 213.6 Td (0) Tj ET
+0.3 w 36 210 m 128 210 l S
+0.3 w 128 210 m 318 210 l S
+0.3 w 392 210 m 438 210 l S
+0.3 w 438 210 m 484 210 l S
+0.3 w 484 210 m 526 210 l S
+0.3 w 526 210 m 568 210 l S
+0.3 w 568 210 m 610 210 l S
+0.3 w 610 210 m 652 210 l S
+0.3 w 652 210 m 690 210 l S
+BT /F1 7.5 Tf 39 200.6 Td (BLR-BRN1-FT02) Tj ET
+BT /F1 7.5 Tf 131 200.6 Td (Burner fuel flow 2) Tj ET
+BT /F1 7.5 Tf 430.83 200.6 Td (0) Tj ET
+BT /F1 7.5 Tf 458.07 200.6 Td (1500.5) Tj ET
+BT /F1 7.5 Tf 548.32 200.6 Td (1125) Tj ET
+BT /F1 7.5 Tf 682.83 200.6 Td (0) Tj ET
+0.3 w 36 197 m 128 197 l S
+0.3 w 128 197 m 318 197 l S
+0.3 w 318 197 m 352 197 l S
+0.3 w 352 197 m 392 197 l S
+0.3 w 392 197 m 438 197 l S
+0.3 w 438 197 m 484 197 l S
+0.3 w 484 197 m 526 197 l S
+0.3 w 526 197 m 568 197 l S
+0.3 w 568 197 m 610 197 l S
+0.3 w 610 197 m 652 197 l S
+0.3 w 652 197 m 690 197 l S
+BT /F1 7.5 Tf 39 187.6 Td (BLR-BRN1-YS01) Tj ET
+BT /F1 7.5 Tf 131 187.6 Td (Burner 1 start command) Tj ET
+BT /F1 7.5 Tf 321 187.6 Td (DO) Tj ET
+0.3 w 36 184 m 128 184 l S
+0.3 w 128 184 m 318 184 l S
+0.3 w 352 184 m 392 184 l S
+0.3 w 392 184 m 438 184 l S
+0.3 w 438 184 m 484 184 l S
+0.3 w 484 184 m 526 184 l S
+0.3 w 526 184 m 568 184 l S
+0.3 w 568 184 m 610 184 l S
+0.3 w 610 184 m 652 184 l S
+0.3 w 652 184 m 690 184 l S
+BT /F1 7.5 Tf 39 174.6 Td (BLR-BRN1-YS02) Tj ET
+BT /F1 7.5 Tf 131 174.6 Td (Burner 2 start command) Tj ET
+0.3 w 36 171 m 128 171 l S
+0.3 w 128 171 m 318 171 l S
+0.3 w 318 171 m 352 171 l S
+0.3 w 352 171 m 392 171 l S
+0.3 w 392 171 m 438 171 l S
+0.3 w 438 171 m 484 171 l S
+0.3 w 484 171 m 526 171 l S
+0.3 w 526 171 m 568 171 l S
+0.3 w 568 171 m 610 171 l S
+0.3 w 610 171 m 652 171 l S
+0.3 w 652 171 m 690 171 l S
+BT /F1 7.5 Tf 39 161.6 Td (PMS-GRB1-VT01) Tj ET
+BT /F1 7.5 Tf 131 161.6 Td (Main busbar voltage section 1) Tj ET
+BT /F1 7.5 Tf 321 161.6 Td (AI) Tj ET
+BT /F1 7.5 Tf 355 161.6 Td (kV) Tj ET
+BT /F1 7.5 Tf 430.83 161.6 Td (0) Tj ET
+BT /F1 7.5 Tf 472.66 161.6 Td (12) Tj ET
+BT /F1 7.5 Tf 508.41 161.6 Td (11.5) Tj ET
+BT /F1 7.5 Tf 550.41 161.6 Td (10.2) Tj ET
+BT /F1 7.5 Tf 596.58 161.6 Td (2.4) Tj ET
+BT /F1 7.5 Tf 678.66 161.6 Td (15) Tj ET
+0.3 w 36 158 m 128 158 l S
+0.3 w 128 158 m 318 158 l S
+0.3 w 392 158 m 438 158 l S
+0.3 w 438 158 m 484 158 l S
+0.3 w 484 158 m 526 158 l S
+0.3 w 526 158 m 568 158 l S
+0.3 w 568 158 m 610 158 l S
+0.3 w 610 158 m 652 158 l S
+0.3 w 652 158 m 690 158 l S
+BT /F1 7.5 Tf 39 148.6 Td (PMS-GRB1-VT02) Tj ET
+BT /F1 7.5 Tf 131 148.6 Td (Main busbar voltage section 2) Tj ET
+BT /F1 7.5 Tf 430.83 148.6 Td (0) Tj ET
+BT /F1 7.5 Tf 472.66 148.6 Td (12) Tj ET
+BT /F1 7.5 Tf 508.41 148.6 Td (11.5) Tj ET
+BT /F1 7.5 Tf 554.58 148.6 Td (9.6) Tj ET
+BT /F1 7.5 Tf 602.83 148.6 Td (3) Tj ET
+BT /F1 7.5 Tf 678.66 148.6 Td (30) Tj ET
+0.3 w 36 145 m 128 145 l S
+0.3 w 128 145 m 318 145 l S
+0.3 w 392 145 m 438 145 l S
+0.3 w 438 145 m 484 145 l S
+0.3 w 484 145 m 526 145 l S
+0.3 w 526 145 m 568 145 l S
+0.3 w 568 145 m 610 145 l S
+0.3 w 610 145 m 652 145 l S
+0.3 w 652 145 m 690 145 l S
+BT /F1 7.5 Tf 39 135.6 Td (PMS-GRB1-VT03) Tj ET
+BT /F1 7.5 Tf 131 135.6 Td (Main busbar voltage section 3) Tj ET
+BT /F1 7.5 Tf 430.83 135.6 Td (0) Tj ET
+BT /F1 7.5 Tf 472.66 135.6 Td (12) Tj ET
+BT /F1 7.5 Tf 508.41 135.6 Td (10.6) Tj ET
+BT /F1 7.5 Tf 554.58 135.6 Td (9.6) Tj ET
+BT /F1 7.5 Tf 596.58 135.6 Td (2.4) Tj ET
+BT /F1 7.5 Tf 682.83 135.6 Td (5) Tj ET
+0.3 w 36 132 m 128 132 l S
+0.3 w 128 132 m 318 132 l S
+0.3 w 352 132 m 392 132 l S
+0.3 w 392 132 m 438 132 l S
+0.3 w 438 132 m 484 132 l S
+0.3 w 484 132 m 526 132 l S
+0.3 w 526 132 m 568 132 l S
+0.3 w 568 132 m 610 132 l S
+0.3 w 610 132 m 652 132 l S
+0.3 w 652 132 m 690 132 l S
+BT /F1 7.5 Tf 39 122.6 Td (PMS-GRB1-II01) Tj ET
+BT /F1 7.5 Tf 131 122.6 Td (Generator breaker current 1) Tj ET
+BT /F1 7.5 Tf 355 122.6 Td (A) Tj ET
+BT /F1 7.5 Tf 430.83 122.6 Td (0) Tj ET
+BT /F1 7.5 Tf 464.32 122.6 Td (3500) Tj ET
+BT /F1 7.5 Tf 506.32 122.6 Td (3220) Tj ET
+BT /F1 7.5 Tf 548.32 122.6 Td (2625) Tj ET
+BT /F1 7.5 Tf 678.66 122.6 Td (15) Tj ET
+0.3 w 36 119 m 128 119 l S
+0.3 w 128 119 m 318 119 l S
+0.3 w 318 119 m 352 119 l S
+0.3 w 352 119 m 392 119 l S
+0.3 w 392 119 m 438 119 l S
+0.3 w 438 119 m 484 119 l S
+0.3 w 484 119 m 526 119 l S
+0.3 w 526 119 m 568 119 l S
+0.3 w 568 119 m 610 119 l S
+0.3 w 610 119 m 652 119 l S
+0.3 w 652 119 m 690 119 l S
+0.3 w 36 509 m 36 119 l S
+0.3 w 128 509 m 128 119 l S
+0.3 w 318 509 m 318 119 l S
+0.3 w 352 509 m 352 119 l S
+0.3 w 392 509 m 392 119 l S
+0.3 w 438 509 m 438 119 l S
+0.3 w 484 509 m 484 119 l S
+0.3 w 526 509 m 526 119 l S
+0.3 w 568 509 m 568 119 l S
+0.3 w 610 509 m 610 119 l S
+0.3 w 652 509 m 652 119 l S
+0.3 w 690 509 m 690 119 l S
+0.6 w 36 522 m 690 522 l S
+BT /F1 7 Tf 36 24 Td (MV Example - I/O list IO-001 Rev B) Tj ET
+BT /F1 7 Tf 654.2 24 Td (Page 2 of 4) Tj ET
+
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 842 595] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 7 0 R >>
+endobj
+9 0 obj
+<< /Length 18666 >>
+stream
+BT /F2 12 Tf 36 563 Td (I/O LIST - ENGINE ROOM) Tj ET
+BT /F1 8 Tf 36 549 Td (Document IO-002 Rev A - repeated header, merged Type and Unit cells) Tj ET
+BT /F2 7.5 Tf 426.29 525.6 Td (Range) Tj ET
+0.5 w 393 522 m 483 522 l S
+BT /F2 7.5 Tf 547.47 525.6 Td (Alarm limits) Tj ET
+0.5 w 485 522 m 651 522 l S
+BT /F2 7.5 Tf 39 512.6 Td (Tag) Tj ET
+BT /F2 7.5 Tf 131 512.6 Td (Description) Tj ET
+BT /F2 7.5 Tf 321 512.6 Td (Type) Tj ET
+BT /F2 7.5 Tf 355 512.6 Td (Unit) Tj ET
+BT /F2 7.5 Tf 420.42 512.6 Td (Low) Tj ET
+BT /F2 7.5 Tf 464.65 512.6 Td (High) Tj ET
+BT /F2 7.5 Tf 511.52 512.6 Td (HH) Tj ET
+BT /F2 7.5 Tf 559.26 512.6 Td (H) Tj ET
+BT /F2 7.5 Tf 602.58 512.6 Td (L) Tj ET
+BT /F2 7.5 Tf 640.16 512.6 Td (LL) Tj ET
+BT /F2 7.5 Tf 660.49 512.6 Td (Delay s) Tj ET
+0.9 w 36 509 m 690 509 l S
+BT /F1 7.5 Tf 39 499.6 Td (PMS-GRB1-II02) Tj ET
+BT /F1 7.5 Tf 131 499.6 Td (Generator breaker current 2) Tj ET
+BT /F1 7.5 Tf 321 499.6 Td (AI) Tj ET
+BT /F1 7.5 Tf 355 499.6 Td (A) Tj ET
+BT /F1 7.5 Tf 430.83 499.6 Td (0) Tj ET
+BT /F1 7.5 Tf 464.32 499.6 Td (3500) Tj ET
+BT /F1 7.5 Tf 506.32 499.6 Td (3080) Tj ET
+BT /F1 7.5 Tf 548.32 499.6 Td (2975) Tj ET
+BT /F1 7.5 Tf 678.66 499.6 Td (30) Tj ET
+0.3 w 36 496 m 128 496 l S
+0.3 w 128 496 m 318 496 l S
+0.3 w 392 496 m 438 496 l S
+0.3 w 438 496 m 484 496 l S
+0.3 w 484 496 m 526 496 l S
+0.3 w 526 496 m 568 496 l S
+0.3 w 568 496 m 610 496 l S
+0.3 w 610 496 m 652 496 l S
+0.3 w 652 496 m 690 496 l S
+BT /F1 7.5 Tf 39 486.6 Td (PMS-GRB1-II03) Tj ET
+BT /F1 7.5 Tf 131 486.6 Td (Generator breaker current 3) Tj ET
+BT /F1 7.5 Tf 430.83 486.6 Td (0) Tj ET
+BT /F1 7.5 Tf 464.32 486.6 Td (3500) Tj ET
+BT /F1 7.5 Tf 506.32 486.6 Td (3360) Tj ET
+BT /F1 7.5 Tf 548.32 486.6 Td (2800) Tj ET
+BT /F1 7.5 Tf 682.83 486.6 Td (5) Tj ET
+0.3 w 36 483 m 128 483 l S
+0.3 w 128 483 m 318 483 l S
+0.3 w 392 483 m 438 483 l S
+0.3 w 438 483 m 484 483 l S
+0.3 w 484 483 m 526 483 l S
+0.3 w 526 483 m 568 483 l S
+0.3 w 568 483 m 610 483 l S
+0.3 w 610 483 m 652 483 l S
+0.3 w 652 483 m 690 483 l S
+BT /F1 7.5 Tf 39 473.6 Td (PMS-GRB1-II04) Tj ET
+BT /F1 7.5 Tf 131 473.6 Td (Generator breaker current 4) Tj ET
+BT /F1 7.5 Tf 430.83 473.6 Td (0) Tj ET
+BT /F1 7.5 Tf 464.32 473.6 Td (3500) Tj ET
+BT /F1 7.5 Tf 506.32 473.6 Td (3220) Tj ET
+BT /F1 7.5 Tf 548.32 473.6 Td (2800) Tj ET
+BT /F1 7.5 Tf 678.66 473.6 Td (10) Tj ET
+0.3 w 36 470 m 128 470 l S
+0.3 w 128 470 m 318 470 l S
+0.3 w 352 470 m 392 470 l S
+0.3 w 392 470 m 438 470 l S
+0.3 w 438 470 m 484 470 l S
+0.3 w 484 470 m 526 470 l S
+0.3 w 526 470 m 568 470 l S
+0.3 w 568 470 m 610 470 l S
+0.3 w 610 470 m 652 470 l S
+0.3 w 652 470 m 690 470 l S
+BT /F1 7.5 Tf 39 460.6 Td (PMS-GRB1-JT01) Tj ET
+BT /F1 7.5 Tf 131 460.6 Td (Generator active power 1) Tj ET
+BT /F1 7.5 Tf 355 460.6 Td (kW) Tj ET
+BT /F1 7.5 Tf 430.83 460.6 Td (0) Tj ET
+BT /F1 7.5 Tf 464.32 460.6 Td (5000) Tj ET
+BT /F1 7.5 Tf 506.32 460.6 Td (4400) Tj ET
+BT /F1 7.5 Tf 678.66 460.6 Td (10) Tj ET
+0.3 w 36 457 m 128 457 l S
+0.3 w 128 457 m 318 457 l S
+0.3 w 392 457 m 438 457 l S
+0.3 w 438 457 m 484 457 l S
+0.3 w 484 457 m 526 457 l S
+0.3 w 526 457 m 568 457 l S
+0.3 w 568 457 m 610 457 l S
+0.3 w 610 457 m 652 457 l S
+0.3 w 652 457 m 690 457 l S
+BT /F1 7.5 Tf 39 447.6 Td (PMS-GRB1-JT02) Tj ET
+BT /F1 7.5 Tf 131 447.6 Td (Generator active power 2) Tj ET
+BT /F1 7.5 Tf 430.83 447.6 Td (0) Tj ET
+BT /F1 7.5 Tf 464.32 447.6 Td (5000) Tj ET
+BT /F1 7.5 Tf 506.32 447.6 Td (4400) Tj ET
+BT /F1 7.5 Tf 678.66 447.6 Td (10) Tj ET
+0.3 w 36 444 m 128 444 l S
+0.3 w 128 444 m 318 444 l S
+0.3 w 392 444 m 438 444 l S
+0.3 w 438 444 m 484 444 l S
+0.3 w 484 444 m 526 444 l S
+0.3 w 526 444 m 568 444 l S
+0.3 w 568 444 m 610 444 l S
+0.3 w 610 444 m 652 444 l S
+0.3 w 652 444 m 690 444 l S
+BT /F1 7.5 Tf 39 434.6 Td (PMS-GRB1-JT03) Tj ET
+BT /F1 7.5 Tf 131 434.6 Td (Generator active power 3) Tj ET
+BT /F1 7.5 Tf 430.83 434.6 Td (0) Tj ET
+BT /F1 7.5 Tf 464.32 434.6 Td (5000) Tj ET
+BT /F1 7.5 Tf 506.32 434.6 Td (4600) Tj ET
+BT /F1 7.5 Tf 682.83 434.6 Td (2) Tj ET
+0.3 w 36 431 m 128 431 l S
+0.3 w 128 431 m 318 431 l S
+0.3 w 352 431 m 392 431 l S
+0.3 w 392 431 m 438 431 l S
+0.3 w 438 431 m 484 431 l S
+0.3 w 484 431 m 526 431 l S
+0.3 w 526 431 m 568 431 l S
+0.3 w 568 431 m 610 431 l S
+0.3 w 610 431 m 652 431 l S
+0.3 w 652 431 m 690 431 l S
+BT /F1 7.5 Tf 39 421.6 Td (PMS-GRB1-ST01) Tj ET
+BT /F1 7.5 Tf 131 421.6 Td (Busbar frequency 1) Tj ET
+BT /F1 7.5 Tf 355 421.6 Td (Hz) Tj ET
+BT /F1 7.5 Tf 426.66 421.6 Td (45) Tj ET
+BT /F1 7.5 Tf 472.66 421.6 Td (65) Tj ET
+BT /F1 7.5 Tf 508.41 421.6 Td (64.2) Tj ET
+BT /F1 7.5 Tf 556.66 421.6 Td (62) Tj ET
+BT /F1 7.5 Tf 598.66 421.6 Td (50) Tj ET
+BT /F1 7.5 Tf 640.66 421.6 Td (46) Tj ET
+BT /F1 7.5 Tf 682.83 421.6 Td (5) Tj ET
+0.3 w 36 418 m 128 418 l S
+0.3 w 128 418 m 318 418 l S
+0.3 w 392 418 m 438 418 l S
+0.3 w 438 418 m 484 418 l S
+0.3 w 484 418 m 526 418 l S
+0.3 w 526 418 m 568 418 l S
+0.3 w 568 418 m 610 418 l S
+0.3 w 610 418 m 652 418 l S
+0.3 w 652 418 m 690 418 l S
+BT /F1 7.5 Tf 39 408.6 Td (PMS-GRB1-ST02) Tj ET
+BT /F1 7.5 Tf 131 408.6 Td (Busbar frequency 2) Tj ET
+BT /F1 7.5 Tf 426.66 408.6 Td (45) Tj ET
+BT /F1 7.5 Tf 472.66 408.6 Td (65) Tj ET
+BT /F1 7.5 Tf 508.41 408.6 Td (64.2) Tj ET
+BT /F1 7.5 Tf 556.66 408.6 Td (62) Tj ET
+BT /F1 7.5 Tf 598.66 408.6 Td (50) Tj ET
+BT /F1 7.5 Tf 640.66 408.6 Td (46) Tj ET
+BT /F1 7.5 Tf 678.66 408.6 Td (10) Tj ET
+0.3 w 36 405 m 128 405 l S
+0.3 w 128 405 m 318 405 l S
+0.3 w 318 405 m 352 405 l S
+0.3 w 352 405 m 392 405 l S
+0.3 w 392 405 m 438 405 l S
+0.3 w 438 405 m 484 405 l S
+0.3 w 484 405 m 526 405 l S
+0.3 w 526 405 m 568 405 l S
+0.3 w 568 405 m 610 405 l S
+0.3 w 610 405 m 652 405 l S
+0.3 w 652 405 m 690 405 l S
+BT /F1 7.5 Tf 39 395.6 Td (PMS-GRB1-XS01) Tj ET
+BT /F1 7.5 Tf 131 395.6 Td (Generator breaker 1 closed) Tj ET
+BT /F1 7.5 Tf 321 395.6 Td (DI) Tj ET
+0.3 w 36 392 m 128 392 l S
+0.3 w 128 392 m 318 392 l S
+0.3 w 352 392 m 392 392 l S
+0.3 w 392 392 m 438 392 l S
+0.3 w 438 392 m 484 392 l S
+0.3 w 484 392 m 526 392 l S
+0.3 w 526 392 m 568 392 l S
+0.3 w 568 392 m 610 392 l S
+0.3 w 610 392 m 652 392 l S
+0.3 w 652 392 m 690 392 l S
+BT /F1 7.5 Tf 39 382.6 Td (PMS-GRB1-XS02) Tj ET
+BT /F1 7.5 Tf 131 382.6 Td (Generator breaker 2 closed) Tj ET
+0.3 w 36 379 m 128 379 l S
+0.3 w 128 379 m 318 379 l S
+0.3 w 352 379 m 392 379 l S
+0.3 w 392 379 m 438 379 l S
+0.3 w 438 379 m 484 379 l S
+0.3 w 484 379 m 526 379 l S
+0.3 w 526 379 m 568 379 l S
+0.3 w 568 379 m 610 379 l S
+0.3 w 610 379 m 652 379 l S
+0.3 w 652 379 m 690 379 l S
+BT /F1 7.5 Tf 39 369.6 Td (PMS-GRB1-XS03) Tj ET
+BT /F1 7.5 Tf 131 369.6 Td (Generator breaker 3 closed) Tj ET
+0.3 w 36 366 m 128 366 l S
+0.3 w 128 366 m 318 366 l S
+0.3 w 352 366 m 392 366 l S
+0.3 w 392 366 m 438 366 l S
+0.3 w 438 366 m 484 366 l S
+0.3 w 484 366 m 526 366 l S
+0.3 w 526 366 m 568 366 l S
+0.3 w 568 366 m 610 366 l S
+0.3 w 610 366 m 652 366 l S
+0.3 w 652 366 m 690 366 l S
+BT /F1 7.5 Tf 39 356.6 Td (PMS-GRB1-XS04) Tj ET
+BT /F1 7.5 Tf 131 356.6 Td (Generator breaker 4 closed) Tj ET
+0.3 w 36 353 m 128 353 l S
+0.3 w 128 353 m 318 353 l S
+0.3 w 318 353 m 352 353 l S
+0.3 w 352 353 m 392 353 l S
+0.3 w 392 353 m 438 353 l S
+0.3 w 438 353 m 484 353 l S
+0.3 w 484 353 m 526 353 l S
+0.3 w 526 353 m 568 353 l S
+0.3 w 568 353 m 610 353 l S
+0.3 w 610 353 m 652 353 l S
+0.3 w 652 353 m 690 353 l S
+BT /F1 7.5 Tf 39 343.6 Td (PMS-SHR1-JT01) Tj ET
+BT /F1 7.5 Tf 131 343.6 Td (Shore connection power 1) Tj ET
+BT /F1 7.5 Tf 321 343.6 Td (AI) Tj ET
+BT /F1 7.5 Tf 355 343.6 Td (kW) Tj ET
+BT /F1 7.5 Tf 430.83 343.6 Td (0) Tj ET
+BT /F1 7.5 Tf 464.32 343.6 Td (2500) Tj ET
+BT /F1 7.5 Tf 506.32 343.6 Td (2200) Tj ET
+BT /F1 7.5 Tf 678.66 343.6 Td (10) Tj ET
+0.3 w 36 340 m 128 340 l S
+0.3 w 128 340 m 318 340 l S
+0.3 w 392 340 m 438 340 l S
+0.3 w 438 340 m 484 340 l S
+0.3 w 484 340 m 526 340 l S
+0.3 w 526 340 m 568 340 l S
+0.3 w 568 340 m 610 340 l S
+0.3 w 610 340 m 652 340 l S
+0.3 w 652 340 m 690 340 l S
+BT /F1 7.5 Tf 39 330.6 Td (PMS-SHR1-JT02) Tj ET
+BT /F1 7.5 Tf 131 330.6 Td (Shore connection power 2) Tj ET
+BT /F1 7.5 Tf 430.83 330.6 Td (0) Tj ET
+BT /F1 7.5 Tf 464.32 330.6 Td (2500) Tj ET
+BT /F1 7.5 Tf 506.32 330.6 Td (2200) Tj ET
+BT /F1 7.5 Tf 682.83 330.6 Td (5) Tj ET
+0.3 w 36 327 m 128 327 l S
+0.3 w 128 327 m 318 327 l S
+0.3 w 352 327 m 392 327 l S
+0.3 w 392 327 m 438 327 l S
+0.3 w 438 327 m 484 327 l S
+0.3 w 484 327 m 526 327 l S
+0.3 w 526 327 m 568 327 l S
+0.3 w 568 327 m 610 327 l S
+0.3 w 610 327 m 652 327 l S
+0.3 w 652 327 m 690 327 l S
+BT /F1 7.5 Tf 39 317.6 Td (PMS-SHR1-II01) Tj ET
+BT /F1 7.5 Tf 131 317.6 Td (Shore connection current 1) Tj ET
+BT /F1 7.5 Tf 355 317.6 Td (A) Tj ET
+BT /F1 7.5 Tf 430.83 317.6 Td (0) Tj ET
+BT /F1 7.5 Tf 464.32 317.6 Td (1600) Tj ET
+BT /F1 7.5 Tf 506.32 317.6 Td (1536) Tj ET
+BT /F1 7.5 Tf 548.32 317.6 Td (1200) Tj ET
+BT /F1 7.5 Tf 682.83 317.6 Td (3) Tj ET
+0.3 w 36 314 m 128 314 l S
+0.3 w 128 314 m 318 314 l S
+0.3 w 392 314 m 438 314 l S
+0.3 w 438 314 m 484 314 l S
+0.3 w 484 314 m 526 314 l S
+0.3 w 526 314 m 568 314 l S
+0.3 w 568 314 m 610 314 l S
+0.3 w 610 314 m 652 314 l S
+0.3 w 652 314 m 690 314 l S
+BT /F1 7.5 Tf 39 304.6 Td (PMS-SHR1-II02) Tj ET
+BT /F1 7.5 Tf 131 304.6 Td (Shore connection current 2) Tj ET
+BT /F1 7.5 Tf 430.83 304.6 Td (0) Tj ET
+BT /F1 7.5 Tf 464.32 304.6 Td (1600) Tj ET
+BT /F1 7.5 Tf 506.32 304.6 Td (1472) Tj ET
+BT /F1 7.5 Tf 548.32 304.6 Td (1360) Tj ET
+BT /F1 7.5 Tf 682.83 304.6 Td (2) Tj ET
+0.3 w 36 301 m 128 301 l S
+0.3 w 128 301 m 318 301 l S
+0.3 w 392 301 m 438 301 l S
+0.3 w 438 301 m 484 301 l S
+0.3 w 484 301 m 526 301 l S
+0.3 w 526 301 m 568 301 l S
+0.3 w 568 301 m 610 301 l S
+0.3 w 610 301 m 652 301 l S
+0.3 w 652 301 m 690 301 l S
+BT /F1 7.5 Tf 39 291.6 Td (PMS-SHR1-II03) Tj ET
+BT /F1 7.5 Tf 131 291.6 Td (Shore connection current 3) Tj ET
+BT /F1 7.5 Tf 430.83 291.6 Td (0) Tj ET
+BT /F1 7.5 Tf 464.32 291.6 Td (1600) Tj ET
+BT /F1 7.5 Tf 506.32 291.6 Td (1472) Tj ET
+BT /F1 7.5 Tf 548.32 291.6 Td (1200) Tj ET
+BT /F1 7.5 Tf 678.66 291.6 Td (10) Tj ET
+0.3 w 36 288 m 128 288 l S
+0.3 w 128 288 m 318 288 l S
+0.3 w 352 288 m 392 288 l S
+0.3 w 392 288 m 438 288 l S
+0.3 w 438 288 m 484 288 l S
+0.3 w 484 288 m 526 288 l S
+0.3 w 526 288 m 568 288 l S
+0.3 w 568 288 m 610 288 l S
+0.3 w 610 288 m 652 288 l S
+0.3 w 652 288 m 690 288 l S
+BT /F1 7.5 Tf 39 278.6 Td (PMS-SHR1-VT01) Tj ET
+BT /F1 7.5 Tf 131 278.6 Td (Shore connection voltage 1) Tj ET
+BT /F1 7.5 Tf 355 278.6 Td (V) Tj ET
+BT /F1 7.5 Tf 430.83 278.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 278.6 Td (480) Tj ET
+BT /F1 7.5 Tf 510.49 278.6 Td (461) Tj ET
+BT /F1 7.5 Tf 552.49 278.6 Td (360) Tj ET
+BT /F1 7.5 Tf 598.66 278.6 Td (96) Tj ET
+BT /F1 7.5 Tf 640.66 278.6 Td (53) Tj ET
+BT /F1 7.5 Tf 678.66 278.6 Td (15) Tj ET
+0.3 w 36 275 m 128 275 l S
+0.3 w 128 275 m 318 275 l S
+0.3 w 392 275 m 438 275 l S
+0.3 w 438 275 m 484 275 l S
+0.3 w 484 275 m 526 275 l S
+0.3 w 526 275 m 568 275 l S
+0.3 w 568 275 m 610 275 l S
+0.3 w 610 275 m 652 275 l S
+0.3 w 652 275 m 690 275 l S
+BT /F1 7.5 Tf 39 265.6 Td (PMS-SHR1-VT02) Tj ET
+BT /F1 7.5 Tf 131 265.6 Td (Shore connection voltage 2) Tj ET
+BT /F1 7.5 Tf 430.83 265.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 265.6 Td (480) Tj ET
+BT /F1 7.5 Tf 510.49 265.6 Td (442) Tj ET
+BT /F1 7.5 Tf 552.49 265.6 Td (408) Tj ET
+BT /F1 7.5 Tf 594.49 265.6 Td (120) Tj ET
+BT /F1 7.5 Tf 640.66 265.6 Td (24) Tj ET
+BT /F1 7.5 Tf 678.66 265.6 Td (30) Tj ET
+0.3 w 36 262 m 128 262 l S
+0.3 w 128 262 m 318 262 l S
+0.3 w 352 262 m 392 262 l S
+0.3 w 392 262 m 438 262 l S
+0.3 w 438 262 m 484 262 l S
+0.3 w 484 262 m 526 262 l S
+0.3 w 526 262 m 568 262 l S
+0.3 w 568 262 m 610 262 l S
+0.3 w 610 262 m 652 262 l S
+0.3 w 652 262 m 690 262 l S
+BT /F1 7.5 Tf 39 252.6 Td (BWTS-UVR1-II01) Tj ET
+BT /F1 7.5 Tf 131 252.6 Td (UV reactor lamp current 1) Tj ET
+BT /F1 7.5 Tf 355 252.6 Td (A) Tj ET
+BT /F1 7.5 Tf 430.83 252.6 Td (0) Tj ET
+BT /F1 7.5 Tf 472.66 252.6 Td (30) Tj ET
+BT /F1 7.5 Tf 550.41 252.6 Td (22.5) Tj ET
+BT /F1 7.5 Tf 596.58 252.6 Td (7.5) Tj ET
+BT /F1 7.5 Tf 682.83 252.6 Td (3) Tj ET
+0.3 w 36 249 m 128 249 l S
+0.3 w 128 249 m 318 249 l S
+0.3 w 392 249 m 438 249 l S
+0.3 w 438 249 m 484 249 l S
+0.3 w 484 249 m 526 249 l S
+0.3 w 526 249 m 568 249 l S
+0.3 w 568 249 m 610 249 l S
+0.3 w 610 249 m 652 249 l S
+0.3 w 652 249 m 690 249 l S
+BT /F1 7.5 Tf 39 239.6 Td (BWTS-UVR1-II02) Tj ET
+BT /F1 7.5 Tf 131 239.6 Td (UV reactor lamp current 2) Tj ET
+BT /F1 7.5 Tf 430.83 239.6 Td (0) Tj ET
+BT /F1 7.5 Tf 472.66 239.6 Td (30) Tj ET
+BT /F1 7.5 Tf 556.66 239.6 Td (24) Tj ET
+BT /F1 7.5 Tf 596.58 239.6 Td (4.5) Tj ET
+BT /F1 7.5 Tf 678.66 239.6 Td (30) Tj ET
+0.3 w 36 236 m 128 236 l S
+0.3 w 128 236 m 318 236 l S
+0.3 w 352 236 m 392 236 l S
+0.3 w 392 236 m 438 236 l S
+0.3 w 438 236 m 484 236 l S
+0.3 w 484 236 m 526 236 l S
+0.3 w 526 236 m 568 236 l S
+0.3 w 568 236 m 610 236 l S
+0.3 w 610 236 m 652 236 l S
+0.3 w 652 236 m 690 236 l S
+BT /F1 7.5 Tf 39 226.6 Td (BWTS-UVR1-TT01) Tj ET
+BT /F1 7.5 Tf 131 226.6 Td (UV reactor water temperature 1) Tj ET
+BT /F1 7.5 Tf 355 226.6 Td (∞C) Tj ET
+BT /F1 7.5 Tf 430.83 226.6 Td (0) Tj ET
+BT /F1 7.5 Tf 472.66 226.6 Td (80) Tj ET
+BT /F1 7.5 Tf 508.41 226.6 Td (70.4) Tj ET
+BT /F1 7.5 Tf 556.66 226.6 Td (60) Tj ET
+BT /F1 7.5 Tf 682.83 226.6 Td (3) Tj ET
+0.3 w 36 223 m 128 223 l S
+0.3 w 128 223 m 318 223 l S
+0.3 w 392 223 m 438 223 l S
+0.3 w 438 223 m 484 223 l S
+0.3 w 484 223 m 526 223 l S
+0.3 w 526 223 m 568 223 l S
+0.3 w 568 223 m 610 223 l S
+0.3 w 610 223 m 652 223 l S
+0.3 w 652 223 m 690 223 l S
+BT /F1 7.5 Tf 39 213.6 Td (BWTS-UVR1-TT02) Tj ET
+BT /F1 7.5 Tf 131 213.6 Td (UV reactor water temperature 2) Tj ET
+BT /F1 7.5 Tf 430.83 213.6 Td (0) Tj ET
+BT /F1 7.5 Tf 472.66 213.6 Td (80) Tj ET
+BT /F1 7.5 Tf 508.41 213.6 Td (76.8) Tj ET
+BT /F1 7.5 Tf 556.66 213.6 Td (60) Tj ET
+BT /F1 7.5 Tf 678.66 213.6 Td (10) Tj ET
+0.3 w 36 210 m 128 210 l S
+0.3 w 128 210 m 318 210 l S
+0.3 w 352 210 m 392 210 l S
+0.3 w 392 210 m 438 210 l S
+0.3 w 438 210 m 484 210 l S
+0.3 w 484 210 m 526 210 l S
+0.3 w 526 210 m 568 210 l S
+0.3 w 568 210 m 610 210 l S
+0.3 w 610 210 m 652 210 l S
+0.3 w 652 210 m 690 210 l S
+BT /F1 7.5 Tf 39 200.6 Td (BWTS-UVR1-PT01) Tj ET
+BT /F1 7.5 Tf 131 200.6 Td (UV reactor pressure 1) Tj ET
+BT /F1 7.5 Tf 355 200.6 Td (bar) Tj ET
+BT /F1 7.5 Tf 430.83 200.6 Td (0) Tj ET
+BT /F1 7.5 Tf 472.66 200.6 Td (10) Tj ET
+BT /F1 7.5 Tf 560.83 200.6 Td (8) Tj ET
+BT /F1 7.5 Tf 596.58 200.6 Td (1.5) Tj ET
+BT /F1 7.5 Tf 638.58 200.6 Td (0.8) Tj ET
+BT /F1 7.5 Tf 678.66 200.6 Td (10) Tj ET
+0.3 w 36 197 m 128 197 l S
+0.3 w 128 197 m 318 197 l S
+0.3 w 392 197 m 438 197 l S
+0.3 w 438 197 m 484 197 l S
+0.3 w 484 197 m 526 197 l S
+0.3 w 526 197 m 568 197 l S
+0.3 w 568 197 m 610 197 l S
+0.3 w 610 197 m 652 197 l S
+0.3 w 652 197 m 690 197 l S
+BT /F1 7.5 Tf 39 187.6 Td (BWTS-UVR1-PT02) Tj ET
+BT /F1 7.5 Tf 131 187.6 Td (UV reactor pressure 2) Tj ET
+BT /F1 7.5 Tf 430.83 187.6 Td (0) Tj ET
+BT /F1 7.5 Tf 472.66 187.6 Td (10) Tj ET
+BT /F1 7.5 Tf 554.58 187.6 Td (8.5) Tj ET
+BT /F1 7.5 Tf 596.58 187.6 Td (2.5) Tj ET
+BT /F1 7.5 Tf 638.58 187.6 Td (0.8) Tj ET
+BT /F1 7.5 Tf 682.83 187.6 Td (3) Tj ET
+0.3 w 36 184 m 128 184 l S
+0.3 w 128 184 m 318 184 l S
+0.3 w 392 184 m 438 184 l S
+0.3 w 438 184 m 484 184 l S
+0.3 w 484 184 m 526 184 l S
+0.3 w 526 184 m 568 184 l S
+0.3 w 568 184 m 610 184 l S
+0.3 w 610 184 m 652 184 l S
+0.3 w 652 184 m 690 184 l S
+BT /F1 7.5 Tf 39 174.6 Td (BWTS-UVR1-PT03) Tj ET
+BT /F1 7.5 Tf 131 174.6 Td (UV reactor pressure 3) Tj ET
+BT /F1 7.5 Tf 430.83 174.6 Td (0) Tj ET
+BT /F1 7.5 Tf 472.66 174.6 Td (10) Tj ET
+BT /F1 7.5 Tf 560.83 174.6 Td (8) Tj ET
+BT /F1 7.5 Tf 596.58 174.6 Td (2.5) Tj ET
+BT /F1 7.5 Tf 638.58 174.6 Td (1.1) Tj ET
+BT /F1 7.5 Tf 678.66 174.6 Td (10) Tj ET
+0.3 w 36 171 m 128 171 l S
+0.3 w 128 171 m 318 171 l S
+0.3 w 352 171 m 392 171 l S
+0.3 w 392 171 m 438 171 l S
+0.3 w 438 171 m 484 171 l S
+0.3 w 484 171 m 526 171 l S
+0.3 w 526 171 m 568 171 l S
+0.3 w 568 171 m 610 171 l S
+0.3 w 610 171 m 652 171 l S
+0.3 w 652 171 m 690 171 l S
+BT /F1 7.5 Tf 39 161.6 Td (BWTS-UVR1-FT01) Tj ET
+BT /F1 7.5 Tf 131 161.6 Td (Ballast treatment flow 1) Tj ET
+BT /F1 7.5 Tf 355 161.6 Td (m3/h) Tj ET
+BT /F1 7.5 Tf 430.83 161.6 Td (0) Tj ET
+BT /F1 7.5 Tf 464.32 161.6 Td (3000) Tj ET
+BT /F1 7.5 Tf 548.32 161.6 Td (2550) Tj ET
+BT /F1 7.5 Tf 678.66 161.6 Td (15) Tj ET
+0.3 w 36 158 m 128 158 l S
+0.3 w 128 158 m 318 158 l S
+0.3 w 392 158 m 438 158 l S
+0.3 w 438 158 m 484 158 l S
+0.3 w 484 158 m 526 158 l S
+0.3 w 526 158 m 568 158 l S
+0.3 w 568 158 m 610 158 l S
+0.3 w 610 158 m 652 158 l S
+0.3 w 652 158 m 690 158 l S
+BT /F1 7.5 Tf 39 148.6 Td (BWTS-UVR1-FT02) Tj ET
+BT /F1 7.5 Tf 131 148.6 Td (Ballast treatment flow 2) Tj ET
+BT /F1 7.5 Tf 430.83 148.6 Td (0) Tj ET
+BT /F1 7.5 Tf 464.32 148.6 Td (3000) Tj ET
+BT /F1 7.5 Tf 548.32 148.6 Td (2250) Tj ET
+BT /F1 7.5 Tf 682.83 148.6 Td (3) Tj ET
+0.3 w 36 145 m 128 145 l S
+0.3 w 128 145 m 318 145 l S
+0.3 w 352 145 m 392 145 l S
+0.3 w 392 145 m 438 145 l S
+0.3 w 438 145 m 484 145 l S
+0.3 w 484 145 m 526 145 l S
+0.3 w 526 145 m 568 145 l S
+0.3 w 568 145 m 610 145 l S
+0.3 w 610 145 m 652 145 l S
+0.3 w 652 145 m 690 145 l S
+BT /F1 7.5 Tf 39 135.6 Td (BWTS-UVR1-AT01) Tj ET
+BT /F1 7.5 Tf 131 135.6 Td (Residual oxidant) Tj ET
+BT /F1 7.5 Tf 355 135.6 Td (ppm) Tj ET
+BT /F1 7.5 Tf 430.83 135.6 Td (0) Tj ET
+BT /F1 7.5 Tf 472.66 135.6 Td (10) Tj ET
+BT /F1 7.5 Tf 560.83 135.6 Td (8) Tj ET
+BT /F1 7.5 Tf 682.83 135.6 Td (0) Tj ET
+0.3 w 36 132 m 128 132 l S
+0.3 w 128 132 m 318 132 l S
+0.3 w 352 132 m 392 132 l S
+0.3 w 392 132 m 438 132 l S
+0.3 w 438 132 m 484 132 l S
+0.3 w 484 132 m 526 132 l S
+0.3 w 526 132 m 568 132 l S
+0.3 w 568 132 m 610 132 l S
+0.3 w 610 132 m 652 132 l S
+0.3 w 652 132 m 690 132 l S
+BT /F1 7.5 Tf 39 122.6 Td (BWTS-FLT1-PT01) Tj ET
+BT /F1 7.5 Tf 131 122.6 Td (Filter differential pressure 1) Tj ET
+BT /F1 7.5 Tf 355 122.6 Td (bar) Tj ET
+BT /F1 7.5 Tf 430.83 122.6 Td (0) Tj ET
+BT /F1 7.5 Tf 476.83 122.6 Td (2) Tj ET
+BT /F1 7.5 Tf 508.41 122.6 Td (1.92) Tj ET
+BT /F1 7.5 Tf 554.58 122.6 Td (1.5) Tj ET
+BT /F1 7.5 Tf 678.66 122.6 Td (15) Tj ET
+0.3 w 36 119 m 128 119 l S
+0.3 w 128 119 m 318 119 l S
+0.3 w 318 119 m 352 119 l S
+0.3 w 352 119 m 392 119 l S
+0.3 w 392 119 m 438 119 l S
+0.3 w 438 119 m 484 119 l S
+0.3 w 484 119 m 526 119 l S
+0.3 w 526 119 m 568 119 l S
+0.3 w 568 119 m 610 119 l S
+0.3 w 610 119 m 652 119 l S
+0.3 w 652 119 m 690 119 l S
+0.3 w 36 509 m 36 119 l S
+0.3 w 128 509 m 128 119 l S
+0.3 w 318 509 m 318 119 l S
+0.3 w 352 509 m 352 119 l S
+0.3 w 392 509 m 392 119 l S
+0.3 w 438 509 m 438 119 l S
+0.3 w 484 509 m 484 119 l S
+0.3 w 526 509 m 526 119 l S
+0.3 w 568 509 m 568 119 l S
+0.3 w 610 509 m 610 119 l S
+0.3 w 652 509 m 652 119 l S
+0.3 w 690 509 m 690 119 l S
+0.6 w 36 522 m 690 522 l S
+BT /F1 7 Tf 36 24 Td (MV Example - I/O list IO-001 Rev B) Tj ET
+BT /F1 7 Tf 654.2 24 Td (Page 3 of 4) Tj ET
+
+endstream
+endobj
+10 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 842 595] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 9 0 R >>
+endobj
+11 0 obj
+<< /Length 18133 >>
+stream
+BT /F2 12 Tf 36 563 Td (I/O LIST - ENGINE ROOM) Tj ET
+BT /F1 8 Tf 36 549 Td (Document IO-002 Rev A - continued \(this page has no header of its own\)) Tj ET
+BT /F1 7.5 Tf 39 525.6 Td (BWTS-FLT1-PT02) Tj ET
+BT /F1 7.5 Tf 131 525.6 Td (Filter differential pressure 2) Tj ET
+BT /F1 7.5 Tf 321 525.6 Td (AI) Tj ET
+BT /F1 7.5 Tf 355 525.6 Td (bar) Tj ET
+BT /F1 7.5 Tf 430.83 525.6 Td (0) Tj ET
+BT /F1 7.5 Tf 476.83 525.6 Td (2) Tj ET
+BT /F1 7.5 Tf 508.41 525.6 Td (1.84) Tj ET
+BT /F1 7.5 Tf 554.58 525.6 Td (1.6) Tj ET
+BT /F1 7.5 Tf 682.83 525.6 Td (5) Tj ET
+0.3 w 36 522 m 128 522 l S
+0.3 w 128 522 m 318 522 l S
+0.3 w 392 522 m 438 522 l S
+0.3 w 438 522 m 484 522 l S
+0.3 w 484 522 m 526 522 l S
+0.3 w 526 522 m 568 522 l S
+0.3 w 568 522 m 610 522 l S
+0.3 w 610 522 m 652 522 l S
+0.3 w 652 522 m 690 522 l S
+BT /F1 7.5 Tf 39 512.6 Td (BWTS-FLT1-PT03) Tj ET
+BT /F1 7.5 Tf 131 512.6 Td (Filter differential pressure 3) Tj ET
+BT /F1 7.5 Tf 430.83 512.6 Td (0) Tj ET
+BT /F1 7.5 Tf 476.83 512.6 Td (2) Tj ET
+BT /F1 7.5 Tf 508.41 512.6 Td (1.84) Tj ET
+BT /F1 7.5 Tf 554.58 512.6 Td (1.7) Tj ET
+BT /F1 7.5 Tf 682.83 512.6 Td (2) Tj ET
+0.3 w 36 509 m 128 509 l S
+0.3 w 128 509 m 318 509 l S
+0.3 w 318 509 m 352 509 l S
+0.3 w 352 509 m 392 509 l S
+0.3 w 392 509 m 438 509 l S
+0.3 w 438 509 m 484 509 l S
+0.3 w 484 509 m 526 509 l S
+0.3 w 526 509 m 568 509 l S
+0.3 w 568 509 m 610 509 l S
+0.3 w 610 509 m 652 509 l S
+0.3 w 652 509 m 690 509 l S
+BT /F1 7.5 Tf 39 499.6 Td (BWTS-FLT1-XS01) Tj ET
+BT /F1 7.5 Tf 131 499.6 Td (Filter 1 backflush active) Tj ET
+BT /F1 7.5 Tf 321 499.6 Td (DI) Tj ET
+0.3 w 36 496 m 128 496 l S
+0.3 w 128 496 m 318 496 l S
+0.3 w 352 496 m 392 496 l S
+0.3 w 392 496 m 438 496 l S
+0.3 w 438 496 m 484 496 l S
+0.3 w 484 496 m 526 496 l S
+0.3 w 526 496 m 568 496 l S
+0.3 w 568 496 m 610 496 l S
+0.3 w 610 496 m 652 496 l S
+0.3 w 652 496 m 690 496 l S
+BT /F1 7.5 Tf 39 486.6 Td (BWTS-FLT1-XS02) Tj ET
+BT /F1 7.5 Tf 131 486.6 Td (Filter 2 backflush active) Tj ET
+0.3 w 36 483 m 128 483 l S
+0.3 w 128 483 m 318 483 l S
+0.3 w 352 483 m 392 483 l S
+0.3 w 392 483 m 438 483 l S
+0.3 w 438 483 m 484 483 l S
+0.3 w 484 483 m 526 483 l S
+0.3 w 526 483 m 568 483 l S
+0.3 w 568 483 m 610 483 l S
+0.3 w 610 483 m 652 483 l S
+0.3 w 652 483 m 690 483 l S
+BT /F1 7.5 Tf 39 473.6 Td (BWTS-FLT1-XS03) Tj ET
+BT /F1 7.5 Tf 131 473.6 Td (Filter 3 backflush active) Tj ET
+0.3 w 36 470 m 128 470 l S
+0.3 w 128 470 m 318 470 l S
+0.3 w 318 470 m 352 470 l S
+0.3 w 352 470 m 392 470 l S
+0.3 w 392 470 m 438 470 l S
+0.3 w 438 470 m 484 470 l S
+0.3 w 484 470 m 526 470 l S
+0.3 w 526 470 m 568 470 l S
+0.3 w 568 470 m 610 470 l S
+0.3 w 610 470 m 652 470 l S
+0.3 w 652 470 m 690 470 l S
+BT /F1 7.5 Tf 39 460.6 Td (BWTS-FLT1-ZT01) Tj ET
+BT /F1 7.5 Tf 131 460.6 Td (Filter inlet valve 1 position) Tj ET
+BT /F1 7.5 Tf 321 460.6 Td (AI) Tj ET
+BT /F1 7.5 Tf 355 460.6 Td (%) Tj ET
+BT /F1 7.5 Tf 430.83 460.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 460.6 Td (100) Tj ET
+0.3 w 36 457 m 128 457 l S
+0.3 w 128 457 m 318 457 l S
+0.3 w 392 457 m 438 457 l S
+0.3 w 438 457 m 484 457 l S
+0.3 w 484 457 m 526 457 l S
+0.3 w 526 457 m 568 457 l S
+0.3 w 568 457 m 610 457 l S
+0.3 w 610 457 m 652 457 l S
+0.3 w 652 457 m 690 457 l S
+BT /F1 7.5 Tf 39 447.6 Td (BWTS-FLT1-ZT02) Tj ET
+BT /F1 7.5 Tf 131 447.6 Td (Filter inlet valve 2 position) Tj ET
+BT /F1 7.5 Tf 430.83 447.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 447.6 Td (100) Tj ET
+0.3 w 36 444 m 128 444 l S
+0.3 w 128 444 m 318 444 l S
+0.3 w 392 444 m 438 444 l S
+0.3 w 438 444 m 484 444 l S
+0.3 w 484 444 m 526 444 l S
+0.3 w 526 444 m 568 444 l S
+0.3 w 568 444 m 610 444 l S
+0.3 w 610 444 m 652 444 l S
+0.3 w 652 444 m 690 444 l S
+BT /F1 7.5 Tf 39 434.6 Td (TANK-TK21-LT01) Tj ET
+BT /F1 7.5 Tf 131 434.6 Td (Cargo oil tank 21 level 1) Tj ET
+BT /F1 7.5 Tf 430.83 434.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 434.6 Td (100) Tj ET
+BT /F1 7.5 Tf 514.66 434.6 Td (88) Tj ET
+BT /F1 7.5 Tf 556.66 434.6 Td (80) Tj ET
+BT /F1 7.5 Tf 598.66 434.6 Td (20) Tj ET
+BT /F1 7.5 Tf 644.83 434.6 Td (5) Tj ET
+BT /F1 7.5 Tf 678.66 434.6 Td (30) Tj ET
+0.3 w 36 431 m 128 431 l S
+0.3 w 128 431 m 318 431 l S
+0.3 w 392 431 m 438 431 l S
+0.3 w 438 431 m 484 431 l S
+0.3 w 484 431 m 526 431 l S
+0.3 w 526 431 m 568 431 l S
+0.3 w 568 431 m 610 431 l S
+0.3 w 610 431 m 652 431 l S
+0.3 w 652 431 m 690 431 l S
+BT /F1 7.5 Tf 39 421.6 Td (TANK-TK21-LT02) Tj ET
+BT /F1 7.5 Tf 131 421.6 Td (Cargo oil tank 21 level 2) Tj ET
+BT /F1 7.5 Tf 430.83 421.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 421.6 Td (100) Tj ET
+BT /F1 7.5 Tf 514.66 421.6 Td (92) Tj ET
+BT /F1 7.5 Tf 556.66 421.6 Td (75) Tj ET
+BT /F1 7.5 Tf 598.66 421.6 Td (15) Tj ET
+BT /F1 7.5 Tf 644.83 421.6 Td (8) Tj ET
+BT /F1 7.5 Tf 682.83 421.6 Td (5) Tj ET
+0.3 w 36 418 m 128 418 l S
+0.3 w 128 418 m 318 418 l S
+0.3 w 392 418 m 438 418 l S
+0.3 w 438 418 m 484 418 l S
+0.3 w 484 418 m 526 418 l S
+0.3 w 526 418 m 568 418 l S
+0.3 w 568 418 m 610 418 l S
+0.3 w 610 418 m 652 418 l S
+0.3 w 652 418 m 690 418 l S
+BT /F1 7.5 Tf 39 408.6 Td (TANK-TK21-LT03) Tj ET
+BT /F1 7.5 Tf 131 408.6 Td (Cargo oil tank 21 level 3) Tj ET
+BT /F1 7.5 Tf 430.83 408.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 408.6 Td (100) Tj ET
+BT /F1 7.5 Tf 514.66 408.6 Td (96) Tj ET
+BT /F1 7.5 Tf 556.66 408.6 Td (80) Tj ET
+BT /F1 7.5 Tf 598.66 408.6 Td (20) Tj ET
+BT /F1 7.5 Tf 644.83 408.6 Td (5) Tj ET
+BT /F1 7.5 Tf 682.83 408.6 Td (3) Tj ET
+0.3 w 36 405 m 128 405 l S
+0.3 w 128 405 m 318 405 l S
+0.3 w 352 405 m 392 405 l S
+0.3 w 392 405 m 438 405 l S
+0.3 w 438 405 m 484 405 l S
+0.3 w 484 405 m 526 405 l S
+0.3 w 526 405 m 568 405 l S
+0.3 w 568 405 m 610 405 l S
+0.3 w 610 405 m 652 405 l S
+0.3 w 652 405 m 690 405 l S
+BT /F1 7.5 Tf 39 395.6 Td (TANK-TK21-TT01) Tj ET
+BT /F1 7.5 Tf 131 395.6 Td (Cargo oil tank 21 temperature 1) Tj ET
+BT /F1 7.5 Tf 355 395.6 Td (∞C) Tj ET
+BT /F1 7.5 Tf 430.83 395.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 395.6 Td (100) Tj ET
+BT /F1 7.5 Tf 556.66 395.6 Td (80) Tj ET
+BT /F1 7.5 Tf 682.83 395.6 Td (0) Tj ET
+0.3 w 36 392 m 128 392 l S
+0.3 w 128 392 m 318 392 l S
+0.3 w 392 392 m 438 392 l S
+0.3 w 438 392 m 484 392 l S
+0.3 w 484 392 m 526 392 l S
+0.3 w 526 392 m 568 392 l S
+0.3 w 568 392 m 610 392 l S
+0.3 w 610 392 m 652 392 l S
+0.3 w 652 392 m 690 392 l S
+BT /F1 7.5 Tf 39 382.6 Td (TANK-TK21-TT02) Tj ET
+BT /F1 7.5 Tf 131 382.6 Td (Cargo oil tank 21 temperature 2) Tj ET
+BT /F1 7.5 Tf 430.83 382.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 382.6 Td (100) Tj ET
+BT /F1 7.5 Tf 556.66 382.6 Td (85) Tj ET
+BT /F1 7.5 Tf 678.66 382.6 Td (30) Tj ET
+0.3 w 36 379 m 128 379 l S
+0.3 w 128 379 m 318 379 l S
+0.3 w 352 379 m 392 379 l S
+0.3 w 392 379 m 438 379 l S
+0.3 w 438 379 m 484 379 l S
+0.3 w 484 379 m 526 379 l S
+0.3 w 526 379 m 568 379 l S
+0.3 w 568 379 m 610 379 l S
+0.3 w 610 379 m 652 379 l S
+0.3 w 652 379 m 690 379 l S
+BT /F1 7.5 Tf 39 369.6 Td (TANK-TK21-PT01) Tj ET
+BT /F1 7.5 Tf 131 369.6 Td (Cargo oil tank 21 vapour pressure) Tj ET
+BT /F1 7.5 Tf 355 369.6 Td (mbar) Tj ET
+BT /F1 7.5 Tf 424.16 369.6 Td (-50) Tj ET
+BT /F1 7.5 Tf 468.49 369.6 Td (150) Tj ET
+BT /F1 7.5 Tf 552.49 369.6 Td (110) Tj ET
+BT /F1 7.5 Tf 596.16 369.6 Td (-10) Tj ET
+BT /F1 7.5 Tf 678.66 369.6 Td (10) Tj ET
+0.3 w 36 366 m 128 366 l S
+0.3 w 128 366 m 318 366 l S
+0.3 w 352 366 m 392 366 l S
+0.3 w 392 366 m 438 366 l S
+0.3 w 438 366 m 484 366 l S
+0.3 w 484 366 m 526 366 l S
+0.3 w 526 366 m 568 366 l S
+0.3 w 568 366 m 610 366 l S
+0.3 w 610 366 m 652 366 l S
+0.3 w 652 366 m 690 366 l S
+BT /F1 7.5 Tf 39 356.6 Td (TANK-TK22-LT01) Tj ET
+BT /F1 7.5 Tf 131 356.6 Td (Slop tank 22 level 1) Tj ET
+BT /F1 7.5 Tf 355 356.6 Td (%) Tj ET
+BT /F1 7.5 Tf 430.83 356.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 356.6 Td (100) Tj ET
+BT /F1 7.5 Tf 514.66 356.6 Td (96) Tj ET
+BT /F1 7.5 Tf 556.66 356.6 Td (80) Tj ET
+BT /F1 7.5 Tf 598.66 356.6 Td (25) Tj ET
+BT /F1 7.5 Tf 644.83 356.6 Td (8) Tj ET
+BT /F1 7.5 Tf 678.66 356.6 Td (30) Tj ET
+0.3 w 36 353 m 128 353 l S
+0.3 w 128 353 m 318 353 l S
+0.3 w 392 353 m 438 353 l S
+0.3 w 438 353 m 484 353 l S
+0.3 w 484 353 m 526 353 l S
+0.3 w 526 353 m 568 353 l S
+0.3 w 568 353 m 610 353 l S
+0.3 w 610 353 m 652 353 l S
+0.3 w 652 353 m 690 353 l S
+BT /F1 7.5 Tf 39 343.6 Td (TANK-TK22-LT02) Tj ET
+BT /F1 7.5 Tf 131 343.6 Td (Slop tank 22 level 2) Tj ET
+BT /F1 7.5 Tf 430.83 343.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 343.6 Td (100) Tj ET
+BT /F1 7.5 Tf 514.66 343.6 Td (88) Tj ET
+BT /F1 7.5 Tf 556.66 343.6 Td (85) Tj ET
+BT /F1 7.5 Tf 598.66 343.6 Td (15) Tj ET
+BT /F1 7.5 Tf 644.83 343.6 Td (8) Tj ET
+BT /F1 7.5 Tf 682.83 343.6 Td (5) Tj ET
+0.3 w 36 340 m 128 340 l S
+0.3 w 128 340 m 318 340 l S
+0.3 w 392 340 m 438 340 l S
+0.3 w 438 340 m 484 340 l S
+0.3 w 484 340 m 526 340 l S
+0.3 w 526 340 m 568 340 l S
+0.3 w 568 340 m 610 340 l S
+0.3 w 610 340 m 652 340 l S
+0.3 w 652 340 m 690 340 l S
+BT /F1 7.5 Tf 39 330.6 Td (TANK-TK22-LT03) Tj ET
+BT /F1 7.5 Tf 131 330.6 Td (Slop tank 22 level 3) Tj ET
+BT /F1 7.5 Tf 430.83 330.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 330.6 Td (100) Tj ET
+BT /F1 7.5 Tf 514.66 330.6 Td (92) Tj ET
+BT /F1 7.5 Tf 556.66 330.6 Td (80) Tj ET
+BT /F1 7.5 Tf 598.66 330.6 Td (20) Tj ET
+BT /F1 7.5 Tf 644.83 330.6 Td (5) Tj ET
+BT /F1 7.5 Tf 678.66 330.6 Td (10) Tj ET
+0.3 w 36 327 m 128 327 l S
+0.3 w 128 327 m 318 327 l S
+0.3 w 352 327 m 392 327 l S
+0.3 w 392 327 m 438 327 l S
+0.3 w 438 327 m 484 327 l S
+0.3 w 484 327 m 526 327 l S
+0.3 w 526 327 m 568 327 l S
+0.3 w 568 327 m 610 327 l S
+0.3 w 610 327 m 652 327 l S
+0.3 w 652 327 m 690 327 l S
+BT /F1 7.5 Tf 39 317.6 Td (TANK-TK22-TT01) Tj ET
+BT /F1 7.5 Tf 131 317.6 Td (Slop tank 22 temperature 1) Tj ET
+BT /F1 7.5 Tf 355 317.6 Td (∞C) Tj ET
+BT /F1 7.5 Tf 430.83 317.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 317.6 Td (100) Tj ET
+BT /F1 7.5 Tf 556.66 317.6 Td (75) Tj ET
+BT /F1 7.5 Tf 678.66 317.6 Td (10) Tj ET
+0.3 w 36 314 m 128 314 l S
+0.3 w 128 314 m 318 314 l S
+0.3 w 392 314 m 438 314 l S
+0.3 w 438 314 m 484 314 l S
+0.3 w 484 314 m 526 314 l S
+0.3 w 526 314 m 568 314 l S
+0.3 w 568 314 m 610 314 l S
+0.3 w 610 314 m 652 314 l S
+0.3 w 652 314 m 690 314 l S
+BT /F1 7.5 Tf 39 304.6 Td (TANK-TK22-TT02) Tj ET
+BT /F1 7.5 Tf 131 304.6 Td (Slop tank 22 temperature 2) Tj ET
+BT /F1 7.5 Tf 430.83 304.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 304.6 Td (100) Tj ET
+BT /F1 7.5 Tf 556.66 304.6 Td (80) Tj ET
+BT /F1 7.5 Tf 678.66 304.6 Td (30) Tj ET
+0.3 w 36 301 m 128 301 l S
+0.3 w 128 301 m 318 301 l S
+0.3 w 352 301 m 392 301 l S
+0.3 w 392 301 m 438 301 l S
+0.3 w 438 301 m 484 301 l S
+0.3 w 484 301 m 526 301 l S
+0.3 w 526 301 m 568 301 l S
+0.3 w 568 301 m 610 301 l S
+0.3 w 610 301 m 652 301 l S
+0.3 w 652 301 m 690 301 l S
+BT /F1 7.5 Tf 39 291.6 Td (TANK-TK22-PT01) Tj ET
+BT /F1 7.5 Tf 131 291.6 Td (Slop tank 22 vapour pressure) Tj ET
+BT /F1 7.5 Tf 355 291.6 Td (mbar) Tj ET
+BT /F1 7.5 Tf 424.16 291.6 Td (-50) Tj ET
+BT /F1 7.5 Tf 468.49 291.6 Td (150) Tj ET
+BT /F1 7.5 Tf 552.49 291.6 Td (110) Tj ET
+BT /F1 7.5 Tf 596.16 291.6 Td (-20) Tj ET
+BT /F1 7.5 Tf 682.83 291.6 Td (0) Tj ET
+0.3 w 36 288 m 128 288 l S
+0.3 w 128 288 m 318 288 l S
+0.3 w 352 288 m 392 288 l S
+0.3 w 392 288 m 438 288 l S
+0.3 w 438 288 m 484 288 l S
+0.3 w 484 288 m 526 288 l S
+0.3 w 526 288 m 568 288 l S
+0.3 w 568 288 m 610 288 l S
+0.3 w 610 288 m 652 288 l S
+0.3 w 652 288 m 690 288 l S
+BT /F1 7.5 Tf 39 278.6 Td (TANK-TK23-LT01) Tj ET
+BT /F1 7.5 Tf 131 278.6 Td (Fresh water tank 23 level 1) Tj ET
+BT /F1 7.5 Tf 355 278.6 Td (%) Tj ET
+BT /F1 7.5 Tf 430.83 278.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 278.6 Td (100) Tj ET
+BT /F1 7.5 Tf 556.66 278.6 Td (75) Tj ET
+BT /F1 7.5 Tf 598.66 278.6 Td (20) Tj ET
+BT /F1 7.5 Tf 644.83 278.6 Td (5) Tj ET
+BT /F1 7.5 Tf 682.83 278.6 Td (5) Tj ET
+0.3 w 36 275 m 128 275 l S
+0.3 w 128 275 m 318 275 l S
+0.3 w 392 275 m 438 275 l S
+0.3 w 438 275 m 484 275 l S
+0.3 w 484 275 m 526 275 l S
+0.3 w 526 275 m 568 275 l S
+0.3 w 568 275 m 610 275 l S
+0.3 w 610 275 m 652 275 l S
+0.3 w 652 275 m 690 275 l S
+BT /F1 7.5 Tf 39 265.6 Td (TANK-TK23-LT02) Tj ET
+BT /F1 7.5 Tf 131 265.6 Td (Fresh water tank 23 level 2) Tj ET
+BT /F1 7.5 Tf 430.83 265.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 265.6 Td (100) Tj ET
+BT /F1 7.5 Tf 556.66 265.6 Td (80) Tj ET
+BT /F1 7.5 Tf 598.66 265.6 Td (15) Tj ET
+BT /F1 7.5 Tf 644.83 265.6 Td (5) Tj ET
+BT /F1 7.5 Tf 678.66 265.6 Td (30) Tj ET
+0.3 w 36 262 m 128 262 l S
+0.3 w 128 262 m 318 262 l S
+0.3 w 392 262 m 438 262 l S
+0.3 w 438 262 m 484 262 l S
+0.3 w 484 262 m 526 262 l S
+0.3 w 526 262 m 568 262 l S
+0.3 w 568 262 m 610 262 l S
+0.3 w 610 262 m 652 262 l S
+0.3 w 652 262 m 690 262 l S
+BT /F1 7.5 Tf 39 252.6 Td (TANK-TK23-LT03) Tj ET
+BT /F1 7.5 Tf 131 252.6 Td (Fresh water tank 23 level 3) Tj ET
+BT /F1 7.5 Tf 430.83 252.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 252.6 Td (100) Tj ET
+BT /F1 7.5 Tf 556.66 252.6 Td (85) Tj ET
+BT /F1 7.5 Tf 598.66 252.6 Td (15) Tj ET
+BT /F1 7.5 Tf 644.83 252.6 Td (5) Tj ET
+BT /F1 7.5 Tf 682.83 252.6 Td (5) Tj ET
+0.3 w 36 249 m 128 249 l S
+0.3 w 128 249 m 318 249 l S
+0.3 w 392 249 m 438 249 l S
+0.3 w 438 249 m 484 249 l S
+0.3 w 484 249 m 526 249 l S
+0.3 w 526 249 m 568 249 l S
+0.3 w 568 249 m 610 249 l S
+0.3 w 610 249 m 652 249 l S
+0.3 w 652 249 m 690 249 l S
+BT /F1 7.5 Tf 39 239.6 Td (TANK-TK23-LT04) Tj ET
+BT /F1 7.5 Tf 131 239.6 Td (Fresh water tank 23 level 4) Tj ET
+BT /F1 7.5 Tf 430.83 239.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 239.6 Td (100) Tj ET
+BT /F1 7.5 Tf 556.66 239.6 Td (80) Tj ET
+BT /F1 7.5 Tf 598.66 239.6 Td (15) Tj ET
+BT /F1 7.5 Tf 644.83 239.6 Td (5) Tj ET
+BT /F1 7.5 Tf 678.66 239.6 Td (30) Tj ET
+0.3 w 36 236 m 128 236 l S
+0.3 w 128 236 m 318 236 l S
+0.3 w 352 236 m 392 236 l S
+0.3 w 392 236 m 438 236 l S
+0.3 w 438 236 m 484 236 l S
+0.3 w 484 236 m 526 236 l S
+0.3 w 526 236 m 568 236 l S
+0.3 w 568 236 m 610 236 l S
+0.3 w 610 236 m 652 236 l S
+0.3 w 652 236 m 690 236 l S
+BT /F1 7.5 Tf 39 226.6 Td (TANK-TK23-TT01) Tj ET
+BT /F1 7.5 Tf 131 226.6 Td (Fresh water tank 23 temperature) Tj ET
+BT /F1 7.5 Tf 355 226.6 Td (∞C) Tj ET
+BT /F1 7.5 Tf 430.83 226.6 Td (0) Tj ET
+BT /F1 7.5 Tf 472.66 226.6 Td (60) Tj ET
+BT /F1 7.5 Tf 556.66 226.6 Td (51) Tj ET
+BT /F1 7.5 Tf 678.66 226.6 Td (10) Tj ET
+0.3 w 36 223 m 128 223 l S
+0.3 w 128 223 m 318 223 l S
+0.3 w 352 223 m 392 223 l S
+0.3 w 392 223 m 438 223 l S
+0.3 w 438 223 m 484 223 l S
+0.3 w 484 223 m 526 223 l S
+0.3 w 526 223 m 568 223 l S
+0.3 w 568 223 m 610 223 l S
+0.3 w 610 223 m 652 223 l S
+0.3 w 652 223 m 690 223 l S
+BT /F1 7.5 Tf 39 213.6 Td (TANK-OWS1-AT01) Tj ET
+BT /F1 7.5 Tf 131 213.6 Td (Oil content monitor 1) Tj ET
+BT /F1 7.5 Tf 355 213.6 Td (ppm) Tj ET
+BT /F1 7.5 Tf 430.83 213.6 Td (0) Tj ET
+BT /F1 7.5 Tf 472.66 213.6 Td (30) Tj ET
+BT /F1 7.5 Tf 550.41 213.6 Td (22.5) Tj ET
+BT /F1 7.5 Tf 682.83 213.6 Td (3) Tj ET
+0.3 w 36 210 m 128 210 l S
+0.3 w 128 210 m 318 210 l S
+0.3 w 392 210 m 438 210 l S
+0.3 w 438 210 m 484 210 l S
+0.3 w 484 210 m 526 210 l S
+0.3 w 526 210 m 568 210 l S
+0.3 w 568 210 m 610 210 l S
+0.3 w 610 210 m 652 210 l S
+0.3 w 652 210 m 690 210 l S
+BT /F1 7.5 Tf 39 200.6 Td (TANK-OWS1-AT02) Tj ET
+BT /F1 7.5 Tf 131 200.6 Td (Oil content monitor 2) Tj ET
+BT /F1 7.5 Tf 430.83 200.6 Td (0) Tj ET
+BT /F1 7.5 Tf 472.66 200.6 Td (30) Tj ET
+BT /F1 7.5 Tf 556.66 200.6 Td (24) Tj ET
+BT /F1 7.5 Tf 682.83 200.6 Td (5) Tj ET
+0.3 w 36 197 m 128 197 l S
+0.3 w 128 197 m 318 197 l S
+0.3 w 352 197 m 392 197 l S
+0.3 w 392 197 m 438 197 l S
+0.3 w 438 197 m 484 197 l S
+0.3 w 484 197 m 526 197 l S
+0.3 w 526 197 m 568 197 l S
+0.3 w 568 197 m 610 197 l S
+0.3 w 610 197 m 652 197 l S
+0.3 w 652 197 m 690 197 l S
+BT /F1 7.5 Tf 39 187.6 Td (TANK-OWS1-LT01) Tj ET
+BT /F1 7.5 Tf 131 187.6 Td (Bilge holding tank level 1) Tj ET
+BT /F1 7.5 Tf 355 187.6 Td (%) Tj ET
+BT /F1 7.5 Tf 430.83 187.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 187.6 Td (100) Tj ET
+BT /F1 7.5 Tf 514.66 187.6 Td (92) Tj ET
+BT /F1 7.5 Tf 556.66 187.6 Td (80) Tj ET
+BT /F1 7.5 Tf 598.66 187.6 Td (25) Tj ET
+BT /F1 7.5 Tf 678.66 187.6 Td (10) Tj ET
+0.3 w 36 184 m 128 184 l S
+0.3 w 128 184 m 318 184 l S
+0.3 w 392 184 m 438 184 l S
+0.3 w 438 184 m 484 184 l S
+0.3 w 484 184 m 526 184 l S
+0.3 w 526 184 m 568 184 l S
+0.3 w 568 184 m 610 184 l S
+0.3 w 610 184 m 652 184 l S
+0.3 w 652 184 m 690 184 l S
+BT /F1 7.5 Tf 39 174.6 Td (TANK-OWS1-LT02) Tj ET
+BT /F1 7.5 Tf 131 174.6 Td (Bilge holding tank level 2) Tj ET
+BT /F1 7.5 Tf 430.83 174.6 Td (0) Tj ET
+BT /F1 7.5 Tf 468.49 174.6 Td (100) Tj ET
+BT /F1 7.5 Tf 514.66 174.6 Td (92) Tj ET
+BT /F1 7.5 Tf 556.66 174.6 Td (85) Tj ET
+BT /F1 7.5 Tf 598.66 174.6 Td (15) Tj ET
+BT /F1 7.5 Tf 678.66 174.6 Td (10) Tj ET
+0.3 w 36 171 m 128 171 l S
+0.3 w 128 171 m 318 171 l S
+0.3 w 352 171 m 392 171 l S
+0.3 w 392 171 m 438 171 l S
+0.3 w 438 171 m 484 171 l S
+0.3 w 484 171 m 526 171 l S
+0.3 w 526 171 m 568 171 l S
+0.3 w 568 171 m 610 171 l S
+0.3 w 610 171 m 652 171 l S
+0.3 w 652 171 m 690 171 l S
+BT /F1 7.5 Tf 39 161.6 Td (TANK-OWS1-FT01) Tj ET
+BT /F1 7.5 Tf 131 161.6 Td (Separator discharge flow) Tj ET
+BT /F1 7.5 Tf 355 161.6 Td (m3/h) Tj ET
+BT /F1 7.5 Tf 430.83 161.6 Td (0) Tj ET
+BT /F1 7.5 Tf 476.83 161.6 Td (5) Tj ET
+BT /F1 7.5 Tf 560.83 161.6 Td (4) Tj ET
+BT /F1 7.5 Tf 682.83 161.6 Td (5) Tj ET
+0.3 w 36 158 m 128 158 l S
+0.3 w 128 158 m 318 158 l S
+0.3 w 318 158 m 352 158 l S
+0.3 w 352 158 m 392 158 l S
+0.3 w 392 158 m 438 158 l S
+0.3 w 438 158 m 484 158 l S
+0.3 w 484 158 m 526 158 l S
+0.3 w 526 158 m 568 158 l S
+0.3 w 568 158 m 610 158 l S
+0.3 w 610 158 m 652 158 l S
+0.3 w 652 158 m 690 158 l S
+BT /F1 7.5 Tf 39 148.6 Td (TANK-OWS1-XA01) Tj ET
+BT /F1 7.5 Tf 131 148.6 Td (Separator alarm 1) Tj ET
+BT /F1 7.5 Tf 321 148.6 Td (DI) Tj ET
+0.3 w 36 145 m 128 145 l S
+0.3 w 128 145 m 318 145 l S
+0.3 w 318 145 m 352 145 l S
+0.3 w 352 145 m 392 145 l S
+0.3 w 392 145 m 438 145 l S
+0.3 w 438 145 m 484 145 l S
+0.3 w 484 145 m 526 145 l S
+0.3 w 526 145 m 568 145 l S
+0.3 w 568 145 m 610 145 l S
+0.3 w 610 145 m 652 145 l S
+0.3 w 652 145 m 690 145 l S
+0.3 w 36 535 m 36 145 l S
+0.3 w 128 535 m 128 145 l S
+0.3 w 318 535 m 318 145 l S
+0.3 w 352 535 m 352 145 l S
+0.3 w 392 535 m 392 145 l S
+0.3 w 438 535 m 438 145 l S
+0.3 w 484 535 m 484 145 l S
+0.3 w 526 535 m 526 145 l S
+0.3 w 568 535 m 568 145 l S
+0.3 w 610 535 m 610 145 l S
+0.3 w 652 535 m 652 145 l S
+0.3 w 690 535 m 690 145 l S
+0.6 w 36 535 m 690 535 l S
+BT /F1 7 Tf 36 24 Td (MV Example - I/O list IO-001 Rev B) Tj ET
+BT /F1 7 Tf 654.2 24 Td (Page 4 of 4) Tj ET
+
+endstream
+endobj
+12 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 842 595] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 11 0 R >>
+endobj
+xref
+0 13
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000141 00000 n 
+0000000238 00000 n 
+0000000340 00000 n 
+0000019019 00000 n 
+0000019155 00000 n 
+0000038143 00000 n 
+0000038279 00000 n 
+0000056998 00000 n 
+0000057135 00000 n 
+0000075322 00000 n 
+trailer
+<< /Size 13 /Root 1 0 R >>
+startxref
+75460
+%%EOF

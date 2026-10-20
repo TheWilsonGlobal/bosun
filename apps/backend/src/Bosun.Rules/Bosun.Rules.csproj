@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Deterministic validation rules: pure C#, depends on Bosun.Domain only. -->
+  <ItemGroup>
+    <ProjectReference Include="..\Bosun.Domain\Bosun.Domain.csproj" />
+  </ItemGroup>
+</Project>

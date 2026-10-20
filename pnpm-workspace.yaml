@@ -1,0 +1,4 @@
+# JS apps only; the .NET backend (apps/backend) is driven through Bosun.sln and the root scripts.
+packages:
+  - apps/frontend
+  - apps/admin

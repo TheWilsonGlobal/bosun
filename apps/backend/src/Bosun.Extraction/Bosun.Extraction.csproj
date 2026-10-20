@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\Bosun.Application\Bosun.Application.csproj" />
+    <ProjectReference Include="..\Bosun.Agent\Bosun.Agent.csproj" />
+    <PackageReference Include="PdfPig" />
+    <PackageReference Include="PDFtoImage" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <!-- Prompts are files in the repo, compiled into the assembly so they ship with it and hash identically everywhere. -->
+    <EmbeddedResource Include="prompts\**\*.md" LogicalName="prompts/%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+</Project>

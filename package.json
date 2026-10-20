@@ -1,0 +1,35 @@
+{
+  "name": "bosun",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Bosun - AI-assisted ship automation configurator (sample project)",
+  "packageManager": "pnpm@12.14.0",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "dev:backend": "node scripts/dotnet.mjs run --project apps/backend/src/Bosun.Api",
+    "test": "node scripts/dotnet.mjs test Bosun.sln && pnpm -r --if-present test",
+    "test:backend": "node scripts/dotnet.mjs test Bosun.sln",
+    "test:live": "node scripts/dotnet.mjs test apps/backend/tests/Bosun.Api.IntegrationTests -p:IncludeLive=true --filter Category=Live --logger \"console;verbosity=detailed\"",
+    "evals": "node scripts/dotnet.mjs run --project apps/backend/src/Bosun.Evals --",
+    "fixtures:generate": "node scripts/dotnet.mjs run --project apps/backend/src/Bosun.Evals -- --generate-fixtures",
+    "llm:usage": "node scripts/dotnet.mjs run --project apps/backend/src/Bosun.Api -- --llm-usage",
+    "test:coverage": "node scripts/dotnet.mjs test apps/backend/tests/Bosun.Rules.Tests -p:CollectCoverage=true \"-p:Include=[Bosun.Rules]*\" -p:Threshold=100 -p:ThresholdType=branch -p:ThresholdStat=total -p:CoverletOutputFormat=cobertura -p:CoverletOutput=../../../../data/coverage/rules.cobertura.xml",
+    "lint": "eslint . && pnpm -r --if-present lint",
+    "format": "prettier --write . && node scripts/dotnet.mjs format Bosun.sln && pnpm -r --if-present format",
+    "format:check": "prettier --check . && node scripts/dotnet.mjs format Bosun.sln --verify-no-changes",
+    "build": "node scripts/dotnet.mjs build Bosun.sln -c Release && pnpm -r --if-present build",
+    "db:reset": "node scripts/dotnet.mjs run --project apps/backend/src/Bosun.Api -- --reset-db",
+    "db:migrate": "node scripts/dotnet.mjs run --project apps/backend/src/Bosun.Api -- --migrate",
+    "ef": "node scripts/dotnet.mjs tool run dotnet-ef"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.0.0",
+    "eslint": "^9.0.0",
+    "eslint-config-prettier": "^10.0.0",
+    "globals": "^16.0.0",
+    "prettier": "^3.0.0"
+  }
+}

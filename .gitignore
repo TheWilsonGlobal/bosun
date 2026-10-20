@@ -1,0 +1,16 @@
+# .env holds real Gemini keys: never commit it
+.env
+.env.*
+!.env.example
+TODO.md
+data/
+bin/
+obj/
+node_modules/
+dist/
+.vs/
+*.user
+TestResults/
+coverage/
+*.log
+*.tsbuildinfo

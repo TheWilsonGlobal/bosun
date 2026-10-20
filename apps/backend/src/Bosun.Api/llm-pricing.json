@@ -1,0 +1,12 @@
+{
+  "Llm": {
+    "Pricing": {
+      "Note": "ESTIMATES in USD per 1,000,000 tokens, used only for the cost column of llm_calls and /api/ai/usage. The numbers below are PLACEHOLDERS (the Gemini 2.5 Flash-Lite list prices); they were not verified against the current price sheet for the models named here. Check https://ai.google.dev/gemini-api/docs/pricing and edit. The free tier bills nothing. Reasoning (thought) tokens are billed at the output rate.",
+      "Default": { "InputPerMillionUsd": 0.1, "OutputPerMillionUsd": 0.4 },
+      "Models": {
+        "gemini-3.5-flash-lite": { "InputPerMillionUsd": 0.1, "OutputPerMillionUsd": 0.4 },
+        "gemini-embedding-2": { "InputPerMillionUsd": 0.15, "OutputPerMillionUsd": 0 }
+      }
+    }
+  }
+}

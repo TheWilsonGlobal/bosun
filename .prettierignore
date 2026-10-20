@@ -1,0 +1,18 @@
+# .NET side is formatted by `dotnet format` (see .editorconfig)
+apps/backend/
+**/bin/
+**/obj/
+data/
+node_modules/
+dist/
+pnpm-lock.yaml
+Bosun.sln
+TODO.md
+.env*
+# generated / large data files
+seed/
+# fixtures are written by `pnpm run fixtures:generate` (byte-for-byte reproducible, so prettier must not reformat them)
+evals/extraction/*.truth.json
+evals/safety/*.truth.json
+evals/extraction/*.pdf
+evals/safety/*.pdf

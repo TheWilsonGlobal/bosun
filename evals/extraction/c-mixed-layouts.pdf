@@ -1,0 +1,663 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Count 3 /Kids [6 0 R 8 0 R 10 0 R] >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Length 10178 >>
+stream
+BT /F2 12 Tf 36 563 Td (SIGNAL LIST - MACHINERY \(EU EXPORT\)) Tj ET
+BT /F1 8 Tf 36 549 Td (Decimal comma, thousands dot, combined range column) Tj ET
+BT /F2 7.5 Tf 39 525.6 Td (Pos) Tj ET
+BT /F2 7.5 Tf 63 525.6 Td (Tag No.) Tj ET
+BT /F2 7.5 Tf 155 525.6 Td (Service) Tj ET
+BT /F2 7.5 Tf 345 525.6 Td (Eng. unit) Tj ET
+BT /F2 7.5 Tf 389 525.6 Td (Range) Tj ET
+BT /F2 7.5 Tf 510.16 525.6 Td (LL) Tj ET
+BT /F2 7.5 Tf 558.58 525.6 Td (L) Tj ET
+BT /F2 7.5 Tf 601.26 525.6 Td (H) Tj ET
+BT /F2 7.5 Tf 639.52 525.6 Td (HH) Tj ET
+BT /F2 7.5 Tf 660.07 525.6 Td (Delay [s]) Tj ET
+BT /F2 7.5 Tf 697 525.6 Td (Signal) Tj ET
+0.9 w 36 522 m 756 522 l S
+BT /F1 7.5 Tf 39 512.6 Td (1) Tj ET
+BT /F1 7.5 Tf 63 512.6 Td (TANK-OWS1-XA02) Tj ET
+BT /F1 7.5 Tf 155 512.6 Td (Separator alarm 2) Tj ET
+BT /F1 7.5 Tf 697 512.6 Td (Digital in) Tj ET
+0.3 w 36 509 m 756 509 l S
+BT /F1 7.5 Tf 39 499.6 Td (2) Tj ET
+BT /F1 7.5 Tf 63 499.6 Td (ME-HPU1-PT01) Tj ET
+BT /F1 7.5 Tf 155 499.6 Td (Hydraulic power unit pressure 1) Tj ET
+BT /F1 7.5 Tf 345 499.6 Td (bar\(g\)) Tj ET
+BT /F1 7.5 Tf 389 499.6 Td (0 Ö 400) Tj ET
+BT /F1 7.5 Tf 510.66 499.6 Td (44) Tj ET
+BT /F1 7.5 Tf 554.66 499.6 Td (80) Tj ET
+BT /F1 7.5 Tf 594.49 499.6 Td (320) Tj ET
+BT /F1 7.5 Tf 682.66 499.6 Td (15) Tj ET
+BT /F1 7.5 Tf 697 499.6 Td (4-20mA) Tj ET
+0.3 w 36 496 m 756 496 l S
+BT /F1 7.5 Tf 39 486.6 Td (3) Tj ET
+BT /F1 7.5 Tf 63 486.6 Td (ME-HPU1-PT02) Tj ET
+BT /F1 7.5 Tf 155 486.6 Td (Hydraulic power unit pressure 2) Tj ET
+BT /F1 7.5 Tf 345 486.6 Td (bar\(g\)) Tj ET
+BT /F1 7.5 Tf 389 486.6 Td (0 Ö 400) Tj ET
+BT /F1 7.5 Tf 510.66 486.6 Td (20) Tj ET
+BT /F1 7.5 Tf 554.66 486.6 Td (60) Tj ET
+BT /F1 7.5 Tf 594.49 486.6 Td (300) Tj ET
+BT /F1 7.5 Tf 686.83 486.6 Td (3) Tj ET
+BT /F1 7.5 Tf 697 486.6 Td (4-20mA) Tj ET
+0.3 w 36 483 m 756 483 l S
+BT /F1 7.5 Tf 39 473.6 Td (4) Tj ET
+BT /F1 7.5 Tf 63 473.6 Td (ME-HPU1-PT03) Tj ET
+BT /F1 7.5 Tf 155 473.6 Td (Hydraulic power unit pressure 3) Tj ET
+BT /F1 7.5 Tf 345 473.6 Td (bar) Tj ET
+BT /F1 7.5 Tf 389 473.6 Td (0 Ö 400) Tj ET
+BT /F1 7.5 Tf 510.66 473.6 Td (20) Tj ET
+BT /F1 7.5 Tf 554.66 473.6 Td (60) Tj ET
+BT /F1 7.5 Tf 594.49 473.6 Td (300) Tj ET
+BT /F1 7.5 Tf 686.83 473.6 Td (3) Tj ET
+BT /F1 7.5 Tf 697 473.6 Td (4-20mA) Tj ET
+0.3 w 36 470 m 756 470 l S
+BT /F1 7.5 Tf 39 460.6 Td (5) Tj ET
+BT /F1 7.5 Tf 63 460.6 Td (ME-HPU1-TT01) Tj ET
+BT /F1 7.5 Tf 155 460.6 Td (Hydraulic oil temperature 1) Tj ET
+BT /F1 7.5 Tf 345 460.6 Td (∞C) Tj ET
+BT /F1 7.5 Tf 389 460.6 Td (0 Ö 100) Tj ET
+BT /F1 7.5 Tf 598.66 460.6 Td (85) Tj ET
+BT /F1 7.5 Tf 642.66 460.6 Td (88) Tj ET
+BT /F1 7.5 Tf 682.66 460.6 Td (10) Tj ET
+BT /F1 7.5 Tf 697 460.6 Td (Pt100) Tj ET
+0.3 w 36 457 m 756 457 l S
+BT /F1 7.5 Tf 39 447.6 Td (6) Tj ET
+BT /F1 7.5 Tf 63 447.6 Td (ME-HPU1-TT02) Tj ET
+BT /F1 7.5 Tf 155 447.6 Td (Hydraulic oil temperature 2) Tj ET
+BT /F1 7.5 Tf 345 447.6 Td (degC) Tj ET
+BT /F1 7.5 Tf 389 447.6 Td (0 Ö 100) Tj ET
+BT /F1 7.5 Tf 598.66 447.6 Td (75) Tj ET
+BT /F1 7.5 Tf 642.66 447.6 Td (92) Tj ET
+BT /F1 7.5 Tf 686.83 447.6 Td (3) Tj ET
+BT /F1 7.5 Tf 697 447.6 Td (4-20mA) Tj ET
+0.3 w 36 444 m 756 444 l S
+BT /F1 7.5 Tf 39 434.6 Td (7) Tj ET
+BT /F1 7.5 Tf 63 434.6 Td (ME-HPU1-LT01) Tj ET
+BT /F1 7.5 Tf 155 434.6 Td (Hydraulic oil tank level) Tj ET
+BT /F1 7.5 Tf 345 434.6 Td (%) Tj ET
+BT /F1 7.5 Tf 389 434.6 Td (0 Ö 100) Tj ET
+BT /F1 7.5 Tf 514.83 434.6 Td (8) Tj ET
+BT /F1 7.5 Tf 554.66 434.6 Td (15) Tj ET
+BT /F1 7.5 Tf 682.66 434.6 Td (30) Tj ET
+BT /F1 7.5 Tf 697 434.6 Td (4-20mA) Tj ET
+0.3 w 36 431 m 756 431 l S
+BT /F1 7.5 Tf 39 421.6 Td (8) Tj ET
+BT /F1 7.5 Tf 63 421.6 Td (ME-HPU1-XS01) Tj ET
+BT /F1 7.5 Tf 155 421.6 Td (Hydraulic pump 1 running) Tj ET
+BT /F1 7.5 Tf 697 421.6 Td (Digital in) Tj ET
+0.3 w 36 418 m 756 418 l S
+BT /F1 7.5 Tf 39 408.6 Td (9) Tj ET
+BT /F1 7.5 Tf 63 408.6 Td (ME-HPU1-XS02) Tj ET
+BT /F1 7.5 Tf 155 408.6 Td (Hydraulic pump 2 running) Tj ET
+BT /F1 7.5 Tf 697 408.6 Td (Digital in) Tj ET
+0.3 w 36 405 m 756 405 l S
+BT /F1 7.5 Tf 39 395.6 Td (10) Tj ET
+BT /F1 7.5 Tf 63 395.6 Td (ME-HPU1-XS03) Tj ET
+BT /F1 7.5 Tf 155 395.6 Td (Hydraulic pump 3 running) Tj ET
+BT /F1 7.5 Tf 697 395.6 Td (Digital in) Tj ET
+0.3 w 36 392 m 756 392 l S
+BT /F1 7.5 Tf 39 382.6 Td (11) Tj ET
+BT /F1 7.5 Tf 63 382.6 Td (ME-HPU1-XS04) Tj ET
+BT /F1 7.5 Tf 155 382.6 Td (Hydraulic pump 4 running) Tj ET
+BT /F1 7.5 Tf 697 382.6 Td (Digital in) Tj ET
+0.3 w 36 379 m 756 379 l S
+BT /F1 7.5 Tf 39 369.6 Td (12) Tj ET
+BT /F1 7.5 Tf 63 369.6 Td (ME-CPD1-PT01) Tj ET
+BT /F1 7.5 Tf 155 369.6 Td (Cylinder pressure indicator 1) Tj ET
+BT /F1 7.5 Tf 345 369.6 Td (barg) Tj ET
+BT /F1 7.5 Tf 389 369.6 Td (0 Ö 200) Tj ET
+BT /F1 7.5 Tf 594.49 369.6 Td (170) Tj ET
+BT /F1 7.5 Tf 686.83 369.6 Td (5) Tj ET
+BT /F1 7.5 Tf 697 369.6 Td (4-20mA) Tj ET
+0.3 w 36 366 m 756 366 l S
+BT /F1 7.5 Tf 39 356.6 Td (13) Tj ET
+BT /F1 7.5 Tf 63 356.6 Td (ME-CPD1-PT02) Tj ET
+BT /F1 7.5 Tf 155 356.6 Td (Cylinder pressure indicator 2) Tj ET
+BT /F1 7.5 Tf 345 356.6 Td (barg) Tj ET
+BT /F1 7.5 Tf 389 356.6 Td (0 Ö 200) Tj ET
+BT /F1 7.5 Tf 594.49 356.6 Td (170) Tj ET
+BT /F1 7.5 Tf 682.66 356.6 Td (10) Tj ET
+BT /F1 7.5 Tf 697 356.6 Td (4-20mA) Tj ET
+0.3 w 36 353 m 756 353 l S
+BT /F1 7.5 Tf 39 343.6 Td (14) Tj ET
+BT /F1 7.5 Tf 63 343.6 Td (ME-CPD1-PT03) Tj ET
+BT /F1 7.5 Tf 155 343.6 Td (Cylinder pressure indicator 3) Tj ET
+BT /F1 7.5 Tf 345 343.6 Td (bar) Tj ET
+BT /F1 7.5 Tf 389 343.6 Td (0 Ö 200) Tj ET
+BT /F1 7.5 Tf 594.49 343.6 Td (160) Tj ET
+BT /F1 7.5 Tf 682.66 343.6 Td (30) Tj ET
+BT /F1 7.5 Tf 697 343.6 Td (4-20mA) Tj ET
+0.3 w 36 340 m 756 340 l S
+BT /F1 7.5 Tf 39 330.6 Td (15) Tj ET
+BT /F1 7.5 Tf 63 330.6 Td (ME-CPD1-PT04) Tj ET
+BT /F1 7.5 Tf 155 330.6 Td (Cylinder pressure indicator 4) Tj ET
+BT /F1 7.5 Tf 345 330.6 Td (barg) Tj ET
+BT /F1 7.5 Tf 389 330.6 Td (0 Ö 200) Tj ET
+BT /F1 7.5 Tf 594.49 330.6 Td (150) Tj ET
+BT /F1 7.5 Tf 682.66 330.6 Td (10) Tj ET
+BT /F1 7.5 Tf 697 330.6 Td (4-20mA) Tj ET
+0.3 w 36 327 m 756 327 l S
+BT /F1 7.5 Tf 39 317.6 Td (16) Tj ET
+BT /F1 7.5 Tf 63 317.6 Td (ME-CPD1-TT01) Tj ET
+BT /F1 7.5 Tf 155 317.6 Td (Cylinder liner temperature 1) Tj ET
+BT /F1 7.5 Tf 345 317.6 Td (degC) Tj ET
+BT /F1 7.5 Tf 389 317.6 Td (0 Ö 300) Tj ET
+BT /F1 7.5 Tf 594.49 317.6 Td (225) Tj ET
+BT /F1 7.5 Tf 638.49 317.6 Td (264) Tj ET
+BT /F1 7.5 Tf 682.66 317.6 Td (30) Tj ET
+BT /F1 7.5 Tf 697 317.6 Td (Pt100) Tj ET
+0.3 w 36 314 m 756 314 l S
+BT /F1 7.5 Tf 39 304.6 Td (17) Tj ET
+BT /F1 7.5 Tf 63 304.6 Td (ME-CPD1-TT02) Tj ET
+BT /F1 7.5 Tf 155 304.6 Td (Cylinder liner temperature 2) Tj ET
+BT /F1 7.5 Tf 345 304.6 Td (degC) Tj ET
+BT /F1 7.5 Tf 389 304.6 Td (0 Ö 300) Tj ET
+BT /F1 7.5 Tf 594.49 304.6 Td (225) Tj ET
+BT /F1 7.5 Tf 638.49 304.6 Td (288) Tj ET
+BT /F1 7.5 Tf 682.66 304.6 Td (30) Tj ET
+BT /F1 7.5 Tf 697 304.6 Td (Pt100) Tj ET
+0.3 w 36 301 m 756 301 l S
+BT /F1 7.5 Tf 39 291.6 Td (18) Tj ET
+BT /F1 7.5 Tf 63 291.6 Td (ME-CPD1-TT03) Tj ET
+BT /F1 7.5 Tf 155 291.6 Td (Cylinder liner temperature 3) Tj ET
+BT /F1 7.5 Tf 345 291.6 Td (degC) Tj ET
+BT /F1 7.5 Tf 389 291.6 Td (0 Ö 300) Tj ET
+BT /F1 7.5 Tf 594.49 291.6 Td (255) Tj ET
+BT /F1 7.5 Tf 638.49 291.6 Td (288) Tj ET
+BT /F1 7.5 Tf 682.66 291.6 Td (30) Tj ET
+BT /F1 7.5 Tf 697 291.6 Td (4-20mA) Tj ET
+0.3 w 36 288 m 756 288 l S
+BT /F1 7.5 Tf 39 278.6 Td (19) Tj ET
+BT /F1 7.5 Tf 63 278.6 Td (ME-CPD1-TT04) Tj ET
+BT /F1 7.5 Tf 155 278.6 Td (Cylinder liner temperature 4) Tj ET
+BT /F1 7.5 Tf 345 278.6 Td (degC) Tj ET
+BT /F1 7.5 Tf 389 278.6 Td (0 Ö 300) Tj ET
+BT /F1 7.5 Tf 594.49 278.6 Td (225) Tj ET
+BT /F1 7.5 Tf 638.49 278.6 Td (288) Tj ET
+BT /F1 7.5 Tf 686.83 278.6 Td (0) Tj ET
+BT /F1 7.5 Tf 697 278.6 Td (Pt100) Tj ET
+0.3 w 36 275 m 756 275 l S
+BT /F1 7.5 Tf 39 265.6 Td (20) Tj ET
+BT /F1 7.5 Tf 63 265.6 Td (ME-CPD1-VT01) Tj ET
+BT /F1 7.5 Tf 155 265.6 Td (Cylinder block vibration 1) Tj ET
+BT /F1 7.5 Tf 345 265.6 Td (mm/s) Tj ET
+BT /F1 7.5 Tf 389 265.6 Td (0 Ö 50) Tj ET
+BT /F1 7.5 Tf 592.41 265.6 Td (37,5) Tj ET
+BT /F1 7.5 Tf 642.66 265.6 Td (46) Tj ET
+BT /F1 7.5 Tf 682.66 265.6 Td (15) Tj ET
+BT /F1 7.5 Tf 697 265.6 Td (4-20mA) Tj ET
+0.3 w 36 262 m 756 262 l S
+BT /F1 7.5 Tf 39 252.6 Td (21) Tj ET
+BT /F1 7.5 Tf 63 252.6 Td (ME-CPD1-VT02) Tj ET
+BT /F1 7.5 Tf 155 252.6 Td (Cylinder block vibration 2) Tj ET
+BT /F1 7.5 Tf 345 252.6 Td (mm/s) Tj ET
+BT /F1 7.5 Tf 389 252.6 Td (0 Ö 50) Tj ET
+BT /F1 7.5 Tf 592.41 252.6 Td (37,5) Tj ET
+BT /F1 7.5 Tf 642.66 252.6 Td (44) Tj ET
+BT /F1 7.5 Tf 686.83 252.6 Td (5) Tj ET
+BT /F1 7.5 Tf 697 252.6 Td (4-20mA) Tj ET
+0.3 w 36 249 m 756 249 l S
+BT /F1 7.5 Tf 39 239.6 Td (22) Tj ET
+BT /F1 7.5 Tf 63 239.6 Td (AE-SCV1-TT01) Tj ET
+BT /F1 7.5 Tf 155 239.6 Td (Scavenge air temperature 1) Tj ET
+BT /F1 7.5 Tf 345 239.6 Td (degC) Tj ET
+BT /F1 7.5 Tf 389 239.6 Td (0 Ö 150) Tj ET
+BT /F1 7.5 Tf 594.49 239.6 Td (112) Tj ET
+BT /F1 7.5 Tf 638.49 239.6 Td (132) Tj ET
+BT /F1 7.5 Tf 686.83 239.6 Td (5) Tj ET
+BT /F1 7.5 Tf 697 239.6 Td (4-20mA) Tj ET
+0.3 w 36 236 m 756 236 l S
+BT /F1 7.5 Tf 39 226.6 Td (23) Tj ET
+BT /F1 7.5 Tf 63 226.6 Td (AE-SCV1-TT02) Tj ET
+BT /F1 7.5 Tf 155 226.6 Td (Scavenge air temperature 2) Tj ET
+BT /F1 7.5 Tf 345 226.6 Td (∞C) Tj ET
+BT /F1 7.5 Tf 389 226.6 Td (0 Ö 150) Tj ET
+BT /F1 7.5 Tf 594.49 226.6 Td (128) Tj ET
+BT /F1 7.5 Tf 638.49 226.6 Td (138) Tj ET
+BT /F1 7.5 Tf 682.66 226.6 Td (15) Tj ET
+BT /F1 7.5 Tf 697 226.6 Td (Pt100) Tj ET
+0.3 w 36 223 m 756 223 l S
+BT /F1 7.5 Tf 39 213.6 Td (24) Tj ET
+BT /F1 7.5 Tf 63 213.6 Td (AE-SCV1-TT03) Tj ET
+BT /F1 7.5 Tf 155 213.6 Td (Scavenge air temperature 3) Tj ET
+BT /F1 7.5 Tf 345 213.6 Td (degC) Tj ET
+BT /F1 7.5 Tf 389 213.6 Td (0 Ö 150) Tj ET
+BT /F1 7.5 Tf 594.49 213.6 Td (120) Tj ET
+BT /F1 7.5 Tf 638.49 213.6 Td (138) Tj ET
+BT /F1 7.5 Tf 686.83 213.6 Td (2) Tj ET
+BT /F1 7.5 Tf 697 213.6 Td (4-20mA) Tj ET
+0.3 w 36 210 m 756 210 l S
+0.3 w 36 522 m 36 210 l S
+0.3 w 60 522 m 60 210 l S
+0.3 w 152 522 m 152 210 l S
+0.3 w 342 522 m 342 210 l S
+0.3 w 386 522 m 386 210 l S
+0.3 w 478 522 m 478 210 l S
+0.3 w 522 522 m 522 210 l S
+0.3 w 566 522 m 566 210 l S
+0.3 w 610 522 m 610 210 l S
+0.3 w 654 522 m 654 210 l S
+0.3 w 694 522 m 694 210 l S
+0.3 w 756 522 m 756 210 l S
+0.6 w 36 535 m 756 535 l S
+BT /F1 7 Tf 36 24 Td (MV Example - I/O list IO-001 Rev B) Tj ET
+BT /F1 7 Tf 720.2 24 Td (Page 1 of 3) Tj ET
+
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 842 595] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 5 0 R >>
+endobj
+7 0 obj
+<< /Length 10404 >>
+stream
+BT /F2 12 Tf 36 563 Td (INSTRUMENT INDEX \(US EXPORT\)) Tj ET
+BT /F1 8 Tf 36 549 Td (Decimal point, thousands comma, Min/Max and Lo-Lo..Hi-Hi columns) Tj ET
+BT /F2 7.5 Tf 39 525.6 Td (Tag) Tj ET
+BT /F2 7.5 Tf 131 525.6 Td (Description) Tj ET
+BT /F2 7.5 Tf 321 525.6 Td (Type) Tj ET
+BT /F2 7.5 Tf 361 525.6 Td (Units) Tj ET
+BT /F2 7.5 Tf 434.19 525.6 Td (Min) Tj ET
+BT /F2 7.5 Tf 483.98 525.6 Td (Max) Tj ET
+BT /F2 7.5 Tf 522.67 525.6 Td (Lo-Lo) Tj ET
+BT /F2 7.5 Tf 578.16 525.6 Td (Lo) Tj ET
+BT /F2 7.5 Tf 623.5 525.6 Td (Hi) Tj ET
+BT /F2 7.5 Tf 657.34 525.6 Td (Hi-Hi) Tj ET
+BT /F2 7.5 Tf 683.2 525.6 Td (Delay \(s\)) Tj ET
+0.9 w 36 522 m 718 522 l S
+BT /F1 7.5 Tf 39 512.6 Td (AE-SCV1-PT01) Tj ET
+BT /F1 7.5 Tf 131 512.6 Td (Scavenge air pressure 1) Tj ET
+BT /F1 7.5 Tf 321 512.6 Td (AI) Tj ET
+BT /F1 7.5 Tf 361 512.6 Td (bar) Tj ET
+BT /F1 7.5 Tf 442.83 512.6 Td (0) Tj ET
+BT /F1 7.5 Tf 494.83 512.6 Td (4) Tj ET
+BT /F1 7.5 Tf 582.83 512.6 Td (1) Tj ET
+BT /F1 7.5 Tf 620.58 512.6 Td (3.2) Tj ET
+BT /F1 7.5 Tf 706.66 512.6 Td (10) Tj ET
+0.3 w 36 509 m 718 509 l S
+BT /F1 7.5 Tf 39 499.6 Td (AE-SCV1-PT02) Tj ET
+BT /F1 7.5 Tf 131 499.6 Td (Scavenge air pressure 2) Tj ET
+BT /F1 7.5 Tf 321 499.6 Td (AI) Tj ET
+BT /F1 7.5 Tf 361 499.6 Td (bar g) Tj ET
+BT /F1 7.5 Tf 442.83 499.6 Td (0) Tj ET
+BT /F1 7.5 Tf 494.83 499.6 Td (4) Tj ET
+BT /F1 7.5 Tf 576.58 499.6 Td (0.8) Tj ET
+BT /F1 7.5 Tf 626.83 499.6 Td (3) Tj ET
+BT /F1 7.5 Tf 710.83 499.6 Td (2) Tj ET
+0.3 w 36 496 m 718 496 l S
+BT /F1 7.5 Tf 39 486.6 Td (AE-SCV1-PT03) Tj ET
+BT /F1 7.5 Tf 131 486.6 Td (Scavenge air pressure 3) Tj ET
+BT /F1 7.5 Tf 321 486.6 Td (AI) Tj ET
+BT /F1 7.5 Tf 361 486.6 Td (bar) Tj ET
+BT /F1 7.5 Tf 442.83 486.6 Td (0) Tj ET
+BT /F1 7.5 Tf 494.83 486.6 Td (4) Tj ET
+BT /F1 7.5 Tf 582.83 486.6 Td (1) Tj ET
+BT /F1 7.5 Tf 620.58 486.6 Td (3.2) Tj ET
+BT /F1 7.5 Tf 706.66 486.6 Td (10) Tj ET
+0.3 w 36 483 m 718 483 l S
+BT /F1 7.5 Tf 39 473.6 Td (AE-SCV1-ST01) Tj ET
+BT /F1 7.5 Tf 131 473.6 Td (Turbocharger speed 1) Tj ET
+BT /F1 7.5 Tf 321 473.6 Td (AI) Tj ET
+BT /F1 7.5 Tf 361 473.6 Td (rpm) Tj ET
+BT /F1 7.5 Tf 442.83 473.6 Td (0) Tj ET
+BT /F1 7.5 Tf 476.07 473.6 Td (40,000) Tj ET
+BT /F1 7.5 Tf 608.07 473.6 Td (30,000) Tj ET
+BT /F1 7.5 Tf 652.07 473.6 Td (38,400) Tj ET
+BT /F1 7.5 Tf 706.66 473.6 Td (10) Tj ET
+0.3 w 36 470 m 718 470 l S
+BT /F1 7.5 Tf 39 460.6 Td (AE-SCV1-ST02) Tj ET
+BT /F1 7.5 Tf 131 460.6 Td (Turbocharger speed 2) Tj ET
+BT /F1 7.5 Tf 321 460.6 Td (AI) Tj ET
+BT /F1 7.5 Tf 361 460.6 Td (rpm) Tj ET
+BT /F1 7.5 Tf 442.83 460.6 Td (0) Tj ET
+BT /F1 7.5 Tf 476.07 460.6 Td (40,000) Tj ET
+BT /F1 7.5 Tf 608.07 460.6 Td (34,000) Tj ET
+BT /F1 7.5 Tf 652.07 460.6 Td (38,400) Tj ET
+BT /F1 7.5 Tf 710.83 460.6 Td (2) Tj ET
+0.3 w 36 457 m 718 457 l S
+BT /F1 7.5 Tf 39 447.6 Td (BLR-SPH1-TT01) Tj ET
+BT /F1 7.5 Tf 131 447.6 Td (Steam superheater outlet temperature 1) Tj ET
+BT /F1 7.5 Tf 321 447.6 Td (AI) Tj ET
+BT /F1 7.5 Tf 361 447.6 Td (∞C) Tj ET
+BT /F1 7.5 Tf 442.83 447.6 Td (0) Tj ET
+BT /F1 7.5 Tf 486.49 447.6 Td (450) Tj ET
+BT /F1 7.5 Tf 618.49 447.6 Td (360) Tj ET
+BT /F1 7.5 Tf 662.49 447.6 Td (432) Tj ET
+BT /F1 7.5 Tf 706.66 447.6 Td (30) Tj ET
+0.3 w 36 444 m 718 444 l S
+BT /F1 7.5 Tf 39 434.6 Td (BLR-SPH1-TT02) Tj ET
+BT /F1 7.5 Tf 131 434.6 Td (Steam superheater outlet temperature 2) Tj ET
+BT /F1 7.5 Tf 321 434.6 Td (AI) Tj ET
+BT /F1 7.5 Tf 361 434.6 Td (deg C) Tj ET
+BT /F1 7.5 Tf 442.83 434.6 Td (0) Tj ET
+BT /F1 7.5 Tf 486.49 434.6 Td (450) Tj ET
+BT /F1 7.5 Tf 618.49 434.6 Td (360) Tj ET
+BT /F1 7.5 Tf 662.49 434.6 Td (396) Tj ET
+BT /F1 7.5 Tf 706.66 434.6 Td (30) Tj ET
+0.3 w 36 431 m 718 431 l S
+BT /F1 7.5 Tf 39 421.6 Td (BLR-SPH1-TT03) Tj ET
+BT /F1 7.5 Tf 131 421.6 Td (Steam superheater outlet temperature 3) Tj ET
+BT /F1 7.5 Tf 321 421.6 Td (AI) Tj ET
+BT /F1 7.5 Tf 361 421.6 Td (∞C) Tj ET
+BT /F1 7.5 Tf 442.83 421.6 Td (0) Tj ET
+BT /F1 7.5 Tf 486.49 421.6 Td (450) Tj ET
+BT /F1 7.5 Tf 618.49 421.6 Td (360) Tj ET
+BT /F1 7.5 Tf 662.49 421.6 Td (396) Tj ET
+BT /F1 7.5 Tf 706.66 421.6 Td (10) Tj ET
+0.3 w 36 418 m 718 418 l S
+BT /F1 7.5 Tf 39 408.6 Td (BLR-SPH1-PT01) Tj ET
+BT /F1 7.5 Tf 131 408.6 Td (Steam header pressure 1) Tj ET
+BT /F1 7.5 Tf 321 408.6 Td (AI) Tj ET
+BT /F1 7.5 Tf 361 408.6 Td (bar) Tj ET
+BT /F1 7.5 Tf 442.83 408.6 Td (0) Tj ET
+BT /F1 7.5 Tf 490.66 408.6 Td (25) Tj ET
+BT /F1 7.5 Tf 576.58 408.6 Td (6.2) Tj ET
+BT /F1 7.5 Tf 616.41 408.6 Td (21.2) Tj ET
+BT /F1 7.5 Tf 666.66 408.6 Td (23) Tj ET
+BT /F1 7.5 Tf 706.66 408.6 Td (15) Tj ET
+0.3 w 36 405 m 718 405 l S
+BT /F1 7.5 Tf 39 395.6 Td (BLR-SPH1-PT02) Tj ET
+BT /F1 7.5 Tf 131 395.6 Td (Steam header pressure 2) Tj ET
+BT /F1 7.5 Tf 321 395.6 Td (AI) Tj ET
+BT /F1 7.5 Tf 361 395.6 Td (bar) Tj ET
+BT /F1 7.5 Tf 442.83 395.6 Td (0) Tj ET
+BT /F1 7.5 Tf 490.66 395.6 Td (25) Tj ET
+BT /F1 7.5 Tf 576.58 395.6 Td (3.8) Tj ET
+BT /F1 7.5 Tf 616.41 395.6 Td (21.2) Tj ET
+BT /F1 7.5 Tf 666.66 395.6 Td (23) Tj ET
+BT /F1 7.5 Tf 706.66 395.6 Td (15) Tj ET
+0.3 w 36 392 m 718 392 l S
+BT /F1 7.5 Tf 39 382.6 Td (BLR-SPH1-PT03) Tj ET
+BT /F1 7.5 Tf 131 382.6 Td (Steam header pressure 3) Tj ET
+BT /F1 7.5 Tf 321 382.6 Td (AI) Tj ET
+BT /F1 7.5 Tf 361 382.6 Td (bar g) Tj ET
+BT /F1 7.5 Tf 442.83 382.6 Td (0) Tj ET
+BT /F1 7.5 Tf 490.66 382.6 Td (25) Tj ET
+BT /F1 7.5 Tf 576.58 382.6 Td (6.2) Tj ET
+BT /F1 7.5 Tf 616.41 382.6 Td (21.2) Tj ET
+BT /F1 7.5 Tf 666.66 382.6 Td (23) Tj ET
+BT /F1 7.5 Tf 706.66 382.6 Td (10) Tj ET
+0.3 w 36 379 m 718 379 l S
+BT /F1 7.5 Tf 39 369.6 Td (BLR-SPH1-FT01) Tj ET
+BT /F1 7.5 Tf 131 369.6 Td (Steam flow 1) Tj ET
+BT /F1 7.5 Tf 321 369.6 Td (AI) Tj ET
+BT /F1 7.5 Tf 361 369.6 Td (t/hr) Tj ET
+BT /F1 7.5 Tf 442.83 369.6 Td (0) Tj ET
+BT /F1 7.5 Tf 484.41 369.6 Td (40.5) Tj ET
+BT /F1 7.5 Tf 616.41 369.6 Td (34.4) Tj ET
+BT /F1 7.5 Tf 710.83 369.6 Td (5) Tj ET
+0.3 w 36 366 m 718 366 l S
+BT /F1 7.5 Tf 39 356.6 Td (BLR-SPH1-FT02) Tj ET
+BT /F1 7.5 Tf 131 356.6 Td (Steam flow 2) Tj ET
+BT /F1 7.5 Tf 321 356.6 Td (AI) Tj ET
+BT /F1 7.5 Tf 361 356.6 Td (t/h) Tj ET
+BT /F1 7.5 Tf 442.83 356.6 Td (0) Tj ET
+BT /F1 7.5 Tf 484.41 356.6 Td (40.5) Tj ET
+BT /F1 7.5 Tf 616.41 356.6 Td (34.4) Tj ET
+BT /F1 7.5 Tf 706.66 356.6 Td (10) Tj ET
+0.3 w 36 353 m 718 353 l S
+BT /F1 7.5 Tf 39 343.6 Td (PMS-UPS1-VT01) Tj ET
+BT /F1 7.5 Tf 131 343.6 Td (UPS battery voltage 1) Tj ET
+BT /F1 7.5 Tf 321 343.6 Td (AI) Tj ET
+BT /F1 7.5 Tf 361 343.6 Td (V) Tj ET
+BT /F1 7.5 Tf 442.83 343.6 Td (0) Tj ET
+BT /F1 7.5 Tf 486.49 343.6 Td (300) Tj ET
+BT /F1 7.5 Tf 534.66 343.6 Td (33) Tj ET
+BT /F1 7.5 Tf 578.66 343.6 Td (60) Tj ET
+BT /F1 7.5 Tf 618.49 343.6 Td (225) Tj ET
+BT /F1 7.5 Tf 710.83 343.6 Td (3) Tj ET
+0.3 w 36 340 m 718 340 l S
+BT /F1 7.5 Tf 39 330.6 Td (PMS-UPS1-VT02) Tj ET
+BT /F1 7.5 Tf 131 330.6 Td (UPS battery voltage 2) Tj ET
+BT /F1 7.5 Tf 321 330.6 Td (AI) Tj ET
+BT /F1 7.5 Tf 361 330.6 Td (V) Tj ET
+BT /F1 7.5 Tf 442.83 330.6 Td (0) Tj ET
+BT /F1 7.5 Tf 486.49 330.6 Td (300) Tj ET
+BT /F1 7.5 Tf 534.66 330.6 Td (15) Tj ET
+BT /F1 7.5 Tf 578.66 330.6 Td (60) Tj ET
+BT /F1 7.5 Tf 618.49 330.6 Td (255) Tj ET
+BT /F1 7.5 Tf 710.83 330.6 Td (5) Tj ET
+0.3 w 36 327 m 718 327 l S
+BT /F1 7.5 Tf 39 317.6 Td (PMS-UPS1-VT03) Tj ET
+BT /F1 7.5 Tf 131 317.6 Td (UPS battery voltage 3) Tj ET
+BT /F1 7.5 Tf 321 317.6 Td (AI) Tj ET
+BT /F1 7.5 Tf 361 317.6 Td (V) Tj ET
+BT /F1 7.5 Tf 442.83 317.6 Td (0) Tj ET
+BT /F1 7.5 Tf 486.49 317.6 Td (300) Tj ET
+BT /F1 7.5 Tf 534.66 317.6 Td (24) Tj ET
+BT /F1 7.5 Tf 578.66 317.6 Td (75) Tj ET
+BT /F1 7.5 Tf 618.49 317.6 Td (225) Tj ET
+BT /F1 7.5 Tf 710.83 317.6 Td (3) Tj ET
+0.3 w 36 314 m 718 314 l S
+BT /F1 7.5 Tf 39 304.6 Td (PMS-UPS1-II01) Tj ET
+BT /F1 7.5 Tf 131 304.6 Td (UPS output current 1) Tj ET
+BT /F1 7.5 Tf 321 304.6 Td (AI) Tj ET
+BT /F1 7.5 Tf 361 304.6 Td (A) Tj ET
+BT /F1 7.5 Tf 442.83 304.6 Td (0) Tj ET
+BT /F1 7.5 Tf 486.49 304.6 Td (200) Tj ET
+BT /F1 7.5 Tf 618.49 304.6 Td (160) Tj ET
+BT /F1 7.5 Tf 710.83 304.6 Td (3) Tj ET
+0.3 w 36 301 m 718 301 l S
+BT /F1 7.5 Tf 39 291.6 Td (PMS-UPS1-II02) Tj ET
+BT /F1 7.5 Tf 131 291.6 Td (UPS output current 2) Tj ET
+BT /F1 7.5 Tf 321 291.6 Td (AI) Tj ET
+BT /F1 7.5 Tf 361 291.6 Td (A) Tj ET
+BT /F1 7.5 Tf 442.83 291.6 Td (0) Tj ET
+BT /F1 7.5 Tf 486.49 291.6 Td (200) Tj ET
+BT /F1 7.5 Tf 618.49 291.6 Td (150) Tj ET
+BT /F1 7.5 Tf 706.66 291.6 Td (30) Tj ET
+0.3 w 36 288 m 718 288 l S
+BT /F1 7.5 Tf 39 278.6 Td (PMS-UPS1-II03) Tj ET
+BT /F1 7.5 Tf 131 278.6 Td (UPS output current 3) Tj ET
+BT /F1 7.5 Tf 321 278.6 Td (AI) Tj ET
+BT /F1 7.5 Tf 361 278.6 Td (A) Tj ET
+BT /F1 7.5 Tf 442.83 278.6 Td (0) Tj ET
+BT /F1 7.5 Tf 486.49 278.6 Td (200) Tj ET
+BT /F1 7.5 Tf 618.49 278.6 Td (170) Tj ET
+BT /F1 7.5 Tf 706.66 278.6 Td (10) Tj ET
+0.3 w 36 275 m 718 275 l S
+BT /F1 7.5 Tf 39 265.6 Td (PMS-UPS1-TT01) Tj ET
+BT /F1 7.5 Tf 131 265.6 Td (UPS cabinet temperature 1) Tj ET
+BT /F1 7.5 Tf 321 265.6 Td (AI) Tj ET
+BT /F1 7.5 Tf 361 265.6 Td (∞C) Tj ET
+BT /F1 7.5 Tf 442.83 265.6 Td (0) Tj ET
+BT /F1 7.5 Tf 490.66 265.6 Td (80) Tj ET
+BT /F1 7.5 Tf 622.66 265.6 Td (68) Tj ET
+BT /F1 7.5 Tf 660.41 265.6 Td (73.6) Tj ET
+BT /F1 7.5 Tf 706.66 265.6 Td (10) Tj ET
+0.3 w 36 262 m 718 262 l S
+BT /F1 7.5 Tf 39 252.6 Td (PMS-UPS1-TT02) Tj ET
+BT /F1 7.5 Tf 131 252.6 Td (UPS cabinet temperature 2) Tj ET
+BT /F1 7.5 Tf 321 252.6 Td (AI) Tj ET
+BT /F1 7.5 Tf 361 252.6 Td (∞C) Tj ET
+BT /F1 7.5 Tf 442.83 252.6 Td (0) Tj ET
+BT /F1 7.5 Tf 490.66 252.6 Td (80) Tj ET
+BT /F1 7.5 Tf 622.66 252.6 Td (64) Tj ET
+BT /F1 7.5 Tf 660.41 252.6 Td (73.6) Tj ET
+BT /F1 7.5 Tf 710.83 252.6 Td (2) Tj ET
+0.3 w 36 249 m 718 249 l S
+BT /F1 7.5 Tf 39 239.6 Td (PMS-UPS1-XA01) Tj ET
+BT /F1 7.5 Tf 131 239.6 Td (UPS alarm 1) Tj ET
+BT /F1 7.5 Tf 321 239.6 Td (DI) Tj ET
+0.3 w 36 236 m 718 236 l S
+BT /F1 7.5 Tf 39 226.6 Td (PMS-UPS1-XA02) Tj ET
+BT /F1 7.5 Tf 131 226.6 Td (UPS alarm 2) Tj ET
+BT /F1 7.5 Tf 321 226.6 Td (DI) Tj ET
+0.3 w 36 223 m 718 223 l S
+BT /F1 7.5 Tf 39 213.6 Td (PMS-UPS1-XA03) Tj ET
+BT /F1 7.5 Tf 131 213.6 Td (UPS alarm 3) Tj ET
+BT /F1 7.5 Tf 321 213.6 Td (DI) Tj ET
+0.3 w 36 210 m 718 210 l S
+0.3 w 36 522 m 36 210 l S
+0.3 w 128 522 m 128 210 l S
+0.3 w 318 522 m 318 210 l S
+0.3 w 358 522 m 358 210 l S
+0.3 w 402 522 m 402 210 l S
+0.3 w 450 522 m 450 210 l S
+0.3 w 502 522 m 502 210 l S
+0.3 w 546 522 m 546 210 l S
+0.3 w 590 522 m 590 210 l S
+0.3 w 634 522 m 634 210 l S
+0.3 w 678 522 m 678 210 l S
+0.3 w 718 522 m 718 210 l S
+0.6 w 36 535 m 718 535 l S
+BT /F1 7 Tf 36 24 Td (MV Example - I/O list IO-001 Rev B) Tj ET
+BT /F1 7 Tf 682.2 24 Td (Page 2 of 3) Tj ET
+
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 842 595] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 7 0 R >>
+endobj
+9 0 obj
+<< /Length 5009 >>
+stream
+BT /F2 12 Tf 36 563 Td (ALARM SCHEDULE \(COMPACT\)) Tj ET
+BT /F1 8 Tf 36 549 Td (No borders, decimal comma, span in a single cell) Tj ET
+BT /F2 7.5 Tf 39 525.6 Td (Tag) Tj ET
+BT /F2 7.5 Tf 131 525.6 Td (Description) Tj ET
+BT /F2 7.5 Tf 321 525.6 Td (Unit) Tj ET
+BT /F2 7.5 Tf 361 525.6 Td (Span) Tj ET
+BT /F2 7.5 Tf 469.52 525.6 Td (HH) Tj ET
+BT /F2 7.5 Tf 521.26 525.6 Td (H) Tj ET
+BT /F2 7.5 Tf 568.58 525.6 Td (L) Tj ET
+BT /F2 7.5 Tf 610.16 525.6 Td (LL) Tj ET
+BT /F2 7.5 Tf 634.68 525.6 Td (Delay) Tj ET
+BT /F2 7.5 Tf 661 525.6 Td (I/O) Tj ET
+0.9 w 36 522 m 714 522 l S
+BT /F1 7.5 Tf 39 512.6 Td (BWTS-CHM1-LT01) Tj ET
+BT /F1 7.5 Tf 131 512.6 Td (Neutralising chemical tank level 1) Tj ET
+BT /F1 7.5 Tf 321 512.6 Td (pct) Tj ET
+BT /F1 7.5 Tf 361 512.6 Td (0-100) Tj ET
+BT /F1 7.5 Tf 564.66 512.6 Td (15) Tj ET
+BT /F1 7.5 Tf 610.66 512.6 Td (11) Tj ET
+BT /F1 7.5 Tf 650.83 512.6 Td (0) Tj ET
+BT /F1 7.5 Tf 661 512.6 Td (Analog in) Tj ET
+BT /F1 7.5 Tf 39 499.6 Td (BWTS-CHM1-LT02) Tj ET
+BT /F1 7.5 Tf 131 499.6 Td (Neutralising chemical tank level 2) Tj ET
+BT /F1 7.5 Tf 321 499.6 Td (%) Tj ET
+BT /F1 7.5 Tf 361 499.6 Td (0-100) Tj ET
+BT /F1 7.5 Tf 564.66 499.6 Td (20) Tj ET
+BT /F1 7.5 Tf 614.83 499.6 Td (8) Tj ET
+BT /F1 7.5 Tf 646.66 499.6 Td (10) Tj ET
+BT /F1 7.5 Tf 661 499.6 Td (Analog in) Tj ET
+BT /F1 7.5 Tf 39 486.6 Td (ME-SCR2-AT01) Tj ET
+BT /F1 7.5 Tf 131 486.6 Td (NOx analyser reading 1 \(bank 2\)) Tj ET
+BT /F1 7.5 Tf 321 486.6 Td (PPM) Tj ET
+BT /F1 7.5 Tf 361 486.6 Td (0-2000) Tj ET
+BT /F1 7.5 Tf 464.32 486.6 Td (1920) Tj ET
+BT /F1 7.5 Tf 510.32 486.6 Td (1500) Tj ET
+BT /F1 7.5 Tf 646.66 486.6 Td (10) Tj ET
+BT /F1 7.5 Tf 661 486.6 Td (Analog in) Tj ET
+BT /F1 7.5 Tf 39 473.6 Td (ME-SCR2-AT02) Tj ET
+BT /F1 7.5 Tf 131 473.6 Td (NOx analyser reading 2 \(bank 2\)) Tj ET
+BT /F1 7.5 Tf 321 473.6 Td (PPM) Tj ET
+BT /F1 7.5 Tf 361 473.6 Td (0-2000) Tj ET
+BT /F1 7.5 Tf 464.32 473.6 Td (1760) Tj ET
+BT /F1 7.5 Tf 510.32 473.6 Td (1500) Tj ET
+BT /F1 7.5 Tf 650.83 473.6 Td (5) Tj ET
+BT /F1 7.5 Tf 661 473.6 Td (Analog in) Tj ET
+BT /F1 7.5 Tf 39 460.6 Td (ME-EGR2-ST01) Tj ET
+BT /F1 7.5 Tf 131 460.6 Td (EGR blower speed \(bank 2\)) Tj ET
+BT /F1 7.5 Tf 321 460.6 Td (rpm) Tj ET
+BT /F1 7.5 Tf 361 460.6 Td (0-12000) Tj ET
+BT /F1 7.5 Tf 460.15 460.6 Td (10560) Tj ET
+BT /F1 7.5 Tf 510.32 460.6 Td (9000) Tj ET
+BT /F1 7.5 Tf 646.66 460.6 Td (15) Tj ET
+BT /F1 7.5 Tf 661 460.6 Td (Analog in) Tj ET
+BT /F1 7.5 Tf 39 447.6 Td (BLR-BRN2-TT01) Tj ET
+BT /F1 7.5 Tf 131 447.6 Td (Burner flame temperature 1 \(bank 2\)) Tj ET
+BT /F1 7.5 Tf 321 447.6 Td (C) Tj ET
+BT /F1 7.5 Tf 361 447.6 Td (0-1200) Tj ET
+BT /F1 7.5 Tf 464.32 447.6 Td (1056) Tj ET
+BT /F1 7.5 Tf 514.49 447.6 Td (960) Tj ET
+BT /F1 7.5 Tf 650.83 447.6 Td (5) Tj ET
+BT /F1 7.5 Tf 661 447.6 Td (Analog in) Tj ET
+BT /F1 7.5 Tf 39 434.6 Td (BLR-BRN2-TT02) Tj ET
+BT /F1 7.5 Tf 131 434.6 Td (Burner flame temperature 2 \(bank 2\)) Tj ET
+BT /F1 7.5 Tf 321 434.6 Td (∞C) Tj ET
+BT /F1 7.5 Tf 361 434.6 Td (0-1200) Tj ET
+BT /F1 7.5 Tf 464.32 434.6 Td (1104) Tj ET
+BT /F1 7.5 Tf 514.49 434.6 Td (900) Tj ET
+BT /F1 7.5 Tf 646.66 434.6 Td (10) Tj ET
+BT /F1 7.5 Tf 661 434.6 Td (Analog in) Tj ET
+BT /F1 7.5 Tf 39 421.6 Td (BLR-BRN2-TT03) Tj ET
+BT /F1 7.5 Tf 131 421.6 Td (Burner flame temperature 3 \(bank 2\)) Tj ET
+BT /F1 7.5 Tf 321 421.6 Td (∞C) Tj ET
+BT /F1 7.5 Tf 361 421.6 Td (0-1200) Tj ET
+BT /F1 7.5 Tf 464.32 421.6 Td (1152) Tj ET
+BT /F1 7.5 Tf 514.49 421.6 Td (900) Tj ET
+BT /F1 7.5 Tf 646.66 421.6 Td (10) Tj ET
+BT /F1 7.5 Tf 661 421.6 Td (Analog in) Tj ET
+BT /F1 7.5 Tf 39 408.6 Td (BLR-BRN2-ST01) Tj ET
+BT /F1 7.5 Tf 131 408.6 Td (Burner fan speed 1 \(bank 2\)) Tj ET
+BT /F1 7.5 Tf 321 408.6 Td (rpm) Tj ET
+BT /F1 7.5 Tf 361 408.6 Td (0-3600) Tj ET
+BT /F1 7.5 Tf 464.32 408.6 Td (3168) Tj ET
+BT /F1 7.5 Tf 510.32 408.6 Td (2700) Tj ET
+BT /F1 7.5 Tf 646.66 408.6 Td (10) Tj ET
+BT /F1 7.5 Tf 661 408.6 Td (Analog in) Tj ET
+BT /F1 7.5 Tf 39 395.6 Td (BLR-BRN2-ST02) Tj ET
+BT /F1 7.5 Tf 131 395.6 Td (Burner fan speed 2 \(bank 2\)) Tj ET
+BT /F1 7.5 Tf 321 395.6 Td (rpm) Tj ET
+BT /F1 7.5 Tf 361 395.6 Td (0-3600) Tj ET
+BT /F1 7.5 Tf 464.32 395.6 Td (3456) Tj ET
+BT /F1 7.5 Tf 510.32 395.6 Td (2700) Tj ET
+BT /F1 7.5 Tf 650.83 395.6 Td (0) Tj ET
+BT /F1 7.5 Tf 661 395.6 Td (Analog in) Tj ET
+BT /F1 7.5 Tf 39 382.6 Td (BLR-BRN2-FT01) Tj ET
+BT /F1 7.5 Tf 131 382.6 Td (Burner fuel flow 1 \(bank 2\)) Tj ET
+BT /F1 7.5 Tf 321 382.6 Td (kg/h) Tj ET
+BT /F1 7.5 Tf 361 382.6 Td (0-1500,5) Tj ET
+BT /F1 7.5 Tf 510.32 382.6 Td (1275) Tj ET
+BT /F1 7.5 Tf 650.83 382.6 Td (5) Tj ET
+BT /F1 7.5 Tf 661 382.6 Td (Analog in) Tj ET
+BT /F1 7.5 Tf 39 369.6 Td (BLR-BRN2-FT02) Tj ET
+BT /F1 7.5 Tf 131 369.6 Td (Burner fuel flow 2 \(bank 2\)) Tj ET
+BT /F1 7.5 Tf 321 369.6 Td (kg/h) Tj ET
+BT /F1 7.5 Tf 361 369.6 Td (0-1500,5) Tj ET
+BT /F1 7.5 Tf 510.32 369.6 Td (1125) Tj ET
+BT /F1 7.5 Tf 650.83 369.6 Td (5) Tj ET
+BT /F1 7.5 Tf 661 369.6 Td (Analog in) Tj ET
+BT /F1 7 Tf 36 24 Td (MV Example - I/O list IO-001 Rev B) Tj ET
+BT /F1 7 Tf 678.2 24 Td (Page 3 of 3) Tj ET
+
+endstream
+endobj
+10 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 842 595] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 9 0 R >>
+endobj
+xref
+0 11
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000134 00000 n 
+0000000231 00000 n 
+0000000333 00000 n 
+0000010564 00000 n 
+0000010700 00000 n 
+0000021157 00000 n 
+0000021293 00000 n 
+0000026354 00000 n 
+trailer
+<< /Size 11 /Root 1 0 R >>
+startxref
+26491
+%%EOF

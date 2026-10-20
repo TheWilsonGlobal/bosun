@@ -1,0 +1,112 @@
+{
+  "suite": "agent",
+  "startedAt": "2026-10-20T13:43:22.1919451Z",
+  "finishedAt": "2026-10-20T13:44:52.4127602Z",
+  "model": "gemini-3.5-flash-lite",
+  "promptVersion": "planner.system\u002Bactor.system\u002Brepair.user\u002Bnudge.user@64e2e1af",
+  "runsPerCase": 3,
+  "summary": {
+    "cases": 1,
+    "attempts": 3,
+    "passed": 3,
+    "passRate": 1,
+    "casesAt100Percent": 1,
+    "promptTokens": 55152,
+    "candidateTokens": 1349,
+    "thoughtTokens": 0,
+    "totalTokens": 56501,
+    "estimatedCostUsd": 0.006055,
+    "llmCalls": 19,
+    "llmFailures": 0,
+    "avgToolCalls": 4.33,
+    "avgLatencyMs": 29879
+  },
+  "cases": [
+    {
+      "id": "multi-create-tag-with-alarm",
+      "category": "multi-step",
+      "instruction": "Create a new analog temperature tag ME-EXH-TT09 in \u00B0C with range 0 to 600, give it a high alarm at 480 \u00B0C with a 10 s delay, and put it in alarm group ME-EXH.",
+      "passed": 3,
+      "attempts": 3,
+      "passRate": 1,
+      "runs": [
+        {
+          "attempt": 1,
+          "passed": true,
+          "outcome": "ops_match",
+          "detail": null,
+          "status": "awaiting_review",
+          "errorCode": null,
+          "toolCalls": 4,
+          "tokens": 17631,
+          "thoughtTokens": 0,
+          "latencyMs": 11445,
+          "agentMessage": "Created new analog temperature tag ME-EXH-TT09 (\u00B0C, range 0-600), set high alarm H at 480 \u00B0C with 10 s delay, and assigned it to alarm group ME-EXH.",
+          "netEffect": [
+            "create|ME-EXH-TT09 = AI|\u00B0C|0|600|NONE",
+            "group|ME-EXH-TT09 = ME-EXH",
+            "limit|ME-EXH-TT09|H = 480/10"
+          ]
+        },
+        {
+          "attempt": 2,
+          "passed": true,
+          "outcome": "ops_match",
+          "detail": null,
+          "status": "awaiting_review",
+          "errorCode": null,
+          "toolCalls": 5,
+          "tokens": 21190,
+          "thoughtTokens": 0,
+          "latencyMs": 57506,
+          "agentMessage": "Created new analog temperature tag ME-EXH-TT09 in range 0-600 \u00B0C, configured a high alarm limit at 480 \u00B0C with a 10s delay, and assigned it to the ME-EXH alarm group.",
+          "netEffect": [
+            "create|ME-EXH-TT09 = AI|\u00B0C|0|600|NONE",
+            "group|ME-EXH-TT09 = ME-EXH",
+            "limit|ME-EXH-TT09|H = 480/10"
+          ]
+        },
+        {
+          "attempt": 3,
+          "passed": true,
+          "outcome": "ops_match",
+          "detail": null,
+          "status": "awaiting_review",
+          "errorCode": null,
+          "toolCalls": 4,
+          "tokens": 17680,
+          "thoughtTokens": 0,
+          "latencyMs": 20688,
+          "agentMessage": "Created analog temperature tag ME-EXH-TT09 in \u00B0C (range 0 to 600) within alarm group ME-EXH, and added a high alarm (H) at 480 \u00B0C with a 10-second delay.",
+          "netEffect": [
+            "create|ME-EXH-TT09 = AI|\u00B0C|0|600|NONE",
+            "group|ME-EXH-TT09 = ME-EXH",
+            "limit|ME-EXH-TT09|H = 480/10"
+          ]
+        }
+      ]
+    }
+  ],
+  "usage": [
+    {
+      "feature": "agent.act",
+      "model": "gemini-3.5-flash-lite",
+      "calls": 16,
+      "failures": 0,
+      "promptTokens": 52860,
+      "candidateTokens": 792,
+      "thoughtTokens": 0,
+      "costUsd": 0.005602800000000001
+    },
+    {
+      "feature": "agent.plan",
+      "model": "gemini-3.5-flash-lite",
+      "calls": 3,
+      "failures": 0,
+      "promptTokens": 2292,
+      "candidateTokens": 557,
+      "thoughtTokens": 0,
+      "costUsd": 0.00045200000000000004
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\Bosun.Application\Bosun.Application.csproj" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <!-- Prompts are files in the repo, compiled into the assembly so they ship with it and hash identically everywhere. -->
+    <EmbeddedResource Include="prompts\**\*.md" LogicalName="prompts/%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+</Project>

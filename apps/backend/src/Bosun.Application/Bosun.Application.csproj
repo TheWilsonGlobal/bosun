@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\Bosun.Domain\Bosun.Domain.csproj" />
+    <ProjectReference Include="..\Bosun.Rules\Bosun.Rules.csproj" />
+    <!-- Provider-neutral EF Core only (async LINQ over IQueryable); no provider package here. -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
+  </ItemGroup>
+</Project>
