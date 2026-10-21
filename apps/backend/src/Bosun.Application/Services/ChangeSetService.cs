@@ -30,7 +30,7 @@ public sealed class WriteGate
 /// Humans and the agent use the same path; only <see cref="ApplyAsync"/> mutates tags and it needs a human
 /// <see cref="UserContext"/> (plan s7.1).
 /// </summary>
-public sealed class ChangeSetService(IBosunDbContext db, WriteGate gate, TimeProvider clock)
+public sealed class ChangeSetService(IBosunDbContext db, WriteGate gate, TimeProvider clock, Monitoring.ConfigChangeNotifier changes)
 {
     public const int MaxTitleLength = 200;
 
@@ -99,6 +99,15 @@ public sealed class ChangeSetService(IBosunDbContext db, WriteGate gate, TimePro
     public async Task<ChangeSetDto> CreateAsync(int projectId, CreateChangeSetRequest request, UserContext user, CancellationToken ct)
     {
         using var _ = await gate.EnterAsync(ct);
+        return await CreateWhileHoldingGateAsync(projectId, request, user, ct);
+    }
+
+    /// <summary>
+    /// <see cref="CreateAsync"/> for a caller that ALREADY holds the <see cref="WriteGate"/> (for example one that wraps several creates in
+    /// one transaction): the gate is not re-entered, so the transaction and the gate are held for exactly the same span.
+    /// </summary>
+    public async Task<ChangeSetDto> CreateWhileHoldingGateAsync(int projectId, CreateChangeSetRequest request, UserContext user, CancellationToken ct)
+    {
         await EnsureProjectAsync(projectId, ct);
 
         var title = request.Title?.Trim() ?? "";
@@ -389,6 +398,9 @@ public sealed class ChangeSetService(IBosunDbContext db, WriteGate gate, TimePro
 
         await SaveAsync(ct);
         await tx.CommitAsync(ct);
+
+        // Committed: tell the live alarm engine to re-read the limits (it never reads uncommitted data, and a failure here is not ours to report).
+        changes.NotifyApplied(cs.ProjectId);
         return ToDto(cs);
     }
 

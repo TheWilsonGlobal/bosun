@@ -1,0 +1,107 @@
+# RAG eval cases (plan s9): 14 questions the seed documents answer, 6 they do not. Written from the documents in seed/docs BEFORE any
+# live run; never edit an expected section to fit a result.
+#
+# category answerable   `expect` names the document (source = file stem) and the section (heading text) that holds the answer. An
+#                       attempt passes when the answer is given (answered=true) AND cites that section. Retrieval is scored separately:
+#                       hit@k / MRR use the position of that section in the fused top-6.
+# category unanswerable the documents do not contain the answer (some even say so explicitly). The attempt passes when the answer is a
+#                       refusal (answered=false), whether the relevance threshold or the model refused.
+- id: rag-01-alarm-load
+  category: answerable
+  question: How many alarms per operator should we expect in a normal 10-minute period, according to the design targets?
+  expect: { source: alarm-philosophy, section: Purpose and principles }
+
+- id: rag-02-priority1-response
+  category: answerable
+  question: How fast does an operator have to react to a red alarm with a continuous horn?
+  expect: { source: alarm-philosophy, section: Priorities and alarm groups }
+
+- id: rag-03-pressure-hysteresis
+  category: answerable
+  question: What hysteresis is used by default for pressure alarms?
+  expect: { source: alarm-philosophy, section: Limit levels and hysteresis }
+
+- id: rag-04-level-delay
+  category: answerable
+  question: What on-delay do tank level alarms get, and why is it so long?
+  expect: { source: alarm-philosophy, section: Delay times }
+
+- id: rag-05-exhaust-delay-why
+  category: answerable
+  question: Why is the delay for the high exhaust gas temperature alarm 10 s and not 5 s?
+  expect: { source: alarm-philosophy, section: Exhaust gas temperature delay }
+
+- id: rag-06-shelving
+  category: answerable
+  question: How long can an operator keep an alarm shelved, and can critical alarms be shelved at all?
+  expect: { source: alarm-philosophy, section: Acknowledgement and shelving }
+
+- id: rag-07-effect-code-sb
+  category: answerable
+  question: In the cause and effect matrix, what does the effect code SB stand for?
+  expect: { source: cause-and-effect, section: How to read the matrix }
+
+- id: rag-08-lube-oil-standby-pump
+  category: answerable
+  question: At what lubricating oil pressure does the standby pump start on the main engine?
+  expect: { source: cause-and-effect, section: Main engine protection }
+
+- id: rag-09-boiler-purge
+  category: answerable
+  question: How long must the boiler furnace be purged after a flame failure before the burner may start again?
+  expect: { source: cause-and-effect, section: Boiler and steam protection }
+
+- id: rag-10-standby-generator
+  category: answerable
+  question: At what generator load does the power management system start the standby generator, and after how long?
+  expect: { source: cause-and-effect, section: Electrical power and blackout recovery }
+
+- id: rag-11-event-retention
+  category: answerable
+  question: For how many days does the alarm system keep its event history?
+  expect: { source: functional-design-spec, section: System architecture }
+
+- id: rag-12-tag-name-length
+  category: answerable
+  question: What is the maximum number of characters a tag name may have?
+  expect: { source: functional-design-spec, section: Tag naming convention }
+
+- id: rag-13-wire-break
+  category: answerable
+  question: Below which current is a 4-20 mA input treated as a broken wire?
+  expect: { source: functional-design-spec, section: 'Signal types, scaling and sensor faults' }
+
+- id: rag-14-sil-esd-approval
+  category: answerable
+  question: Who has to approve a change set that touches an ESD tag?
+  expect: { source: functional-design-spec, section: Configuration change control }
+
+- id: rag-15-bnws
+  category: unanswerable
+  question: What are the dormant period and the stage timings of the bridge navigational watch alarm system on this ship?
+  notes: BNWAS is listed as out of scope in alarm-philosophy.
+
+- id: rag-16-fire-detection
+  category: unanswerable
+  question: What delay is applied to the fire detector alarms in the engine room?
+  notes: Fire detection is listed as out of scope in alarm-philosophy.
+
+- id: rag-17-cybersecurity
+  category: unanswerable
+  question: What is the policy for remote access to the alarm system?
+  notes: Cybersecurity and remote access are listed as out of scope in alarm-philosophy.
+
+- id: rag-18-bwts-uv
+  category: unanswerable
+  question: What UV intensity setpoint does the ballast water treatment system use?
+  notes: Only the BWTS tag prefix appears in the documents.
+
+- id: rag-19-jacket-pressure-limits
+  category: unanswerable
+  question: What are the low and low-low alarm limits for the jacket cooling water pressure?
+  notes: Near miss. The cause and effect notes give jacket cooling water TEMPERATURE limits only.
+
+- id: rag-20-off-domain
+  category: unanswerable
+  question: What is the capital of Vietnam?
+  notes: Off-domain; the relevance threshold should refuse before any model call.

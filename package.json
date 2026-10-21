@@ -22,6 +22,7 @@
     "format:check": "prettier --check . && node scripts/dotnet.mjs format Bosun.sln --verify-no-changes",
     "build": "node scripts/dotnet.mjs build Bosun.sln -c Release && pnpm -r --if-present build",
     "db:reset": "node scripts/dotnet.mjs run --project apps/backend/src/Bosun.Api -- --reset-db",
+    "kb:index": "node scripts/dotnet.mjs run --project apps/backend/src/Bosun.Api -- --kb-index",
     "db:migrate": "node scripts/dotnet.mjs run --project apps/backend/src/Bosun.Api -- --migrate",
     "ef": "node scripts/dotnet.mjs tool run dotnet-ef"
   },

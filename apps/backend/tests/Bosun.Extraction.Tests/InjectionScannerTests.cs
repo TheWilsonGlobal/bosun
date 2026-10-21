@@ -1,3 +1,4 @@
+using Bosun.Application.Safety;
 using Bosun.Extraction;
 
 namespace Bosun.Extraction.Tests;

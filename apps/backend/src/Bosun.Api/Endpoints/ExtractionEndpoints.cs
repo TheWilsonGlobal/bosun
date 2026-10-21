@@ -80,10 +80,18 @@ public static class ExtractionEndpoints
         writes.MapPost("/extractions/{id:int}/accept",
                 async Task<Created<AcceptResultDto>> (int id, AcceptBody? body, ExtractionService svc, ClaimsPrincipal principal, CancellationToken ct) =>
                 {
-                    var result = await svc.AcceptAsync(id, body?.RowIds, principal.ToUser(), ct);
+                    var result = await svc.AcceptAsync(id, body?.RowIds, principal.ToUser(), ct, body?.AllowFlagged);
                     return TypedResults.Created($"/api/change-sets/{result.ChangeSets[0].Id}", result);
                 })
-            .WithSummary("Turn the chosen rows (default: all open rows) into DRAFT change sets (source=extraction). 422 unresolved_must_fix while must-fix rows are chosen. Never approves or applies.");
+            .WithSummary("Turn the chosen rows (default: all open rows) into DRAFT change sets (source=extraction). 422 unresolved_must_fix while must-fix rows are chosen; 422 flagged_rows_need_override while chosen rows are suspected_injection and not listed in body.allowFlagged; 409 rows_already_decided on a double accept. Never approves or applies.");
+
+        writes.MapDelete("/documents/{documentId:int}",
+                async Task<NoContent> (int documentId, ExtractionService svc, CancellationToken ct) =>
+                {
+                    await svc.RemoveDocumentAsync(documentId, ct);
+                    return TypedResults.NoContent();
+                })
+            .WithSummary("Delete an uploaded document with its extractions, rows and stored file (change sets already made from it stay). 204; 404; 409 extraction_already_running while it is being read.");
     }
 }
 

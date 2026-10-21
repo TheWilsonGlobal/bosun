@@ -27,6 +27,11 @@ public static class ExtractionErrorCodes
     public const string PageOutOfRange = "page_out_of_range";
     public const string DuplicateTagsChosen = "duplicate_tags_chosen";
     public const string AlreadyRunning = "extraction_already_running";
+    public const string PageTooLarge = "page_too_large";
+    public const string PageRenderFailed = "page_render_failed";
+    public const string PdfTooComplex = "pdf_too_complex";
+    public const string BudgetExceeded = "extraction_budget_exceeded";
+    public const string FlaggedRowsNeedOverride = "flagged_rows_need_override";
 }
 
 /// <summary>A patched row plus the other rows whose assessment changed with it (duplicates are judged across rows).</summary>
@@ -78,7 +83,13 @@ public sealed class ExtractionService(
         PdfInfo info;
         try
         {
-            info = PdfPages.Inspect(bytes);
+            // PdfPig cannot be interrupted: the wait is bounded, the abandoned parse finishes on its own thread.
+            info = await Task.Run(() => PdfPages.Inspect(bytes), CancellationToken.None).WaitAsync(TimeSpan.FromSeconds(Math.Max(0.0001, opts.InspectTimeoutSeconds)), ct);
+        }
+        catch (TimeoutException)
+        {
+            throw new AppException(ErrorKind.Unprocessable, ExtractionErrorCodes.PdfTooComplex,
+                $"The PDF took longer than {opts.InspectTimeoutSeconds} s to open and was refused.");
         }
         catch (PdfUnreadableException ex)
         {
@@ -94,6 +105,13 @@ public sealed class ExtractionService(
         {
             throw new AppException(ErrorKind.Unprocessable, ExtractionErrorCodes.TooManyPages,
                 $"The document has {info.PageCount} pages; the limit is {opts.MaxPages}.", new Dictionary<string, object?> { ["pages"] = info.PageCount, ["max"] = opts.MaxPages });
+        }
+
+        if (info.MaxPageSidePoints > opts.MaxPageDimensionPoints)
+        {
+            throw new AppException(ErrorKind.Unprocessable, ExtractionErrorCodes.PageTooLarge,
+                $"Page {info.LargestPage} is {(double.IsFinite(info.MaxPageSidePoints) ? info.MaxPageSidePoints.ToString("0", CultureInfo.InvariantCulture) : "unbounded")} points on its longest side; the limit is {opts.MaxPageDimensionPoints:0} points (about {opts.MaxPageDimensionPoints / 72 * 2.54 / 100:0.0} m).",
+                new Dictionary<string, object?> { ["page"] = info.LargestPage, ["maxPoints"] = opts.MaxPageDimensionPoints });
         }
 
         var stored = await store.SaveAsync(bytes, ct);
@@ -143,30 +161,62 @@ public sealed class ExtractionService(
     /// </summary>
     public async Task<UploadResultDto> ExtractAgainAsync(int documentId, UserContext user, CancellationToken ct)
     {
-        var document = await db.SourceDocuments.AsNoTracking().FirstOrDefaultAsync(d => d.Id == documentId, ct) ?? throw AppException.NotFound("Document", documentId);
-        var running = await db.Extractions.AsNoTracking().AnyAsync(e => e.SourceDocumentId == documentId && (e.Status == ExtractionStatus.Queued || e.Status == ExtractionStatus.Running), ct);
-        if (running)
-        {
-            throw new AppException(ErrorKind.Conflict, ExtractionErrorCodes.AlreadyRunning, "This document is already being read. Wait for it to finish.");
-        }
-
-        var extraction = new ExtractionEntity
-        {
-            ProjectId = document.ProjectId,
-            SourceDocumentId = document.Id,
-            Status = ExtractionStatus.Queued,
-            PagesTotal = document.PageCount,
-            CreatedBy = user.Name,
-            CreatedAt = clock.GetUtcNow().UtcDateTime,
-        };
+        ExtractionEntity extraction;
+        SourceDocument document;
+        // The running check and the insert are one step under the gate: two simultaneous calls cannot both queue a run.
         using (await gate.EnterAsync(ct))
         {
+            document = await db.SourceDocuments.AsNoTracking().FirstOrDefaultAsync(d => d.Id == documentId, ct) ?? throw AppException.NotFound("Document", documentId);
+            var running = await db.Extractions.AsNoTracking().AnyAsync(e => e.SourceDocumentId == documentId && (e.Status == ExtractionStatus.Queued || e.Status == ExtractionStatus.Running), ct);
+            if (running)
+            {
+                throw new AppException(ErrorKind.Conflict, ExtractionErrorCodes.AlreadyRunning, "This document is already being read. Wait for it to finish.");
+            }
+
+            extraction = new ExtractionEntity
+            {
+                ProjectId = document.ProjectId,
+                SourceDocumentId = document.Id,
+                Status = ExtractionStatus.Queued,
+                PagesTotal = document.PageCount,
+                CreatedBy = user.Name,
+                CreatedAt = clock.GetUtcNow().UtcDateTime,
+            };
             db.Extractions.Add(extraction);
             await db.SaveChangesAsync(ct);
         }
 
         runs.Start(extraction.Id);
         return new UploadResultDto(document.Id, extraction.Id);
+    }
+
+    /// <summary>
+    /// Deletes an uploaded document with its extractions and rows, and the stored file. Change sets that were already made from the rows
+    /// stay (they are the project's record). 409 extraction_already_running while an extraction of the document is queued or running.
+    /// </summary>
+    public async Task RemoveDocumentAsync(int documentId, CancellationToken ct)
+    {
+        string storedName;
+        using (await gate.EnterAsync(ct))
+        {
+            var document = await db.SourceDocuments.FirstOrDefaultAsync(d => d.Id == documentId, ct) ?? throw AppException.NotFound("Document", documentId);
+            var running = await db.Extractions.AsNoTracking().AnyAsync(e => e.SourceDocumentId == documentId && (e.Status == ExtractionStatus.Queued || e.Status == ExtractionStatus.Running), ct);
+            if (running)
+            {
+                throw new AppException(ErrorKind.Conflict, ExtractionErrorCodes.AlreadyRunning, "This document is being read right now. Wait for the extraction to finish, then delete it.");
+            }
+
+            storedName = document.StoredName;
+            await using var transaction = await db.Database.BeginTransactionAsync(ct);
+            var extractionIds = await db.Extractions.Where(e => e.SourceDocumentId == documentId).Select(e => e.Id).ToListAsync(ct);
+            await db.ExtractedRows.Where(r => extractionIds.Contains(r.ExtractionId)).ExecuteDeleteAsync(ct);
+            await db.Extractions.Where(e => e.SourceDocumentId == documentId).ExecuteDeleteAsync(ct);
+            await db.SourceDocuments.Where(d => d.Id == documentId).ExecuteDeleteAsync(ct);
+            await transaction.CommitAsync(ct);
+        }
+
+        db.ChangeTracker.Clear();
+        store.Delete(storedName);
     }
 
     /// <summary>Copies the body into memory, refusing more than the cap. The declared length is not trusted: bytes are counted as they arrive.</summary>
@@ -429,8 +479,13 @@ public sealed class ExtractionService(
     /// Turns the chosen rows (default: every open row) into DRAFT change sets of at most 200 operations each, never splitting a row.
     /// Refused while any chosen row is must-fix. Nothing is approved or applied.
     /// </summary>
-    public async Task<AcceptResultDto> AcceptAsync(int extractionId, IReadOnlyList<int>? rowIds, UserContext user, CancellationToken ct)
+    public async Task<AcceptResultDto> AcceptAsync(int extractionId, IReadOnlyList<int>? rowIds, UserContext user, CancellationToken ct, IReadOnlyList<int>? allowFlagged = null)
     {
+        // The gate comes FIRST and is held until the transaction has ended: SQLite allows one writer, so a transaction that waits for the
+        // gate between two creates would sit on the database write lock and stall every other writer until busy_timeout. Everything the
+        // decision rests on (extraction status, row states) is read inside the gate, so two simultaneous accepts see each other's result.
+        using var _ = await gate.EnterAsync(ct);
+        db.ChangeTracker.Clear();
         var extraction = await db.Extractions.Include(e => e.SourceDocument).FirstOrDefaultAsync(e => e.Id == extractionId, ct)
             ?? throw AppException.NotFound("Extraction", extractionId);
         EnsureReady(extraction);
@@ -450,7 +505,7 @@ public sealed class ExtractionService(
             var decided = chosen.Where(r => r.State != ExtractedRowState.Pending).Select(r => r.Id).ToList();
             if (decided.Count > 0)
             {
-                throw new AppException(ErrorKind.Conflict, ExtractionErrorCodes.RowsAlreadyDecided, "Some of the chosen rows are already accepted or excluded.", new Dictionary<string, object?> { ["rowIds"] = decided });
+                throw RowsAlreadyDecided(decided);
             }
         }
         else
@@ -469,6 +524,16 @@ public sealed class ExtractionService(
             throw new AppException(ErrorKind.Unprocessable, ExtractionErrorCodes.UnresolvedMustFix,
                 $"{blocked.Count} row(s) are still must-fix (confidence below {Bands.ReviewThreshold:0.0#}). Correct them in the review, or exclude them, then accept again.",
                 new Dictionary<string, object?> { ["rowIds"] = blocked, ["count"] = blocked.Count });
+        }
+
+        // A row whose cell looks like an instruction to a model is accepted only when the reviewer says so, by id, explicitly.
+        var allowed = (allowFlagged ?? []).ToHashSet();
+        var flagged = chosen.Where(r => r.FlagsJson.Contains(RowFlags.SuspectedInjection, StringComparison.Ordinal) && !allowed.Contains(r.Id)).Select(r => r.Id).ToList();
+        if (flagged.Count > 0)
+        {
+            throw new AppException(ErrorKind.Unprocessable, ExtractionErrorCodes.FlaggedRowsNeedOverride,
+                $"{flagged.Count} chosen row(s) contain text that looks like an instruction (suspected_injection). Check them against the document, then list their ids in allowFlagged to accept them, or exclude them.",
+                new Dictionary<string, object?> { ["rowIds"] = flagged, ["count"] = flagged.Count });
         }
 
         // Two chosen rows with one tag name would put the same createTag twice into the change set.
@@ -498,34 +563,42 @@ public sealed class ExtractionService(
 
         var created = new List<AcceptedChangeSetDto>();
         await using var transaction = await db.Database.BeginTransactionAsync(ct);
-        for (var i = 0; i < batches.Count; i++)
+        try
         {
-            var batch = batches[i];
-            var part = batches.Count > 1 ? $" (part {i + 1}/{batches.Count})" : "";
-            var title = Clip($"Extraction {extraction.Id}: {extraction.SourceDocument!.DisplayName}{part}", ChangeSetService.MaxTitleLength);
-            var inputs = batch.SelectMany(b => b.Ops).Select(o => new OpInput(o, OldProvided: false)).ToList();
-            var changeSet = await changeSets.CreateAsync(
-                extraction.ProjectId,
-                new CreateChangeSetRequest(title, ChangeSetSource.Extraction, inputs, extraction.Model, extraction.PromptVersion),
-                user,
-                ct);
-            foreach (var (row, _) in batch)
+            for (var i = 0; i < batches.Count; i++)
             {
-                row.State = ExtractedRowState.Accepted;
-                row.ChangeSetId = changeSet.Id;
+                var batch = batches[i];
+                var part = batches.Count > 1 ? $" (part {i + 1}/{batches.Count})" : "";
+                var title = Clip($"Extraction {extraction.Id}: {extraction.SourceDocument!.DisplayName}{part}", ChangeSetService.MaxTitleLength);
+                var inputs = batch.SelectMany(b => b.Ops).Select(o => new OpInput(o, OldProvided: false)).ToList();
+                var changeSet = await changeSets.CreateWhileHoldingGateAsync(
+                    extraction.ProjectId,
+                    new CreateChangeSetRequest(title, ChangeSetSource.Extraction, inputs, extraction.Model, extraction.PromptVersion),
+                    user,
+                    ct);
+                foreach (var (row, _) in batch)
+                {
+                    row.State = ExtractedRowState.Accepted;
+                    row.ChangeSetId = changeSet.Id;
+                }
+
+                created.Add(new AcceptedChangeSetDto(changeSet.Id, changeSet.Title, changeSet.Ops.Count, batch.Select(b => b.Row.Id).ToList()));
             }
 
-            created.Add(new AcceptedChangeSetDto(changeSet.Id, changeSet.Title, changeSet.Ops.Count, batch.Select(b => b.Row.Id).ToList()));
-        }
-
-        using (await gate.EnterAsync(ct))
-        {
             await db.SaveChangesAsync(ct);
+            await transaction.CommitAsync(ct);
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            // A row changed between the read and the save (only possible from outside the gate): the transaction rolls back with the scope.
+            throw RowsAlreadyDecided(chosen.Select(r => r.Id).ToList());
         }
 
-        await transaction.CommitAsync(ct);
         return new AcceptResultDto(extraction.Id, created, chosen.Select(r => r.Id).ToList());
     }
+
+    private static AppException RowsAlreadyDecided(IReadOnlyList<int> ids) =>
+        new(ErrorKind.Conflict, ExtractionErrorCodes.RowsAlreadyDecided, "Some of the chosen rows are already accepted or excluded.", new Dictionary<string, object?> { ["rowIds"] = ids });
 
     private static string Clip(string text, int max) => text.Length <= max ? text : text[..(max - 1)] + "…";
 

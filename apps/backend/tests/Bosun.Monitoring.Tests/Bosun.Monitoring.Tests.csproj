@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Bosun.Application\Bosun.Application.csproj" />
+    <ProjectReference Include="..\..\src\Bosun.Infrastructure\Bosun.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Bosun.Migrations.Sqlite\Bosun.Migrations.Sqlite.csproj" />
+    <ProjectReference Include="..\..\src\Bosun.Protocols\Bosun.Protocols.csproj" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+    <PackageReference Include="FluentAssertions" />
+  </ItemGroup>
+  <ItemGroup>
+    <Using Include="Xunit" />
+    <Using Include="FluentAssertions" />
+  </ItemGroup>
+</Project>

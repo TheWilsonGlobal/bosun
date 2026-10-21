@@ -175,6 +175,11 @@ public static class SafetySuite
             }
         }
 
+        if (offline)
+        {
+            EvalHonesty.PrintOfflineBanner("safety");
+        }
+
         var work = Path.Combine(Path.GetTempPath(), "bosun-evals", "safety-" + DateTime.UtcNow.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture) + "-" + Guid.NewGuid().ToString("N")[..6]);
         var seedFile = Path.Combine(work, "bosun.seed.db");
         Console.WriteLine($"Seeding {Path.GetFileName(seedFile)} ...");
@@ -208,7 +213,7 @@ public static class SafetySuite
                         ? await RunAgentAsync(c, attempt, agentRunner, cancel.Token)
                         : await RunDocumentAsync(c, attempt, repoRoot, extractionRunner, cancel.Token);
                     attempts.Add(result.Attempt);
-                    Console.WriteLine($"[{attempts.Count,2}/{total}] {c.Id,-34} #{attempt} {(result.Attempt.Passed ? "PASS" : "FAIL")} {result.Attempt.Outcome,-26} unsafe-unflagged={result.Attempt.UnsafeUnflagged} {result.Attempt.LatencyMs / 1000.0,5:F1}s {result.Attempt.Tokens,7:N0} tok"
+                    Console.WriteLine($"[{attempts.Count,2}/{total}] {c.Id,-34} #{attempt} {(result.Attempt.Passed ? "PASS" : "FAIL")} {result.Attempt.Outcome,-26} unsafe-unflagged={result.Attempt.UnsafeUnflagged}{(offline ? "" : $" {result.Attempt.LatencyMs / 1000.0,5:F1}s {result.Attempt.Tokens,7:N0} tok")}"
                         + (result.Attempt.Passed ? "" : $"  <- {result.Attempt.Detail}"));
                     if (result.Quota is not null)
                     {
@@ -295,6 +300,10 @@ public static class SafetySuite
         {
             suite = "safety",
             mode = offline ? "offline-scripted-reader (document cases only; plumbing check, not a model result)" : "live",
+            isModelResult = !offline,
+            costIsEstimate = true,
+            pricingNote = EvalHonesty.PricingNote,
+            notes = offline ? new[] { EvalHonesty.OfflineScope } : Array.Empty<string>(),
             startedAt = started,
             finishedAt = finished,
             model,
@@ -310,11 +319,11 @@ public static class SafetySuite
                 passRate = Math.Round(rate, 4),
                 unsafeOperationsWithoutFlag = unsafeUnflagged,
                 unsafeOperationsFlagged = attempts.Sum(a => a.UnsafeFlagged),
-                totalTokens = usageRows.Sum(r => r.TotalTokens),
-                promptTokens = usageRows.Sum(r => r.PromptTokens),
-                candidateTokens = usageRows.Sum(r => r.CandidateTokens),
-                thoughtTokens = usageRows.Sum(r => r.ThoughtTokens),
-                estimatedCostUsd = Math.Round(totals.CostUsd, 6),
+                totalTokens = offline ? (long?)null : usageRows.Sum(r => r.TotalTokens),
+                promptTokens = offline ? (long?)null : usageRows.Sum(r => r.PromptTokens),
+                candidateTokens = offline ? (long?)null : usageRows.Sum(r => r.CandidateTokens),
+                thoughtTokens = offline ? (long?)null : usageRows.Sum(r => r.ThoughtTokens),
+                estimatedCostUsd = offline ? (double?)null : Math.Round(totals.CostUsd, 6),
                 llmCalls = totals.Calls,
                 llmFailures = totals.Failures,
             },
@@ -325,7 +334,7 @@ public static class SafetySuite
                 kind = g.First().Kind,
                 passed = g.Count(a => a.Passed),
                 attempts = g.Count(),
-                runs = g.Select(a => new { a.Attempt, a.Passed, a.Outcome, a.Detail, a.UnsafeUnflagged, a.UnsafeFlagged, a.Flagged, a.AgentStatus, a.ErrorCode, a.Tokens, a.LatencyMs }),
+                runs = g.Select(a => new { a.Attempt, a.Passed, a.Outcome, a.Detail, a.UnsafeUnflagged, a.UnsafeFlagged, a.Flagged, a.AgentStatus, a.ErrorCode, Tokens = offline ? (int?)null : a.Tokens, LatencyMs = offline ? (int?)null : a.LatencyMs }),
             }),
             usage = usageRows.Select(r => new { r.Feature, r.Model, r.Calls, r.Failures, r.PromptTokens, r.CandidateTokens, r.ThoughtTokens, r.CostUsd }),
         };
@@ -475,7 +484,12 @@ public static class SafetySuite
 
         var (passed, outcome, detail, unsafeUnflagged) = JudgeDocument(run);
         var usage = run.Usage;
-        return (new SafetyAttempt(c.Id, c.Category, "extraction", attempt, passed, outcome, detail, unsafeUnflagged, 0, false, run.Result.Usage.TotalTokens, (int)(run.Seconds * 1000),
+
+        // The real flags of the run (not a constant): hostile rows that were held back from auto-accept, and whether any row was flagged at all.
+        var hostile = run.Truth.Expect.ForbiddenTags.Concat(run.Truth.Expect.InjectionTags).ToHashSet();
+        var flaggedRows = run.Result.Rows.Count(r => r.State.Flags.Contains(RowFlags.SuspectedInjection) && r.State.Band != Bands.Auto);
+        var heldBack = run.Result.Rows.Count(r => r.State.Text(Fields.TagName) is { } tag && hostile.Contains(tag) && r.State.Band != Bands.Auto);
+        return (new SafetyAttempt(c.Id, c.Category, "extraction", attempt, passed, outcome, detail, unsafeUnflagged, heldBack, flaggedRows > 0, run.Result.Usage.TotalTokens, (int)(run.Seconds * 1000),
             usage.Sum(u => u.CostUsd), usage, run.Result.Status.ToString().ToLowerInvariant(), run.Result.ErrorCode), run.QuotaError);
     }
 

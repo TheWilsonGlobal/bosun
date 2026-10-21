@@ -37,6 +37,34 @@ public sealed class ExtractionOptions
 
     public double? Temperature { get; set; }
 
+    // ---------- resource limits (a hostile or merely huge PDF must cost bounded memory and time) ----------
+
+    /// <summary>Longest page side accepted at upload, in PDF points (72 per inch). A0 is 3370; 5000 is about 1.8 m. Larger = page_too_large.</summary>
+    public double MaxPageDimensionPoints { get; set; } = 5000;
+
+    /// <summary>A rendered page never has more pixels than this: the dpi is lowered until it fits (default 36 million = 6000 x 6000).</summary>
+    public long MaxRenderPixels { get; set; } = 36_000_000;
+
+    /// <summary>Words kept per page; the rest are dropped and the page report says so.</summary>
+    public int MaxWordsPerPage { get; set; } = 20_000;
+
+    /// <summary>Letters inspected per page for the garbage ratio.</summary>
+    public int MaxLettersPerPage { get; set; } = 200_000;
+
+    /// <summary>Horizontal and vertical table lines kept per page (each direction).</summary>
+    public int MaxLinesPerPage { get; set; } = 5_000;
+
+    /// <summary>Time allowed to open an uploaded PDF and measure its pages. The parser cannot be interrupted, so on a timeout the upload is refused while the abandoned work finishes in the background.</summary>
+    public double InspectTimeoutSeconds { get; set; } = 15;
+
+    // ---------- spend cap ----------
+
+    /// <summary>Most model calls one extraction may make (reads, repairs, retries inside a call and second reads). When it is spent the extraction ends partial with code extraction_budget_exceeded. 0 = unlimited.</summary>
+    public int MaxLlmCallsPerExtraction { get; set; } = 200;
+
+    /// <summary>Most total tokens one extraction may use. 0 = unlimited.</summary>
+    public int MaxTokensPerExtraction { get; set; } = 3_000_000;
+
     public TriageOptions Triage { get; set; } = new();
 
     public ScoreOptions Score { get; set; } = new();

@@ -1,9 +1,13 @@
 {
   "suite": "agent",
+  "isModelResult": true,
+  "invalid": false,
+  "costIsEstimate": true,
+  "pricingNote": "estimatedCostUsd is an ESTIMATE: tokens x the per-million-token prices in apps/backend/src/Bosun.Api/llm-pricing.json (list prices, not a bill; free-tier calls cost nothing).",
   "startedAt": "2026-10-20T13:43:22.1919451Z",
   "finishedAt": "2026-10-20T13:44:52.4127602Z",
   "model": "gemini-3.5-flash-lite",
-  "promptVersion": "planner.system\u002Bactor.system\u002Brepair.user\u002Bnudge.user@64e2e1af",
+  "promptVersion": "planner.system+actor.system+repair.user+nudge.user@64e2e1af",
   "runsPerCase": 3,
   "summary": {
     "cases": 1,
@@ -25,7 +29,7 @@
     {
       "id": "multi-create-tag-with-alarm",
       "category": "multi-step",
-      "instruction": "Create a new analog temperature tag ME-EXH-TT09 in \u00B0C with range 0 to 600, give it a high alarm at 480 \u00B0C with a 10 s delay, and put it in alarm group ME-EXH.",
+      "instruction": "Create a new analog temperature tag ME-EXH-TT09 in °C with range 0 to 600, give it a high alarm at 480 °C with a 10 s delay, and put it in alarm group ME-EXH.",
       "passed": 3,
       "attempts": 3,
       "passRate": 1,
@@ -41,9 +45,9 @@
           "tokens": 17631,
           "thoughtTokens": 0,
           "latencyMs": 11445,
-          "agentMessage": "Created new analog temperature tag ME-EXH-TT09 (\u00B0C, range 0-600), set high alarm H at 480 \u00B0C with 10 s delay, and assigned it to alarm group ME-EXH.",
+          "agentMessage": "Created new analog temperature tag ME-EXH-TT09 (°C, range 0-600), set high alarm H at 480 °C with 10 s delay, and assigned it to alarm group ME-EXH.",
           "netEffect": [
-            "create|ME-EXH-TT09 = AI|\u00B0C|0|600|NONE",
+            "create|ME-EXH-TT09 = AI|°C|0|600|NONE",
             "group|ME-EXH-TT09 = ME-EXH",
             "limit|ME-EXH-TT09|H = 480/10"
           ]
@@ -59,9 +63,9 @@
           "tokens": 21190,
           "thoughtTokens": 0,
           "latencyMs": 57506,
-          "agentMessage": "Created new analog temperature tag ME-EXH-TT09 in range 0-600 \u00B0C, configured a high alarm limit at 480 \u00B0C with a 10s delay, and assigned it to the ME-EXH alarm group.",
+          "agentMessage": "Created new analog temperature tag ME-EXH-TT09 in range 0-600 °C, configured a high alarm limit at 480 °C with a 10s delay, and assigned it to the ME-EXH alarm group.",
           "netEffect": [
-            "create|ME-EXH-TT09 = AI|\u00B0C|0|600|NONE",
+            "create|ME-EXH-TT09 = AI|°C|0|600|NONE",
             "group|ME-EXH-TT09 = ME-EXH",
             "limit|ME-EXH-TT09|H = 480/10"
           ]
@@ -77,9 +81,9 @@
           "tokens": 17680,
           "thoughtTokens": 0,
           "latencyMs": 20688,
-          "agentMessage": "Created analog temperature tag ME-EXH-TT09 in \u00B0C (range 0 to 600) within alarm group ME-EXH, and added a high alarm (H) at 480 \u00B0C with a 10-second delay.",
+          "agentMessage": "Created analog temperature tag ME-EXH-TT09 in °C (range 0 to 600) within alarm group ME-EXH, and added a high alarm (H) at 480 °C with a 10-second delay.",
           "netEffect": [
-            "create|ME-EXH-TT09 = AI|\u00B0C|0|600|NONE",
+            "create|ME-EXH-TT09 = AI|°C|0|600|NONE",
             "group|ME-EXH-TT09 = ME-EXH",
             "limit|ME-EXH-TT09|H = 480/10"
           ]

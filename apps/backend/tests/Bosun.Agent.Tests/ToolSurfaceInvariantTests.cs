@@ -44,7 +44,7 @@ public sealed partial class ToolSurfaceInvariantTests : IDisposable
         // Exactly the documented catalogue: a new tool must be added here on purpose.
         tools.Select(t => t.Name).Should().BeEquivalentTo(
         [
-            "search_tags", "get_tags", "list_alarm_groups", "list_controllers",
+            "search_tags", "get_tags", "list_alarm_groups", "list_controllers", "search_docs",
             "propose_create_tag", "propose_update_tag", "propose_set_alarm_limit", "propose_assign_group",
             "validate_draft", "show_draft_summary",
         ]);
@@ -62,7 +62,7 @@ public sealed partial class ToolSurfaceInvariantTests : IDisposable
     [Fact]
     public void Tools_depend_only_on_read_services_and_the_draft_interface_exposes_no_apply()
     {
-        var allowed = new[] { typeof(TagQueries), typeof(ProjectQueries) };
+        var allowed = new[] { typeof(TagQueries), typeof(ProjectQueries), typeof(Bosun.Application.Rag.KnowledgeSearchService) };
         foreach (var tool in Tools())
         {
             var parameters = tool.GetType().GetConstructors().Single().GetParameters().Select(p => p.ParameterType);
@@ -104,6 +104,38 @@ public sealed partial class ToolSurfaceInvariantTests : IDisposable
         offenders.Should().BeEmpty("only a human session may apply, approve or reject (plan s7.1)");
     }
 
+    /// <summary>The PUBLIC ChangeSetService methods the tool surface can reach, by name (tools -> IAgentDraft -> its implementation -> service), three calls deep.</summary>
+    public static IReadOnlyList<string> ChangeSetMethodsReachableFromTools(out IReadOnlyList<Type> toolTypes, out int reachableCount)
+    {
+        var assemblies = CallGraph.BosunAssemblies(typeof(AgentRunner).Assembly, typeof(ToolRegistry).Assembly);
+        toolTypes = assemblies.SelectMany(a => a.GetTypes()).Where(t => !t.IsAbstract && !t.IsInterface && typeof(IAgentTool).IsAssignableFrom(t)).ToList();
+        var drafts = assemblies.SelectMany(a => a.GetTypes()).Where(t => !t.IsAbstract && !t.IsInterface && typeof(IAgentDraft).IsAssignableFrom(t));
+        var roots = toolTypes.Concat(drafts).SelectMany(CallGraph.AllMethods);
+        var reachable = CallGraph.Reachable(roots, 3, assemblies);
+        reachableCount = reachable.Count;
+        return reachable.Where(m => m.DeclaringType == typeof(ChangeSetService) && m.IsPublic && !m.IsSpecialName).Select(m => m.Name).Distinct().Order().ToList();
+    }
+
+    [Fact]
+    public void Every_tool_implementation_in_every_loaded_bosun_assembly_cannot_reach_apply_approve_or_reject_three_calls_deep()
+    {
+        var reached = ChangeSetMethodsReachableFromTools(out var toolTypes, out var count);
+
+        // The scan must see what it is looking for: every registered tool, the interface call into the draft, and the service behind it.
+        toolTypes.Select(t => t.Name).Should().Contain(["SearchTagsTool", "GetTagsTool", "SearchDocsTool", "ProposeSetAlarmLimitTool", "ProposeCreateTagTool", "ValidateDraftTool"]);
+        Tools().Select(t => t.GetType()).Should().BeSubsetOf(toolTypes, "a registered tool the scan did not cover would be unchecked");
+        count.Should().BeGreaterThan(50, "the scan followed calls into the services, not just the tool bodies");
+        reached.Should().Contain(["TryAddOpsAsync", "CreateAgentDraftAsync", "CheckAsync"], "the draft path is the one the tools use");
+
+        reached.Should().NotContain([nameof(ChangeSetService.ApplyAsync), nameof(ChangeSetService.ApproveAsync), nameof(ChangeSetService.RejectAsync)]);
+        reached.Should().BeSubsetOf(
+            [
+                nameof(ChangeSetService.CreateAgentDraftAsync), nameof(ChangeSetService.CreateWhileHoldingGateAsync), nameof(ChangeSetService.CreateAsync), nameof(ChangeSetService.TryAddOpsAsync),
+                nameof(ChangeSetService.CheckAsync), nameof(ChangeSetService.GetAsync), nameof(ChangeSetService.ToDto),
+            ],
+            "a new service method reachable from the tools must be reviewed and added here on purpose");
+    }
+
     [Fact]
     public async Task Using_every_tool_changes_no_tag_limit_group_or_audit_entry_and_leaves_the_change_set_a_draft()
     {
@@ -138,6 +170,11 @@ public sealed partial class ToolSurfaceInvariantTests : IDisposable
             var result = await registry.ExecuteAsync(name, args, context, CancellationToken.None);
             result.Ok.Should().BeTrue($"{name}: {result.Response}");
         }
+
+        // search_docs is a read tool too; the seeded test database has no knowledge base, which it reports as a tool error (not an exception).
+        var docs = await registry.ExecuteAsync(ToolNames.SearchDocs, Args.Obj(("question", Args.V("why is the exhaust gas temperature delay 10 s?"))), context, CancellationToken.None);
+        docs.Ok.Should().BeFalse();
+        docs.ErrorCode.Should().Be(ToolErrorCodes.NotIndexed);
 
         (await host.TagFingerprintAsync()).Should().Be(before);
         var cs = await service.GetAsync(draft.ChangeSetId!.Value, CancellationToken.None);

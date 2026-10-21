@@ -269,6 +269,7 @@ public static class AgentRegistration
         services.AddOptions<AgentOptions>().BindConfiguration("Agent");
         services.AddSingleton<PromptLibrary>();
         services.AddScoped<PingService>();
+        services.AddScoped<RagAskService>();
         services.AddSingleton<IAgentEventSink, NullAgentEventSink>();
         services.AddScoped<AgentRunner>();
         services.AddSingleton<AgentRunManager>();

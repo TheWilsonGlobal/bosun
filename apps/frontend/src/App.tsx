@@ -18,6 +18,12 @@ const ChangeSetDetailPage = lazy(() =>
 const AuditPage = lazy(() =>
   import('@/features/audit/AuditPage').then((m) => ({ default: m.AuditPage })),
 );
+const DocumentsPage = lazy(() =>
+  import('@/features/extraction/DocumentsPage').then((m) => ({ default: m.DocumentsPage })),
+);
+const ExtractionPage = lazy(() =>
+  import('@/features/extraction/ExtractionPage').then((m) => ({ default: m.ExtractionPage })),
+);
 
 export function App() {
   return (
@@ -28,6 +34,8 @@ export function App() {
           <Route path="/tags" element={<TagsPage />} />
           <Route path="/change-sets" element={<ChangeSetsPage />} />
           <Route path="/change-sets/:id" element={<ChangeSetDetailPage />} />
+          <Route path="/documents" element={<DocumentsPage />} />
+          <Route path="/extractions/:id" element={<ExtractionPage />} />
           <Route path="/audit" element={<AuditPage />} />
           <Route
             path="*"

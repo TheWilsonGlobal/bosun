@@ -31,7 +31,8 @@ public sealed record PageContent(
     int CharCount,
     int ImageCount,
     double ImageAreaRatio,
-    double GarbageRatio)
+    double GarbageRatio,
+    bool Capped = false)
 {
     /// <summary>All words in reading order, one text line per visual row (used for grounding checks and the injection scan).</summary>
     public string Text => TableReconstructor.PlainText(this);
@@ -43,7 +44,8 @@ public sealed class PdfUnreadableException(string code, string message, Exceptio
     public string Code { get; } = code;
 }
 
-public sealed record PdfInfo(int PageCount);
+/// <summary>Page count plus the largest page side in PDF points (0 when the sizes could not be read) and the page that has it.</summary>
+public sealed record PdfInfo(int PageCount, double MaxPageSidePoints = 0, int LargestPage = 0);
 
 public static class PdfPages
 {
@@ -57,8 +59,16 @@ public static class PdfPages
     {
         try
         {
-            using var document = PdfDocument.Open(pdf, Options);
-            return new PdfInfo(document.NumberOfPages);
+            int count;
+            using (var document = PdfDocument.Open(pdf, Options))
+            {
+                count = document.NumberOfPages;
+            }
+
+            // Page sizes come from PDFium (the MediaBox is read without interpreting any page content), so a huge MediaBox is seen
+            // here, before anything is rendered.
+            var (side, page) = PdfiumPageRenderer.LargestPageSide(pdf);
+            return new PdfInfo(count, side, page);
         }
         catch (PdfDocumentEncryptedException ex)
         {
@@ -70,15 +80,17 @@ public static class PdfPages
         }
     }
 
-    public static IReadOnlyList<PageContent> Read(byte[] pdf)
+    public static IReadOnlyList<PageContent> Read(byte[] pdf, ExtractionOptions? limits = null, CancellationToken ct = default)
     {
+        limits ??= new ExtractionOptions();
         try
         {
             using var document = PdfDocument.Open(pdf, Options);
             var pages = new List<PageContent>(document.NumberOfPages);
             for (var number = 1; number <= document.NumberOfPages; number++)
             {
-                pages.Add(ReadPage(document.GetPage(number)));
+                ct.ThrowIfCancellationRequested();
+                pages.Add(ReadPage(document.GetPage(number), limits));
             }
 
             return pages;
@@ -87,24 +99,38 @@ public static class PdfPages
         {
             throw new PdfUnreadableException(CodeEncrypted, "The PDF is password protected. Upload an unprotected copy.", ex);
         }
-        catch (Exception ex) when (ex is not OutOfMemoryException and not PdfUnreadableException)
+        catch (Exception ex) when (ex is not OutOfMemoryException and not PdfUnreadableException and not OperationCanceledException)
         {
             throw new PdfUnreadableException(CodeUnreadable, "The file could not be read as a PDF (it may be corrupt or truncated).", ex);
         }
     }
 
-    private static PageContent ReadPage(Page page)
+    private static PageContent ReadPage(Page page, ExtractionOptions limits)
     {
+        var capped = false;
         var words = page.GetWords()
             .Where(w => !string.IsNullOrWhiteSpace(w.Text))
+            .Take(limits.MaxWordsPerPage + 1)
             .Select(w => new PageWord(w.Text, w.BoundingBox.Left, w.BoundingBox.Bottom, w.BoundingBox.Right, w.BoundingBox.Top))
             .ToList();
+        if (words.Count > limits.MaxWordsPerPage)
+        {
+            words.RemoveRange(limits.MaxWordsPerPage, words.Count - limits.MaxWordsPerPage);
+            capped = true;
+        }
 
         var letters = page.Letters;
         var charCount = 0;
         var bad = 0;
+        var letterCount = 0;
         foreach (var letter in letters)
         {
+            if (++letterCount > limits.MaxLettersPerPage)
+            {
+                capped = true;
+                break;
+            }
+
             foreach (var c in letter.Value)
             {
                 if (char.IsWhiteSpace(c))
@@ -120,7 +146,7 @@ public static class PdfPages
             }
         }
 
-        var (horizontal, vertical) = Lines(page);
+        var (horizontal, vertical) = Lines(page, limits.MaxLinesPerPage, ref capped);
         var area = Math.Max(1.0, page.Width * page.Height);
         var imageArea = 0.0;
         var imageCount = 0;
@@ -131,20 +157,27 @@ public static class PdfPages
         }
 
         return new PageContent(page.Number, page.Width, page.Height, words, horizontal, vertical, charCount, imageCount,
-            Math.Min(1.0, imageArea / area), charCount == 0 ? 0 : (double)bad / charCount);
+            Math.Min(1.0, imageArea / area), charCount == 0 ? 0 : (double)bad / charCount, capped);
     }
 
     /// <summary>Replacement characters, private-use glyphs and control characters: what a broken font mapping produces.</summary>
     public static bool IsSuspectChar(char c) =>
         c == '�' || c is >= '' and <= '' || char.IsControl(c) || c is >= '\u0080' and <= '\u009F';
 
-    private static (List<PageLine> Horizontal, List<PageLine> Vertical) Lines(Page page)
+    private static (List<PageLine> Horizontal, List<PageLine> Vertical) Lines(Page page, int maxLines, ref bool capped)
     {
         var horizontal = new List<PageLine>();
         var vertical = new List<PageLine>();
+        var overflow = false;
 
         void Add(PdfPoint a, PdfPoint b)
         {
+            if (horizontal.Count >= maxLines || vertical.Count >= maxLines)
+            {
+                overflow = true;
+                return;
+            }
+
             var dx = Math.Abs(a.X - b.X);
             var dy = Math.Abs(a.Y - b.Y);
             if (dy <= 0.75 && dx >= 3)
@@ -192,6 +225,7 @@ public static class PdfPages
             vertical.Clear();
         }
 
+        capped |= overflow;
         return (horizontal, vertical);
     }
 }

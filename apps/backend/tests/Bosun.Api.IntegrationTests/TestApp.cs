@@ -129,6 +129,10 @@ public class TestApp : WebApplicationFactory<Program>
                 ["Auth:ApproverPassword"] = ApproverPassword,
                 ["Seed:Enabled"] = seed ? "true" : "false",
 
+                // No sockets in ordinary tests: the Modbus poller and NMEA listener only report "disabled". Monitoring tests switch it
+                // on explicitly and point it at a simulator they started in-process on ephemeral ports.
+                ["Monitoring:Enabled"] = "false",
+
                 // Test output stays readable: warnings and errors only (the JSON console would otherwise print every request).
                 ["Serilog:MinimumLevel:Default"] = "Warning",
 
@@ -140,6 +144,7 @@ public class TestApp : WebApplicationFactory<Program>
                 ["Embedding:Model"] = "test-embedding",
                 ["Embedding:ApiKey"] = "test-key-0123456789abcdef",
                 ["Embedding:Dimensions"] = "4",
+                ["Rag:CachePath"] = "", // tests never touch the repo-level embedding cache file
                 ["Auth:LoginRateLimit:PermitLimit"] = "100000", // many tests log in; the limiter has its own test with a tight limit
             };
             foreach (var (key, value) in extra)

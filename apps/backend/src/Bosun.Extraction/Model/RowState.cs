@@ -48,6 +48,9 @@ public static class RowFlags
 
     /// <summary>The text read and the vision read of this page disagree about whether this row exists.</summary>
     public const string DualReadMissing = "dual_read_missing";
+
+    /// <summary>Normalising or assessing this row threw: the raw text is kept, the band is must_fix.</summary>
+    public const string ProcessingFailed = "processing_failed";
 }
 
 public static class FieldFlags

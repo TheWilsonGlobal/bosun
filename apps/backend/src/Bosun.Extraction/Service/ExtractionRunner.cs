@@ -6,6 +6,7 @@ using Bosun.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using ExtractionEntity = Bosun.Domain.Entities.Extraction;
 
 namespace Bosun.Extraction;
@@ -220,7 +221,7 @@ public static class ExtractionRegistration
     {
         services.AddOptions<ExtractionOptions>().BindConfiguration("Extraction");
         services.AddSingleton<ExtractionPrompts>();
-        services.AddSingleton<IPageRenderer, PdfiumPageRenderer>();
+        services.AddSingleton<IPageRenderer>(sp => new PdfiumPageRenderer(sp.GetRequiredService<IOptions<ExtractionOptions>>().Value.MaxRenderPixels));
         services.AddSingleton<IDocumentStore, FileDocumentStore>();
         services.AddSingleton<ExtractionRunManager>();
         services.AddScoped<RowReader>();

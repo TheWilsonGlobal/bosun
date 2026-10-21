@@ -293,10 +293,70 @@ public sealed class AgentApiTests : IDisposable
         // The only mutating routes of the whole API are the known change-set and agent ones; any new one must be classified here on purpose.
         var mutating = routes.Where(r => !r.StartsWith("GET ", StringComparison.Ordinal) && !r.StartsWith("* ", StringComparison.Ordinal) && !r.StartsWith("HEAD ", StringComparison.Ordinal)).ToList();
         // Phase 5 added one PATCH on purpose: the human correction of an extracted row (it edits the REVIEW row, never a tag).
-        var classified = new[] { "PATCH /api/extractions/{id}/rows/{rowId}" };
+        // Review-fix added DELETE /api/documents/{documentId}: it removes an uploaded document and its REVIEW rows, never a tag.
+        var classified = new[] { "PATCH /api/extractions/{id}/rows/{rowId}", "DELETE /api/documents/{documentId}" };
         mutating.Where(r => !r.Contains(" /hubs/", StringComparison.Ordinal) && !classified.Contains(r)).Should().OnlyContain(r => r.StartsWith("POST /api/", StringComparison.Ordinal));
         reachable.Select(r => r.Route).Should().NotIntersectWith(classified.Concat(mutating.Where(r => r.Contains("/extractions", StringComparison.Ordinal) || r.EndsWith("/documents", StringComparison.Ordinal))),
             "the agent tool surface cannot reach the extraction routes either");
+    }
+
+    [Fact]
+    public void The_routes_a_tool_can_reach_are_derived_from_the_compiled_handlers_not_only_declared()
+    {
+        // Which ChangeSetService methods the tool surface reaches (compiled call graph), and which non-GET routes' handlers call any of them.
+        var reachedByTools = ToolSurfaceInvariantTests.ChangeSetMethodsReachableFromTools(out _, out _).ToHashSet();
+        var mutatingReached = reachedByTools.Where(n => !n.StartsWith("Get", StringComparison.Ordinal) && n is not (nameof(ChangeSetService.CheckAsync) or nameof(ChangeSetService.ToDto))).ToHashSet();
+        var assemblies = CallGraph.BosunAssemblies(typeof(AgentRunner).Assembly, typeof(Program).Assembly);
+
+        var handlerCalls = new Dictionary<string, HashSet<string>>();
+        foreach (var endpoint in app.Services.GetRequiredService<EndpointDataSource>().Endpoints.OfType<RouteEndpoint>())
+        {
+            if (endpoint.Metadata.OfType<System.Reflection.MethodInfo>().FirstOrDefault() is not { } handler)
+            {
+                continue;
+            }
+
+            var called = CallGraph.Reachable([handler], 2, assemblies).Where(m => m.DeclaringType == typeof(ChangeSetService) && m.IsPublic && !m.IsSpecialName).Select(m => m.Name).ToHashSet();
+            foreach (var method in endpoint.Metadata.GetMetadata<HttpMethodMetadata>()?.HttpMethods ?? ["*"])
+            {
+                handlerCalls[$"{method} {NormalisePath(endpoint.RoutePattern.RawText!)}"] = called;
+            }
+        }
+
+        handlerCalls.Count.Should().BeGreaterThan(20, "the endpoint handlers must be resolvable, or this test proves nothing");
+        handlerCalls["POST /api/change-sets/{id}/apply"].Should().Contain(nameof(ChangeSetService.ApplyAsync), "the scan must see the apply route call apply");
+        handlerCalls["POST /api/change-sets/{id}/approve"].Should().Contain(nameof(ChangeSetService.ApproveAsync));
+
+        var dangerous = new[] { nameof(ChangeSetService.ApplyAsync), nameof(ChangeSetService.ApproveAsync), nameof(ChangeSetService.RejectAsync) };
+        var reachableNonGet = handlerCalls
+            .Where(r => !r.Key.StartsWith("GET ", StringComparison.Ordinal) && !r.Key.StartsWith("* ", StringComparison.Ordinal) && r.Value.Overlaps(mutatingReached))
+            .Select(r => r.Key).Order().ToList();
+
+        // No route that can apply, approve or reject shares a service method with the tools...
+        reachedByTools.Should().NotIntersectWith(dangerous);
+        mutatingReached.Should().NotBeEmpty().And.BeSubsetOf([nameof(ChangeSetService.CreateAgentDraftAsync), nameof(ChangeSetService.CreateAsync), nameof(ChangeSetService.CreateWhileHoldingGateAsync), nameof(ChangeSetService.TryAddOpsAsync)]);
+        // ...and the non-GET routes that do share one are exactly the draft-creating and draft-appending ones, named here on purpose.
+        reachableNonGet.Should().BeSubsetOf(
+        [
+            "POST /api/projects/{projectId}/change-sets",
+            "POST /api/change-sets/{id}/ops",
+            "POST /api/extractions/{id}/accept",
+            "POST /api/projects/{projectId}/agent/runs",
+        ], "a new non-GET route that reaches the tool services must be classified on purpose");
+
+        // The declared Routes of the tools are a subset of what the compiled handlers confirm (GET reads aside).
+        // Tools declare the draft routes they correspond to; each must be a route the derivation also found, or a plain GET.
+        var declaredNonGet = Registry().Tools.SelectMany(t => t.Routes).Select(Normalise).Where(r => !r.StartsWith("GET ", StringComparison.Ordinal)).Distinct();
+        foreach (var route in declaredNonGet)
+        {
+            handlerCalls.Should().ContainKey(route);
+        }
+    }
+
+    private ToolRegistry Registry()
+    {
+        using var scope = app.Services.CreateScope();
+        return scope.ServiceProvider.GetRequiredService<ToolRegistry>();
     }
 
     private static bool Has(JsonElement element, string name) => element.TryGetProperty(name, out _);

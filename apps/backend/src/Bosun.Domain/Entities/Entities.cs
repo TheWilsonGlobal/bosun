@@ -321,3 +321,85 @@ public sealed class EvalResult
     public int LatencyMs { get; set; }
     public int? AgentRunId { get; set; }
 }
+
+/// <summary>
+/// One searchable passage of a project document (plan s6.4): a heading-bounded slice of a Markdown file with the citation
+/// fields (<see cref="Source"/>, <see cref="Section"/>, <see cref="Page"/>). The embedding is a little-endian float32[768],
+/// L2-normalised, stored as a BLOB (the SQLite vector store scans these in process; Phase 8 moves them to pgvector).
+/// <see cref="ContentHash"/> is the SHA-256 of the exact text that was embedded, so an unchanged chunk is never embedded twice.
+/// </summary>
+public sealed class KnowledgeChunk
+{
+    public int Id { get; set; }
+    public int ProjectId { get; set; }
+    public Project? Project { get; set; }
+
+    /// <summary>Document id for citations: the file name without extension, for example "alarm-philosophy".</summary>
+    public string Source { get; set; } = "";
+
+    /// <summary>Heading text of the section this chunk belongs to.</summary>
+    public string Section { get; set; } = "";
+
+    /// <summary>1-based page of the deterministic pagination of the source (see Chunker.PageChars).</summary>
+    public int Page { get; set; }
+
+    /// <summary>Position of the chunk inside its source (0-based, document order).</summary>
+    public int Ordinal { get; set; }
+
+    public string Text { get; set; } = "";
+    public string ContentHash { get; set; } = "";
+    public byte[]? Embedding { get; set; }
+    public string? EmbeddingModel { get; set; }
+    public DateTime IndexedAt { get; set; }
+}
+
+/// <summary>
+/// One alarm occurrence (a tag crossing one limit level and staying across it for the limit's delay). Holds the current state;
+/// the history of how it got there is in <see cref="AlarmEvent"/>. Keyed by tag NAME, not tag id, so deleting or renaming a tag
+/// in a change set never rewrites or cascades into alarm history. Ids are allocated in process (see AlarmManager) because the
+/// hub announces an alarm before the background writer has stored it; the writer inserts them with their explicit ids.
+/// </summary>
+public sealed class Alarm
+{
+    public int Id { get; set; }
+    public int ProjectId { get; set; }
+    public string TagName { get; set; } = "";
+    public AlarmLevel Level { get; set; }
+
+    /// <summary>The limit as it was configured when the alarm was raised (or last changed while active).</summary>
+    public double LimitValue { get; set; }
+    public double DelayS { get; set; }
+    public double Hysteresis { get; set; }
+    public string? Unit { get; set; }
+    public string? Description { get; set; }
+    public AlarmState State { get; set; }
+    public DateTime RaisedAt { get; set; }
+    public double RaisedValue { get; set; }
+
+    /// <summary>Worst value seen while the condition was active (highest for H/HH, lowest for L/LL).</summary>
+    public double PeakValue { get; set; }
+    public DateTime? AcknowledgedAt { get; set; }
+    public string? AcknowledgedBy { get; set; }
+    public DateTime? ReturnedAt { get; set; }
+    public double? ReturnedValue { get; set; }
+    public DateTime? ClearedAt { get; set; }
+
+    public Alarm Clone() => (Alarm)MemberwiseClone();
+}
+
+/// <summary>Append-only log of an alarm's transitions (raised, acknowledged, returned to normal, cleared).</summary>
+public sealed class AlarmEvent
+{
+    public int Id { get; set; }
+    public int AlarmId { get; set; }
+    public Alarm? Alarm { get; set; }
+    public AlarmEventKind Kind { get; set; }
+    public DateTime At { get; set; }
+
+    /// <summary>The process value at the moment of the transition (null for an acknowledgement, which has none).</summary>
+    public double? Value { get; set; }
+
+    /// <summary>The operator for an acknowledgement; null for transitions the system made.</summary>
+    public string? Actor { get; set; }
+    public string? Note { get; set; }
+}

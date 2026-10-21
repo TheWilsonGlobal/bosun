@@ -122,7 +122,7 @@ public static class GeminiHttp
                         // Honour the provider's wait (plus a little jitter so parallel callers do not stampede), else fall back to backoff.
                         if (await RetryDelayAsync(response, args.Context.CancellationToken) is { } wait)
                         {
-                            return (wait > maxWait && settings.QuotaRetryAttempts > 0 ? TimeSpan.FromSeconds(settings.QuotaRetryDelaySeconds) : wait)
+                            return CapWait(wait, maxWait, response.StatusCode == HttpStatusCode.TooManyRequests, settings)
                                 + TimeSpan.FromMilliseconds(Random.Shared.Next(0, 250));
                         }
                     }
@@ -145,6 +145,26 @@ public static class GeminiHttp
         });
 
         builder.AddTimeout(TimeSpan.FromSeconds(settings.AttemptTimeoutSeconds));
+    }
+
+    /// <summary>
+    /// The pause before a retry: never negative (a Retry-After date in the past), never longer than <paramref name="maxWait"/> for a
+    /// 5xx (a server asking for an hour must not park a request for an hour), and for a 429 the fixed quota delay when quota retries
+    /// are on and the provider asked for longer than the cap.
+    /// </summary>
+    public static TimeSpan CapWait(TimeSpan wait, TimeSpan maxWait, bool isRateLimit, ResilienceSettings settings)
+    {
+        if (wait < TimeSpan.Zero)
+        {
+            return TimeSpan.Zero;
+        }
+
+        if (wait <= maxWait)
+        {
+            return wait;
+        }
+
+        return isRateLimit && settings.QuotaRetryAttempts > 0 ? TimeSpan.FromSeconds(settings.QuotaRetryDelaySeconds) : maxWait;
     }
 
     private static async ValueTask<TimeSpan?> RetryDelayAsync(HttpResponseMessage response, CancellationToken ct)

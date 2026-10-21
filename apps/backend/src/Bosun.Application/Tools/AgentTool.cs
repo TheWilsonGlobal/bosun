@@ -62,6 +62,7 @@ public static class ToolErrorCodes
     public const string ScopeLimit = "scope_limit";
     public const string ResultTooLarge = "result_too_large";
     public const string Failed = "tool_failed";
+    public const string NotIndexed = "not_indexed";
 }
 
 public static class ToolNames
@@ -70,6 +71,7 @@ public static class ToolNames
     public const string GetTags = "get_tags";
     public const string ListAlarmGroups = "list_alarm_groups";
     public const string ListControllers = "list_controllers";
+    public const string SearchDocs = "search_docs";
     public const string ProposeCreateTag = "propose_create_tag";
     public const string ProposeUpdateTag = "propose_update_tag";
     public const string ProposeSetAlarmLimit = "propose_set_alarm_limit";

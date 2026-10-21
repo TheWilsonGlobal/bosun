@@ -19,7 +19,11 @@ public sealed class NormaliserTests
     [InlineData("+3", 3)]
     [InlineData(".5", 0.5)]
     [InlineData("1 200,5", 1200.5)] // space as thousands separator
-    [InlineData("95 100", 95100)] // SI style grouping in threes
+    [InlineData("12 345 678", 12345678)] // SI style grouping in threes (three groups: unambiguous)
+    [InlineData("-20", -20)]
+    [InlineData("1e3", 1000)]
+    [InlineData("1.5e-3", 0.0015)]
+    [InlineData("4 mA", 4)]
     [InlineData("1'200.5", 1200.5)]
     [InlineData("95 °C", 95)]
     [InlineData("1.5e3", 1500)]
@@ -71,6 +75,15 @@ public sealed class NormaliserTests
     [InlineData("12 34 56")]
     [InlineData("1,2,3")]
     [InlineData("95 1000")]
+    [InlineData("0-600")]
+    [InlineData("80-90")]
+    [InlineData("4-20")]
+    [InlineData("10 to 20")]
+    [InlineData("0 ... 600")]
+    [InlineData("0 – 600")]
+    [InlineData("1e99999999999")]
+    [InlineData("1e-99999999999")]
+    [InlineData("2e500")]
     public void Text_that_is_not_one_number_fails_with_a_reason(string raw)
     {
         var result = Normaliser.ParseNumber(raw);
@@ -78,6 +91,59 @@ public sealed class NormaliserTests
         result.Failed.Should().BeTrue();
         result.Value.Should().BeNull();
         result.Problem.Should().NotBeNullOrEmpty();
+    }
+
+    [Theory]
+    [InlineData("95 100", 95100)]
+    [InlineData("1 200", 1200)]
+    public void A_single_space_group_could_be_two_numbers_so_it_is_a_guess(string raw, double expected)
+    {
+        var result = Normaliser.ParseNumber(raw);
+
+        result.Failed.Should().BeFalse();
+        result.Value.Should().Be(expected);
+        result.Guess.Should().BeTrue();
+    }
+
+    [Fact]
+    public void A_huge_exponent_fails_the_value_instead_of_throwing()
+    {
+        var act = () => Normaliser.ParseNumber("1e99999999999");
+
+        act.Should().NotThrow();
+        act().Problem.Should().Contain("out of range");
+    }
+
+    [Fact]
+    public void Four_to_twenty_milliamp_stays_a_valid_signal_type_while_4_20_is_not_a_number()
+    {
+        Normaliser.NormaliseSignalType("4-20mA").Type.Should().Be(SignalType.AI);
+        Normaliser.NormaliseSignalType("4-20 mA").Recognised.Should().BeTrue();
+        Normaliser.ParseNumber("4-20").Failed.Should().BeTrue();
+    }
+
+    [Theory]
+    [InlineData("MW", "MW", false)]
+    [InlineData("mW", "mW", false)]
+    [InlineData("MPa", "MPa", false)]
+    [InlineData("mPa", "mPa", false)]
+    [InlineData("mw", "MW", true)] // lower case: milliwatt or megawatt, say so
+    [InlineData("mpa", "MPa", true)]
+    [InlineData("KPA", "kPa", false)]
+    [InlineData("kpa", "kPa", false)]
+    public void Unit_case_is_folded_only_where_it_does_not_change_the_meaning(string raw, string expected, bool guess)
+    {
+        var result = Normaliser.NormaliseUnit(raw);
+
+        result.Value.Should().Be(expected);
+        result.Guess.Should().Be(guess);
+    }
+
+    [Fact]
+    public void A_bare_capital_M_is_not_folded_onto_metres()
+    {
+        Normaliser.NormaliseUnit("m").Value.Should().Be("m");
+        Normaliser.NormaliseUnit("M").Recognised.Should().BeFalse();
     }
 
     [Fact]

@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Bosun.Simulator</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- Shared framework only for hosting/logging abstractions; no web server is started. -->
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <ProjectReference Include="..\backend\src\Bosun.Protocols\Bosun.Protocols.csproj" />
+  </ItemGroup>
+</Project>

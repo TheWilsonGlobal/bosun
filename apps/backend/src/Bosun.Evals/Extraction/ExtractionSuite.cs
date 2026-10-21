@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Bosun.Application.Llm;
+using Bosun.Application.Safety;
 using Bosun.Domain.Entities;
 using Bosun.Evals.Fixtures;
 using Bosun.Evals.Offline;
@@ -63,6 +64,11 @@ public static class ExtractionSuite
                 Console.Error.WriteLine(ex.Message.Replace("agent evals", "extraction evals", StringComparison.Ordinal));
                 return 2;
             }
+        }
+
+        if (offline)
+        {
+            EvalHonesty.PrintOfflineBanner("extraction");
         }
 
         var work = Path.Combine(Path.GetTempPath(), "bosun-evals", "extraction-" + DateTime.UtcNow.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture) + "-" + Guid.NewGuid().ToString("N")[..6]);
@@ -164,6 +170,10 @@ public static class ExtractionSuite
         {
             suite = "extraction",
             mode = offline ? "offline-scripted-reader (plumbing check, not a model result)" : "live",
+            isModelResult = !offline,
+            costIsEstimate = true,
+            pricingNote = EvalHonesty.PricingNote,
+            notes = offline ? new[] { EvalHonesty.OfflineScope, EvalHonesty.ScannedEchoNote } : Array.Empty<string>(),
             startedAt = started,
             finishedAt = finished,
             model = runner.Model,
@@ -184,15 +194,16 @@ public static class ExtractionSuite
                 summary.DesignedFlags,
                 summary.TextMeetsTarget,
                 summary.ScannedMeetsTarget,
-                promptTokens = usageRows.Sum(r => r.PromptTokens),
-                candidateTokens = usageRows.Sum(r => r.CandidateTokens),
-                thoughtTokens = usageRows.Sum(r => r.ThoughtTokens),
-                totalTokens = usageRows.Sum(r => r.TotalTokens),
-                estimatedCostUsd = Math.Round(totals.CostUsd, 6),
+                scannedF1Meaning = offline ? EvalHonesty.ScannedEchoNote : null,
+                promptTokens = offline ? (long?)null : usageRows.Sum(r => r.PromptTokens),
+                candidateTokens = offline ? (long?)null : usageRows.Sum(r => r.CandidateTokens),
+                thoughtTokens = offline ? (long?)null : usageRows.Sum(r => r.ThoughtTokens),
+                totalTokens = offline ? (long?)null : usageRows.Sum(r => r.TotalTokens),
+                estimatedCostUsd = offline ? (double?)null : Math.Round(totals.CostUsd, 6),
                 llmCalls = totals.Calls,
                 llmFailures = totals.Failures,
             },
-            fixtures = all.Select(a => FixtureJson(a.Attempt, a.Run)),
+            fixtures = all.Select(a => FixtureJson(a.Attempt, a.Run, offline)),
             usage = usageRows.Select(r => new { r.Feature, r.Model, r.Calls, r.Failures, r.PromptTokens, r.CandidateTokens, r.ThoughtTokens, r.CostUsd }),
         };
         await File.WriteAllTextAsync(resultsPath, JsonSerializer.Serialize(report, new JsonSerializerOptions { WriteIndented = true, DefaultIgnoreCondition = JsonIgnoreCondition.Never, PropertyNamingPolicy = JsonNamingPolicy.CamelCase }) + "\n");
@@ -258,13 +269,17 @@ public static class ExtractionSuite
             },
             new
             {
+                // No error rows = nothing for the bands to catch: a share of 1 is then VACUOUS, not evidence of good calibration.
+                vacuous = calibration.ErrorRows == 0,
                 share = Math.Round(calibration.Calibration, 4),
                 errorRows = calibration.ErrorRows,
                 errorRowsInReviewOrMustFix = calibration.Caught,
                 errorRowsAutoAccepted = calibration.AutoErrors,
                 missedRowsNotBanded = runs.Sum(r => r.Text.MissedRows.Count + r.Scanned.MissedRows.Count),
                 textShare = Math.Round(ExtractionScorer.Calibration(runs.SelectMany(r => r.Text.Rows)).Calibration, 4),
+                textVacuous = ExtractionScorer.Calibration(runs.SelectMany(r => r.Text.Rows)).ErrorRows == 0,
                 scannedShare = Math.Round(ExtractionScorer.Calibration(runs.SelectMany(r => r.Scanned.Rows)).Calibration, 4),
+                scannedVacuous = ExtractionScorer.Calibration(runs.SelectMany(r => r.Scanned.Rows)).ErrorRows == 0,
             },
             autoRows.Count == 0 ? null : Math.Round((double)autoRows.Count(r => r.Correct) / autoRows.Count, 4),
             new { fixtures = injection.Count, allFlagged = injection.All(i => i.Flagged == i.Expected), allVerbatim = injection.All(i => i.Verbatim == i.Expected), zeroedAlarms = injection.Sum(i => i.ZeroedAlarms), forbiddenPresent = injection.SelectMany(i => i.ForbiddenPresent).ToList(), details = injection },
@@ -424,13 +439,13 @@ public static class ExtractionSuite
                 return;
             }
 
-            sb.AppendLine($"{label,-22} {"",-8} {a.TruthRows,5} {a.Precision,6:F3} {a.Recall,6:F3} {a.F1,6:F3}   target F1 >= {target:F2}: {(a.F1 >= target ? "MET" : "NOT MET")}");
+            sb.AppendLine($"{label,-22} {"",-8} {a.TruthRows,5} {a.Precision,6:F3} {a.Recall,6:F3} {a.F1,6:F3}   target F1 >= {target:F2}: {(a.F1 >= target ? "MET" : "NOT MET")}{(offline && label.StartsWith("SCANNED", StringComparison.Ordinal) ? "  (echo of the ground truth: does not test rendering or vision)" : "")}");
         }
 
         Line("TEXT (all fixtures)", s.Text, TextTarget);
         Line("SCANNED (all fixtures)", s.Scanned, ScannedTarget);
         sb.AppendLine($"Bands: {JsonSerializer.Serialize(s.Bands)}");
-        sb.AppendLine($"Calibration: {JsonSerializer.Serialize(s.Calibration)}   auto-accepted rows that were fully correct: {(s.AutoAcceptPrecision is { } p ? p.ToString("P1", CultureInfo.InvariantCulture) : "n/a")}");
+        sb.AppendLine($"Calibration{(s.Calibration.GetType().GetProperty("vacuous")?.GetValue(s.Calibration) is true ? " (VACUOUS: no error rows, nothing to catch)" : "")}: {JsonSerializer.Serialize(s.Calibration)}   auto-accepted rows that were fully correct: {(s.AutoAcceptPrecision is { } p ? p.ToString("P1", CultureInfo.InvariantCulture) : "n/a")}");
         foreach (var run in runs.Where(r => r.Truth.Expect.InjectionTags.Count > 0))
         {
             var i = InjectionCheck(run);
@@ -446,7 +461,7 @@ public static class ExtractionSuite
         return sb.ToString();
     }
 
-    private static object FixtureJson(int attempt, FixtureRun run)
+    private static object FixtureJson(int attempt, FixtureRun run, bool offline)
     {
         var (passed, outcome, detail) = Judge(run);
         object Split(ExtractionScore score) => new
@@ -461,6 +476,8 @@ public static class ExtractionSuite
             perField = score.PerField.ToDictionary(f => f.Key, f => new { f.Value.Tp, f.Value.Fp, f.Value.Fn, f1 = Math.Round(f.Value.F1, 4) }),
             bands = new { auto = score.Rows.Count(r => r.Band == Bands.Auto), review = score.Rows.Count(r => r.Band == Bands.Review), mustFix = score.Rows.Count(r => r.Band == Bands.MustFix) },
             calibration = Math.Round(ExtractionScorer.Calibration(score.Rows).Calibration, 4),
+            calibrationVacuous = ExtractionScorer.Calibration(score.Rows).ErrorRows == 0,
+            note = offline && score.Rows.Count > 0 && ReferenceEquals(score, run.Scanned) ? EvalHonesty.ScannedEchoNote : null,
             errorRows = score.Rows.Where(r => !r.Correct).Select(r => new { r.Tag, r.Page, r.Band, r.Extra, wrong = r.Wrong, missing = r.Missing }).Take(60),
             missedRows = score.MissedRows,
         };
@@ -475,13 +492,13 @@ public static class ExtractionSuite
             detail,
             status = run.Result.Status.ToString().ToLowerInvariant(),
             errorCode = run.Result.ErrorCode,
-            seconds = Math.Round(run.Seconds, 1),
+            seconds = offline ? (double?)null : Math.Round(run.Seconds, 1),
             pages = run.Result.Pages.Select(p => new { p.Page, p.Path, p.Reasons, p.Status, p.Rows, p.ReconstructedRows, unmatchedRows = p.UnmatchedRows.Count, p.DualRead, p.InjectionHits, p.ErrorCode }),
             text = Split(run.Text),
             scanned = Split(run.Scanned),
             llmCalls = run.Result.Calls,
-            tokens = new { prompt = run.Result.Usage.PromptTokens, candidate = run.Result.Usage.CandidateTokens, thought = run.Result.Usage.ThoughtTokens, total = run.Result.Usage.TotalTokens },
-            estimatedCostUsd = Math.Round(run.Result.CostUsd, 6),
+            tokens = offline ? null : new { prompt = run.Result.Usage.PromptTokens, candidate = run.Result.Usage.CandidateTokens, thought = run.Result.Usage.ThoughtTokens, total = run.Result.Usage.TotalTokens },
+            estimatedCostUsd = offline ? (double?)null : Math.Round(run.Result.CostUsd, 6),
             quotaError = run.QuotaError,
         };
     }

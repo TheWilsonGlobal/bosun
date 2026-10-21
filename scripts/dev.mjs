@@ -45,7 +45,7 @@ if (busy.length > 0) {
 const children = [];
 let stopping = false;
 
-function start(label, command, args, { critical = true } = {}) {
+function start(label, command, args, { critical = true, survivable = false } = {}) {
   // pnpm is a .cmd shim on Windows, which cannot be spawned without a shell (and shell+args is deprecated).
   // When started via `pnpm run`, npm_execpath points at the real pnpm CLI, which we can spawn directly.
   const pnpmPath = process.env.npm_execpath;
@@ -83,6 +83,12 @@ function start(label, command, args, { critical = true } = {}) {
   });
   child.on('exit', (code) => {
     if (stopping) return;
+    if (survivable) {
+      console.error(
+        `[${label}] exited with code ${code}. The SPAs are still running (the offline banner can be exercised). Press Ctrl+C to stop everything.`,
+      );
+      return;
+    }
     if (!critical && code === 0) {
       console.log(`[${label}] nothing left to run (exit 0); the API keeps running.`);
       return;
@@ -121,7 +127,7 @@ console.log(
   `API http://127.0.0.1:${ports.api}  |  frontend http://127.0.0.1:${ports.frontend}  |  admin http://127.0.0.1:${ports.admin}/admin/`,
 );
 
-start('api', 'dotnet', ['run', '--project', 'apps/backend/src/Bosun.Api']);
+start('api', 'dotnet', ['run', '--project', 'apps/backend/src/Bosun.Api'], { survivable: true });
 
 // pnpm skips packages that do not exist or have no `dev` script (--if-present), so the API also starts before the SPAs are scaffolded.
 start('web', 'pnpm', ['-r', '--parallel', '--if-present', 'run', 'dev'], { critical: false });

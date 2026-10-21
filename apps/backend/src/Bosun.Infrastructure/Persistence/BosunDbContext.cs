@@ -33,6 +33,9 @@ public class BosunDbContext(DbContextOptions<BosunDbContext> options) : DbContex
     public DbSet<SourceDocument> SourceDocuments => Set<SourceDocument>();
     public DbSet<Extraction> Extractions => Set<Extraction>();
     public DbSet<ExtractedRow> ExtractedRows => Set<ExtractedRow>();
+    public DbSet<KnowledgeChunk> KnowledgeChunks => Set<KnowledgeChunk>();
+    public DbSet<Alarm> Alarms => Set<Alarm>();
+    public DbSet<AlarmEvent> AlarmEvents => Set<AlarmEvent>();
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configuration)
     {
@@ -51,6 +54,8 @@ public class BosunDbContext(DbContextOptions<BosunDbContext> options) : DbContex
         configuration.Properties<AgentStepKind>().HaveConversion<string>().HaveMaxLength(16);
         configuration.Properties<ExtractionStatus>().HaveConversion<string>().HaveMaxLength(16);
         configuration.Properties<ExtractedRowState>().HaveConversion<string>().HaveMaxLength(16);
+        configuration.Properties<AlarmState>().HaveConversion<string>().HaveMaxLength(24);
+        configuration.Properties<AlarmEventKind>().HaveConversion<string>().HaveMaxLength(24);
     }
 
     protected override void OnModelCreating(ModelBuilder model)
@@ -261,6 +266,39 @@ public class BosunDbContext(DbContextOptions<BosunDbContext> options) : DbContex
             e.Property(x => x.Band).HasMaxLength(8).IsRequired();
             e.HasIndex(x => new { x.ExtractionId, x.Seq }).IsUnique().HasDatabaseName("ux_extracted_rows_extraction_seq");
             e.HasIndex(x => new { x.ExtractionId, x.Band }).HasDatabaseName("ix_extracted_rows_extraction_band");
+        });
+
+        model.Entity<KnowledgeChunk>(e =>
+        {
+            e.HasOne(x => x.Project).WithMany().HasForeignKey(x => x.ProjectId).OnDelete(DeleteBehavior.Cascade);
+            e.Property(x => x.Source).HasMaxLength(100).IsRequired();
+            e.Property(x => x.Section).HasMaxLength(300).IsRequired();
+            e.Property(x => x.Text).IsRequired();
+            e.Property(x => x.ContentHash).HasMaxLength(64).IsRequired();
+            e.Property(x => x.EmbeddingModel).HasMaxLength(100);
+            e.HasIndex(x => new { x.ProjectId, x.Source, x.Ordinal }).IsUnique().HasDatabaseName("ux_knowledge_chunks_project_source_ordinal");
+            e.HasIndex(x => new { x.ProjectId, x.ContentHash }).HasDatabaseName("ix_knowledge_chunks_project_hash");
+        });
+
+        // Alarm history. Not versioned and not FK-linked to tags (keyed by tag name): one background writer owns the writes.
+        model.Entity<Alarm>(e =>
+        {
+            e.HasOne<Project>().WithMany().HasForeignKey(x => x.ProjectId).OnDelete(DeleteBehavior.Cascade);
+            e.Property(x => x.TagName).HasMaxLength(100).IsRequired();
+            e.Property(x => x.Unit).HasMaxLength(20);
+            e.Property(x => x.Description).HasMaxLength(500);
+            e.Property(x => x.AcknowledgedBy).HasMaxLength(100);
+            e.HasIndex(x => new { x.ProjectId, x.State }).HasDatabaseName("ix_alarms_project_state");
+            e.HasIndex(x => new { x.ProjectId, x.RaisedAt }).HasDatabaseName("ix_alarms_project_raised");
+            e.HasIndex(x => new { x.TagName, x.RaisedAt }).HasDatabaseName("ix_alarms_tag_raised");
+            e.HasMany<AlarmEvent>().WithOne(x => x.Alarm).HasForeignKey(x => x.AlarmId).OnDelete(DeleteBehavior.Cascade);
+        });
+
+        model.Entity<AlarmEvent>(e =>
+        {
+            e.Property(x => x.Actor).HasMaxLength(100);
+            e.Property(x => x.Note).HasMaxLength(200);
+            e.HasIndex(x => new { x.AlarmId, x.At }).HasDatabaseName("ix_alarm_events_alarm_at");
         });
 
         // Integer Version concurrency token on every aggregate (incremented in SaveChanges, below).

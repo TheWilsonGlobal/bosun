@@ -46,7 +46,7 @@ public sealed partial class InvariantAndFixtureTests
             }
         }
 
-        seen.Should().Contain("ChangeSetService.CreateAsync", "the scan must really see calls, or an empty result proves nothing");
+        seen.Should().Contain("ChangeSetService.CreateWhileHoldingGateAsync", "the scan must really see calls, or an empty result proves nothing");
         offenders.Should().BeEmpty("extraction only ever creates a DRAFT; a human approves and applies (plan s7.1)");
     }
 

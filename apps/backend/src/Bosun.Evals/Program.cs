@@ -20,6 +20,7 @@ public static class EvalProgram
     public static async Task<int> Main(string[] args)
     {
         // dotnet run --project apps/backend/src/Bosun.Evals -- --suite agent [--runs 3] [--case id[,id]] [--no-persist]
+        //   --suite rag [--retrieval-only] [--case id[,id]] [--no-persist] [--rpm 10]   (each case runs ONCE)
         //   --suite extraction [--runs 1] [--fixture id[,id]] [--offline] [--no-persist]   --suite safety [--runs 1] [--case id[,id]] [--offline] [--no-persist]   (all: [--rpm 10] [--quota-retries N])
         // (pnpm run evals -- --suite agent --runs 3)
         string? Arg(string name)
@@ -54,9 +55,14 @@ public static class EvalProgram
             return await Bosun.Evals.Safety.SafetySuite.RunAsync(args, Arg);
         }
 
+        if (suite == "rag")
+        {
+            return await Bosun.Evals.Rag.RagSuite.RunAsync(args, Arg);
+        }
+
         if (suite != "agent")
         {
-            Console.Error.WriteLine($"Unknown suite '{suite}'. Implemented: agent, extraction, safety. (rag arrives with its phase.)");
+            Console.Error.WriteLine($"Unknown suite '{suite}'. Implemented: agent, extraction, safety, rag.");
             return 2;
         }
 
@@ -209,6 +215,10 @@ public static class EvalProgram
         var report = new
         {
             suite,
+            isModelResult = true,
+            invalid = false,
+            costIsEstimate = true,
+            pricingNote = EvalHonesty.PricingNote,
             startedAt = started,
             finishedAt = finished,
             model,

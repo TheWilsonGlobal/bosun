@@ -38,6 +38,14 @@ public static partial class Normaliser
     [GeneratedRegex(@"^[0-9]{1,3}([.,][0-9]{3})+$", RegexOptions.CultureInvariant)]
     private static partial Regex GroupedInteger();
 
+    private const int MaxExponent = 400;
+
+    [GeneratedRegex(@"^(?:[-–—−]|\.{2,}|…|to|\.\.)\s*[+-]?\.?[0-9]", RegexOptions.CultureInvariant | RegexOptions.IgnoreCase)]
+    private static partial Regex RangeContinuation();
+
+    [GeneratedRegex(@"(?<![\d.,])([1-9][0-9]{0,2})((?: [0-9]{3})+)(?![0-9])", RegexOptions.CultureInvariant)]
+    private static partial Regex SpaceGrouping();
+
     public static NumberParse ParseNumber(string? raw, NumberLocale locale = NumberLocale.Unknown)
     {
         if (raw is null)
@@ -45,7 +53,7 @@ public static partial class Normaliser
             return NumberParse.Empty;
         }
 
-        var text = CleanNumberText(raw);
+        var text = CleanNumberText(raw, out var spaceGroups, out var groupedWithoutDecimals);
         if (EmptyMarkers.Contains(text))
         {
             return NumberParse.Empty;
@@ -57,8 +65,13 @@ public static partial class Normaliser
             return Fail($"'{raw.Trim()}' is not a number.");
         }
 
-        // Anything after the number must be a unit-like suffix (95 °C), not more digits or a second number.
+        // Anything after the number must be a unit-like suffix (95 °C), not more digits, a second number or a range ("0-600", "10 to 20").
         var rest = match.Groups["rest"].Value.Trim();
+        if (rest.Length > 0 && RangeContinuation().IsMatch(rest))
+        {
+            return Fail($"'{raw.Trim()}' is a range, not a single number.");
+        }
+
         if (rest.Length > 0 && (char.IsDigit(rest[0]) || rest.Contains(' ') && rest.Any(char.IsDigit)))
         {
             return Fail($"'{raw.Trim()}' is not a single number.");
@@ -75,15 +88,25 @@ public static partial class Normaliser
         var value = parsed.Value!.Value;
         if (exponent.Length > 0)
         {
-            value *= Math.Pow(10, int.Parse(exponent[1..], NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture));
+            // Bounded: int.Parse would throw OverflowException on "1e99999999999" and take the whole extraction down with it.
+            if (!int.TryParse(exponent[1..], NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var power) || Math.Abs(power) > MaxExponent)
+            {
+                return Fail($"'{raw.Trim()}' is out of range.");
+            }
+
+            value *= Math.Pow(10, power);
         }
 
-        return double.IsFinite(value) ? new NumberParse(value, parsed.Guess, false) : Fail($"'{raw.Trim()}' is out of range.");
+        // "95 100" could be 95100 (SI grouping) or two numbers: read as grouped, but say it was a guess.
+        var guess = parsed.Guess || spaceGroups == 1 && groupedWithoutDecimals;
+        return double.IsFinite(value) ? new NumberParse(value, guess, false) : Fail($"'{raw.Trim()}' is out of range.");
     }
 
     private static NumberParse Fail(string problem) => new(null, false, true, problem);
 
-    private static string CleanNumberText(string raw)
+    private static string CleanNumberText(string raw) => CleanNumberText(raw, out _, out _);
+
+    private static string CleanNumberText(string raw, out int spaceGroups, out bool groupedWithoutDecimals)
     {
         var sb = new StringBuilder(raw.Length);
         foreach (var c in raw.Trim())
@@ -103,8 +126,15 @@ public static partial class Normaliser
             }
         }
 
-        // collapse "1 200,5" into "1200,5" but keep "95 °C" apart: a space between digit groups of exactly 3 is a thousands separator
-        var text = Regex.Replace(sb.ToString(), @"(?<=\d) (?=\d{3}(?:\D|$))", string.Empty, RegexOptions.CultureInvariant);
+        // collapse "1 200,5" into "1200,5" but keep "95 °C" apart: only a leading group of 1-3 digits (no leading zero) followed by groups of exactly 3 is thousands grouping
+        var groups = 0;
+        var text = SpaceGrouping().Replace(sb.ToString(), m =>
+        {
+            groups++;
+            return m.Groups[1].Value + m.Groups[2].Value.Replace(" ", string.Empty, StringComparison.Ordinal);
+        });
+        spaceGroups = groups == 0 ? 0 : SpaceGrouping().Matches(sb.ToString())[0].Groups[2].Value.Count(c => c == ' ');
+        groupedWithoutDecimals = groups > 0 && !text.Any(c => c is ',' or '.');
         return text.Trim();
     }
 
@@ -297,7 +327,6 @@ public static partial class Normaliser
         ["mbar"] = "mbar",
         ["millibar"] = "mbar",
         ["kpa"] = "kPa",
-        ["mpa"] = "MPa",
         ["mm"] = "mm",
         ["m"] = "m",
         ["m3"] = "m3",
@@ -312,7 +341,6 @@ public static partial class Normaliser
         ["t"] = "t",
         ["kg"] = "kg",
         ["kw"] = "kW",
-        ["mw"] = "MW",
         ["kva"] = "kVA",
         ["kvar"] = "kVAr",
         ["a"] = "A",
@@ -356,10 +384,22 @@ public static partial class Normaliser
         ["mg/l"] = "mg/L",
     };
 
+    // Prefix case carries meaning (mW milliwatt vs MW megawatt, mPa vs MPa): matched ordinally BEFORE the case-folding tables.
+    private static readonly Dictionary<string, string> CaseSensitiveUnits = new(StringComparer.Ordinal)
+    {
+        ["MW"] = "MW",
+        ["mW"] = "mW",
+        ["MPa"] = "MPa",
+        ["MPA"] = "MPa",
+        ["mPa"] = "mPa",
+    };
+
     // Readings that drop information (gauge/absolute, ton type, bare "C", bare "deg") are guesses: right nearly always, still worth a look.
     private static readonly Dictionary<string, string> UnitGuesses = new(StringComparer.OrdinalIgnoreCase)
     {
         ["c"] = "°C",
+        ["mw"] = "MW", // mixed or lower case: milliwatt or megawatt cannot be told apart
+        ["mpa"] = "MPa",
         ["barg"] = "bar",
         ["bar g"] = "bar",
         ["bar(g)"] = "bar",
@@ -392,6 +432,17 @@ public static partial class Normaliser
 
         // Literal degree/ordinal variants first: "ºC", "° C", "oC" typed by hand.
         var key = cleaned.Replace("º", "°", StringComparison.Ordinal).Replace("˚", "°", StringComparison.Ordinal);
+        if (CaseSensitiveUnits.TryGetValue(key, out var exactCase))
+        {
+            return new(exactCase, false, true);
+        }
+
+        // A bare capital M is molar or mega, never metre: do not fold it onto "m".
+        if (key == "M")
+        {
+            return new(cleaned, false, false);
+        }
+
         if (UnitSynonyms.TryGetValue(key, out var canonical) || UnitSynonyms.TryGetValue(key.Replace(" ", string.Empty, StringComparison.Ordinal), out canonical))
         {
             return new(canonical, false, true);

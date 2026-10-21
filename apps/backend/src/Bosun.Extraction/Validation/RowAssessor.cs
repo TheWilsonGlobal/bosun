@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using Bosun.Application.Safety;
 using Bosun.Domain;
 using Bosun.Rules;
 
@@ -88,6 +89,11 @@ public static class RowAssessor
         if (row.Flags.Contains(RowFlags.SuspectedInjection) || row.Flags.Contains(RowFlags.PageInjectionText) || row.Flags.Contains(RowFlags.DualReadMissing))
         {
             cap = score.InjectionRowCap;
+        }
+
+        if (row.Flags.Contains(RowFlags.ProcessingFailed))
+        {
+            cap = 0;
         }
 
         row.Score = Math.Round(Math.Min(fieldMin, cap), 4);

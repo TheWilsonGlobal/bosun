@@ -23,7 +23,12 @@ export function mockFetch(routes: Record<string, Handler>) {
   const impl = async (input: RequestInfo | URL, init?: RequestInit) => {
     const url = new URL(String(input), 'http://test.local');
     const method = init?.method ?? 'GET';
-    const body = init?.body ? JSON.parse(String(init.body)) : undefined;
+    const body =
+      init?.body instanceof FormData
+        ? init.body
+        : init?.body
+          ? JSON.parse(String(init.body))
+          : undefined;
     calls.push({ method, path: url.pathname, body });
     const handler = routes[`${method} ${url.pathname}`];
     if (!handler) throw new Error(`Unmocked request: ${method} ${url.pathname}`);

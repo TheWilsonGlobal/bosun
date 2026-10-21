@@ -81,7 +81,8 @@ public sealed record BandThresholdsDto(double AutoAtLeast, double ReviewAtLeast)
 
 public sealed record PatchRowBody(Dictionary<string, System.Text.Json.JsonElement>? Fields, bool? Excluded);
 
-public sealed record AcceptBody(List<int>? RowIds);
+/// <summary>AllowFlagged: ids of chosen rows flagged suspected_injection that the reviewer explicitly accepts anyway.</summary>
+public sealed record AcceptBody(List<int>? RowIds, List<int>? AllowFlagged = null);
 
 public sealed record AcceptedChangeSetDto(int Id, string Title, int OpCount, IReadOnlyList<int> RowIds);
 

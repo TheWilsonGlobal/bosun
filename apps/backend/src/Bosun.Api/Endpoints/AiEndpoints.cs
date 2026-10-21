@@ -8,8 +8,8 @@ namespace Bosun.Api;
 public static class AiEndpoints
 {
     /// <summary>
-    /// <c>/api/ai/*</c>. Like the configurator reads, open in Development and behind a session everywhere else (every call
-    /// here either costs tokens or reveals spend).
+    /// <c>/api/ai/*</c>. /usage is open in Development like the configurator reads and behind a session everywhere else (it reveals
+    /// spend). /ping SPENDS tokens and is reachable by any web page on the machine (loopback), so it needs a session in EVERY environment.
     /// </summary>
     public static void MapAi(this WebApplication app, bool requireLogin)
     {
@@ -19,9 +19,10 @@ public static class AiEndpoints
             group.RequireAuthorization();
         }
 
-        group.MapMethods("/ping", ["GET", "POST"], async (string? echo, PingService ping, CancellationToken ct) =>
+        app.MapGroup("/api/ai").WithTags("AI").RequireAuthorization()
+            .MapMethods("/ping", ["GET", "POST"], async (string? echo, PingService ping, CancellationToken ct) =>
                 TypedResults.Ok(await ping.PingAsync(echo, ct)))
-            .WithSummary("One structured LLM call against LLM_MODEL (spends a few hundred tokens). Errors carry llm_* codes.");
+            .WithSummary("One structured LLM call against LLM_MODEL (spends a few hundred tokens). Needs a session in every environment (401 unauthorized). Errors carry llm_* codes.");
 
         group.MapGet("/usage", async (string? from, string? to, LlmUsageQueries usage, CancellationToken ct) =>
                 TypedResults.Ok(await usage.SummariseAsync(ParseInstant(from, "from"), ParseInstant(to, "to"), ct)))

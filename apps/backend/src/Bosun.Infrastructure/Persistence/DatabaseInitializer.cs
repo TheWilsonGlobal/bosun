@@ -1,3 +1,4 @@
+using Bosun.Application.Rag;
 using Bosun.Domain;
 using Bosun.Infrastructure.Persistence.Sqlite;
 using Bosun.Infrastructure.Seed;
@@ -33,6 +34,27 @@ public static class DatabaseInitializer
         await using var scope = services.CreateAsyncScope();
         var db = scope.ServiceProvider.GetRequiredService<BosunDbContext>();
         return await ProjectFileImporter.ImportIntoEmptyAsync(db, file, ct);
+    }
+
+    /// <summary>
+    /// Indexes the project documents for the first project WITHOUT calling the embedding provider: only when every chunk is already in
+    /// the embedding cache file (a reseed after a real <c>kb:index</c> is free and instant). Otherwise nothing happens and the knowledge
+    /// base starts empty ("not indexed"); <c>pnpm run kb:index</c> fills it. Never throws: the seed must work without Gemini.
+    /// </summary>
+    public static async Task<IndexReport?> IndexKnowledgeFromCacheAsync(IServiceProvider services, CancellationToken ct = default)
+    {
+        try
+        {
+            await using var scope = services.CreateAsyncScope();
+            var db = scope.ServiceProvider.GetRequiredService<BosunDbContext>();
+            var projectId = await db.Projects.OrderBy(p => p.Id).Select(p => p.Id).FirstOrDefaultAsync(ct);
+            return projectId == 0 ? null : await scope.ServiceProvider.GetRequiredService<KnowledgeIngestService>().ReindexAsync(projectId, cacheOnly: true, ct);
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            Console.WriteLine($"Knowledge base not indexed ({ex.Message}). Run `pnpm run kb:index` once Gemini is configured.");
+            return null;
+        }
     }
 
     /// <summary>Deletes the database file (+ -wal / -shm), migrates and reseeds. Backs <c>pnpm run db:reset</c>.</summary>

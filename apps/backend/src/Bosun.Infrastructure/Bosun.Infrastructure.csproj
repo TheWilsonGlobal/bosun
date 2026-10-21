@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
     <ProjectReference Include="..\Bosun.Application\Bosun.Application.csproj" />
+    <ProjectReference Include="..\Bosun.Protocols\Bosun.Protocols.csproj" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
     <PackageReference Include="Microsoft.Extensions.Http.Resilience" />
     <FrameworkReference Include="Microsoft.AspNetCore.App" />

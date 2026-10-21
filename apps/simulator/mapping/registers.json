@@ -1,0 +1,485 @@
+{
+  "unitId": 1,
+  "registers": [
+    {
+      "address": 0,
+      "tag": "ME-EXH-TT01",
+      "scale": 10,
+      "unit": "°C",
+      "bank": "holding",
+      "sim": {
+        "nominal": 80,
+        "noise": 0.2,
+        "driftPerMinute": 0
+      }
+    },
+    {
+      "address": 1,
+      "tag": "ME-EXH-TT02",
+      "scale": 10,
+      "unit": "°C",
+      "bank": "holding",
+      "sim": {
+        "nominal": 78.0,
+        "noise": 0.2,
+        "driftPerMinute": 0
+      }
+    },
+    {
+      "address": 2,
+      "tag": "ME-EXH-TT03",
+      "scale": 10,
+      "unit": "°C",
+      "bank": "holding",
+      "sim": {
+        "nominal": 81.5,
+        "noise": 0.2,
+        "driftPerMinute": 0
+      }
+    },
+    {
+      "address": 3,
+      "tag": "ME-EXH-TT04",
+      "scale": 10,
+      "unit": "°C",
+      "bank": "holding",
+      "sim": {
+        "nominal": 79.0,
+        "noise": 0.2,
+        "driftPerMinute": 0
+      }
+    },
+    {
+      "address": 4,
+      "tag": "ME-EXH-TT05",
+      "scale": 10,
+      "unit": "°C",
+      "bank": "holding",
+      "sim": {
+        "nominal": 82.0,
+        "noise": 0.2,
+        "driftPerMinute": 0
+      }
+    },
+    {
+      "address": 5,
+      "tag": "ME-EXH-TT06",
+      "scale": 10,
+      "unit": "°C",
+      "bank": "holding",
+      "sim": {
+        "nominal": 79.5,
+        "noise": 0.2,
+        "driftPerMinute": 0
+      }
+    },
+    {
+      "address": 6,
+      "tag": "ME-EXH-TT07",
+      "scale": 10,
+      "unit": "°C",
+      "bank": "holding",
+      "sim": {
+        "nominal": 81.0,
+        "noise": 0.2,
+        "driftPerMinute": 0
+      }
+    },
+    {
+      "address": 7,
+      "tag": "ME-EXH-TT08",
+      "scale": 10,
+      "unit": "°C",
+      "bank": "holding",
+      "sim": {
+        "nominal": 78.5,
+        "noise": 0.2,
+        "driftPerMinute": 0
+      }
+    },
+    {
+      "address": 8,
+      "tag": "ME-EXH-PT01",
+      "scale": 100,
+      "unit": "bar",
+      "bank": "holding",
+      "sim": {
+        "nominal": 1.8,
+        "noise": 0.01,
+        "driftPerMinute": 0
+      }
+    },
+    {
+      "address": 9,
+      "tag": "ME-JCW-TT01",
+      "scale": 10,
+      "unit": "°C",
+      "bank": "holding",
+      "sim": {
+        "nominal": 76.0,
+        "noise": 0.3,
+        "driftPerMinute": 0
+      }
+    },
+    {
+      "address": 10,
+      "tag": "ME-JCW-TT02",
+      "scale": 10,
+      "unit": "°C",
+      "bank": "holding",
+      "sim": {
+        "nominal": 77.5,
+        "noise": 0.3,
+        "driftPerMinute": 0
+      }
+    },
+    {
+      "address": 11,
+      "tag": "ME-JCW-TT03",
+      "scale": 10,
+      "unit": "°C",
+      "bank": "holding",
+      "sim": {
+        "nominal": 75.5,
+        "noise": 0.3,
+        "driftPerMinute": 0
+      }
+    },
+    {
+      "address": 12,
+      "tag": "ME-JCW-TT04",
+      "scale": 10,
+      "unit": "°C",
+      "bank": "holding",
+      "sim": {
+        "nominal": 78.0,
+        "noise": 0.3,
+        "driftPerMinute": 0
+      }
+    },
+    {
+      "address": 13,
+      "tag": "ME-JCW-PT01",
+      "scale": 100,
+      "unit": "bar",
+      "bank": "holding",
+      "sim": {
+        "nominal": 3.2,
+        "noise": 0.02,
+        "driftPerMinute": 0
+      }
+    },
+    {
+      "address": 14,
+      "tag": "ME-JCW-PT02",
+      "scale": 100,
+      "unit": "bar",
+      "bank": "holding",
+      "sim": {
+        "nominal": 3.1,
+        "noise": 0.02,
+        "driftPerMinute": 0
+      }
+    },
+    {
+      "address": 15,
+      "tag": "ME-LUB-PT01",
+      "scale": 100,
+      "unit": "bar",
+      "bank": "holding",
+      "sim": {
+        "nominal": 4.5,
+        "noise": 0.03,
+        "driftPerMinute": 0
+      }
+    },
+    {
+      "address": 16,
+      "tag": "ME-LUB-PT02",
+      "scale": 100,
+      "unit": "bar",
+      "bank": "holding",
+      "sim": {
+        "nominal": 4.4,
+        "noise": 0.03,
+        "driftPerMinute": 0
+      }
+    },
+    {
+      "address": 17,
+      "tag": "ME-LUB-TT01",
+      "scale": 10,
+      "unit": "°C",
+      "bank": "holding",
+      "sim": {
+        "nominal": 55.0,
+        "noise": 0.2,
+        "driftPerMinute": 0
+      }
+    },
+    {
+      "address": 18,
+      "tag": "ME-LUB-TT02",
+      "scale": 10,
+      "unit": "°C",
+      "bank": "holding",
+      "sim": {
+        "nominal": 56.0,
+        "noise": 0.2,
+        "driftPerMinute": 0
+      }
+    },
+    {
+      "address": 19,
+      "tag": "ME-LUB-LT01",
+      "scale": 100,
+      "unit": "%",
+      "bank": "holding",
+      "sim": {
+        "nominal": 62.0,
+        "noise": 0.05,
+        "driftPerMinute": -0.01
+      }
+    },
+    {
+      "address": 20,
+      "tag": "ME-LUB-FT01",
+      "scale": 10,
+      "unit": "m3/h",
+      "bank": "holding",
+      "sim": {
+        "nominal": 48.0,
+        "noise": 0.3,
+        "driftPerMinute": 0
+      }
+    },
+    {
+      "address": 21,
+      "tag": "ME-FO-PT01",
+      "scale": 100,
+      "unit": "bar",
+      "bank": "holding",
+      "sim": {
+        "nominal": 8.0,
+        "noise": 0.04,
+        "driftPerMinute": 0
+      }
+    },
+    {
+      "address": 22,
+      "tag": "ME-FO-TT01",
+      "scale": 10,
+      "unit": "°C",
+      "bank": "holding",
+      "sim": {
+        "nominal": 125.0,
+        "noise": 0.3,
+        "driftPerMinute": 0
+      }
+    },
+    {
+      "address": 23,
+      "tag": "ME-FO-FT01",
+      "scale": 1,
+      "unit": "kg/h",
+      "bank": "holding",
+      "sim": {
+        "nominal": 1450,
+        "noise": 6,
+        "driftPerMinute": 0
+      }
+    },
+    {
+      "address": 24,
+      "tag": "ME-FO-AT01",
+      "scale": 100,
+      "unit": "cSt",
+      "bank": "holding",
+      "sim": {
+        "nominal": 14.0,
+        "noise": 0.05,
+        "driftPerMinute": 0
+      }
+    },
+    {
+      "address": 25,
+      "tag": "ME-SCV-PT01",
+      "scale": 100,
+      "unit": "bar",
+      "bank": "holding",
+      "sim": {
+        "nominal": 2.1,
+        "noise": 0.02,
+        "driftPerMinute": 0
+      }
+    },
+    {
+      "address": 26,
+      "tag": "ME-SCV-TT01",
+      "scale": 10,
+      "unit": "°C",
+      "bank": "holding",
+      "sim": {
+        "nominal": 45.0,
+        "noise": 0.3,
+        "driftPerMinute": 0
+      }
+    },
+    {
+      "address": 27,
+      "tag": "ME-TCH-ST01",
+      "scale": 1,
+      "unit": "rpm",
+      "bank": "holding",
+      "sim": {
+        "nominal": 14500,
+        "noise": 40,
+        "driftPerMinute": 0
+      }
+    },
+    {
+      "address": 28,
+      "tag": "ME-TCH-ST02",
+      "scale": 1,
+      "unit": "rpm",
+      "bank": "holding",
+      "sim": {
+        "nominal": 14350,
+        "noise": 40,
+        "driftPerMinute": 0
+      }
+    },
+    {
+      "address": 29,
+      "tag": "ME-TCH-PT01",
+      "scale": 100,
+      "unit": "bar",
+      "bank": "holding",
+      "sim": {
+        "nominal": 2.4,
+        "noise": 0.02,
+        "driftPerMinute": 0
+      }
+    },
+    {
+      "address": 30,
+      "tag": "ME-TCH-PT02",
+      "scale": 100,
+      "unit": "bar",
+      "bank": "holding",
+      "sim": {
+        "nominal": 2.35,
+        "noise": 0.02,
+        "driftPerMinute": 0
+      }
+    },
+    {
+      "address": 31,
+      "tag": "ME-SPD-ST01",
+      "scale": 100,
+      "unit": "rpm",
+      "bank": "holding",
+      "sim": {
+        "nominal": 82.0,
+        "noise": 0.3,
+        "driftPerMinute": 0
+      }
+    },
+    {
+      "address": 32,
+      "tag": "ME-AIR-PT01",
+      "scale": 100,
+      "unit": "bar",
+      "bank": "holding",
+      "sim": {
+        "nominal": 28.0,
+        "noise": 0.05,
+        "driftPerMinute": 0
+      }
+    },
+    {
+      "address": 33,
+      "tag": "ME-BRG-TT01",
+      "scale": 10,
+      "unit": "°C",
+      "bank": "holding",
+      "sim": {
+        "nominal": 62.0,
+        "noise": 0.2,
+        "driftPerMinute": 0
+      }
+    },
+    {
+      "address": 34,
+      "tag": "TANK-HFO1-LT01",
+      "scale": 100,
+      "unit": "%",
+      "bank": "holding",
+      "sim": {
+        "nominal": 71.0,
+        "noise": 0.02,
+        "driftPerMinute": -0.05
+      }
+    },
+    {
+      "address": 35,
+      "tag": "TANK-MDO1-LT01",
+      "scale": 100,
+      "unit": "%",
+      "bank": "holding",
+      "sim": {
+        "nominal": 55.0,
+        "noise": 0.02,
+        "driftPerMinute": -0.02
+      }
+    },
+    {
+      "address": 36,
+      "tag": "ME-LUB-PT03",
+      "scale": 100,
+      "unit": "bar",
+      "bank": "holding",
+      "sim": {
+        "nominal": 4.4,
+        "noise": 0.03,
+        "driftPerMinute": 0
+      }
+    },
+    {
+      "address": 37,
+      "tag": "ME-LUB-TT03",
+      "scale": 10,
+      "unit": "°C",
+      "bank": "holding",
+      "sim": {
+        "nominal": 55.5,
+        "noise": 0.2,
+        "driftPerMinute": 0
+      }
+    },
+    {
+      "address": 38,
+      "tag": "ME-FO-PT02",
+      "scale": 100,
+      "unit": "bar",
+      "bank": "holding",
+      "sim": {
+        "nominal": 7.9,
+        "noise": 0.04,
+        "driftPerMinute": 0
+      }
+    },
+    {
+      "address": 39,
+      "tag": "ME-FO-TT02",
+      "scale": 10,
+      "unit": "°C",
+      "bank": "holding",
+      "sim": {
+        "nominal": 124.0,
+        "noise": 0.3,
+        "driftPerMinute": 0
+      }
+    }
+  ]
+}

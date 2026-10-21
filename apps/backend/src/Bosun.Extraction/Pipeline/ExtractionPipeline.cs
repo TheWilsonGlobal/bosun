@@ -1,5 +1,6 @@
 using System.Text.RegularExpressions;
 using Bosun.Application.Llm;
+using Bosun.Application.Safety;
 using Bosun.Domain.Entities;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -119,7 +120,7 @@ public sealed class ExtractionPipeline(
         IReadOnlyList<PageContent> pages;
         try
         {
-            pages = PdfPages.Read(pdf);
+            pages = PdfPages.Read(pdf, opts, ct);
         }
         catch (PdfUnreadableException ex)
         {
@@ -156,6 +157,11 @@ public sealed class ExtractionPipeline(
                 ImageAreaRatio = triage.ImageAreaRatio,
                 Status = triage.Path == PagePath.Skip ? "skipped" : "pending",
             };
+            if (content.Capped)
+            {
+                report.Reasons.Add("page_content_capped");
+            }
+
             var item = new PageWork { Content = content, Report = report, Path = triage.Path };
             if (triage.Path == PagePath.Text)
             {
@@ -184,15 +190,34 @@ public sealed class ExtractionPipeline(
         var progressLock = new SemaphoreSlim(1, 1);
         var usageLock = new object();
         var stop = (LlmException?)null;
+        var budgetHit = false;
+
+        // Spend cap: a stuck or hostile document must not run up an unbounded bill (calls include repair turns and second reads).
+        bool BudgetSpent()
+        {
+            lock (usageLock)
+            {
+                var calls = opts.MaxLlmCallsPerExtraction > 0 && result.Calls >= opts.MaxLlmCallsPerExtraction;
+                var tokens = opts.MaxTokensPerExtraction > 0 && result.Usage.TotalTokens >= opts.MaxTokensPerExtraction;
+                if ((calls || tokens) && !budgetHit)
+                {
+                    budgetHit = true;
+                    stop ??= new LlmException(ExtractionErrorCodes.BudgetExceeded,
+                        $"The extraction used its budget ({result.Calls} model calls, {result.Usage.TotalTokens} tokens; limits {opts.MaxLlmCallsPerExtraction} calls / {opts.MaxTokensPerExtraction} tokens). The pages read so far are listed.");
+                }
+
+                return budgetHit;
+            }
+        }
 
         async Task ReadPage(PageWork item)
         {
             await gate.WaitAsync(ct);
             try
             {
-                if (stop is not null)
+                if (BudgetSpent() || stop is not null)
                 {
-                    Fail(item, stop, notAttempted: true);
+                    Fail(item, stop!, notAttempted: true);
                     return;
                 }
 
@@ -206,14 +231,22 @@ public sealed class ExtractionPipeline(
                         Add(result, item.Read);
                     }
                 }
+                catch (Exception ex) when (ex is not OperationCanceledException and not LlmException)
+                {
+                    // A page that cannot be rendered (too large, a corrupt object) is that page's failure, not the extraction's.
+                    logger.LogWarning(ex, "Page {Page} could not be prepared", item.Content.Number);
+                    item.Report.Status = "failed";
+                    item.Report.ErrorCode = ex is PageTooLargeException ? ExtractionErrorCodes.PageTooLarge : ExtractionErrorCodes.PageRenderFailed;
+                    item.Report.ErrorMessage = ex is PageTooLargeException ? ex.Message : "The page could not be rendered.";
+                }
                 catch (LlmException ex)
                 {
                     logger.LogWarning("Reading page {Page} failed: {Code} {Message}", item.Content.Number, ex.Code, ex.Message);
                     Fail(item, ex, notAttempted: false);
-                    if (ex.Code is LlmErrorCodes.AuthFailed or LlmErrorCodes.NotConfigured or LlmErrorCodes.BadRequest
-                        || ex.Code == LlmErrorCodes.RateLimited && (ex.RetryAfter ?? TimeSpan.Zero) > TimeSpan.FromMinutes(5))
+                    if (ex.Code is LlmErrorCodes.AuthFailed or LlmErrorCodes.NotConfigured or LlmErrorCodes.BadRequest or LlmErrorCodes.RateLimited)
                     {
-                        // Every further page would fail the same way (a bad key, a spent daily quota): stop spending time on them.
+                        // Every further page would fail the same way (a bad key, a spent quota). A rate limit that reaches this point
+                        // is one the client already retried and gave up on, so more pages would only burn more retries.
                         stop ??= ex;
                     }
                 }
@@ -252,6 +285,11 @@ public sealed class ExtractionPipeline(
         var sample = readable.Where(w => w.Path == PagePath.Text && w.Rows.Count > 0).Take(opts.DualReadSamplePages).ToList();
         foreach (var item in sample)
         {
+            if (BudgetSpent())
+            {
+                break;
+            }
+
             await DualReadAsync(item, pdf, pages.Count, result, ct);
             dualPages.Add(item.Content.Number);
         }
@@ -269,7 +307,7 @@ public sealed class ExtractionPipeline(
         // low-score text pages get the second read too (capped), then everything on them is assessed again
         foreach (var item in readable.Where(w => w.Path == PagePath.Text && w.Rows.Count > 0 && !dualPages.Contains(w.Content.Number)))
         {
-            if (dualPages.Count >= opts.DualReadMaxPages)
+            if (dualPages.Count >= opts.DualReadMaxPages || BudgetSpent())
             {
                 break;
             }
@@ -296,6 +334,17 @@ public sealed class ExtractionPipeline(
 
         result.Rows.AddRange(all);
         Finish(result, readable.Count);
+        if (budgetHit && stop is not null)
+        {
+            // The budget is the reason the run is incomplete, whatever the first failed page says.
+            result.ErrorCode = stop.Code;
+            result.ErrorMessage = stop.Message;
+            if (result.Status == ExtractionStatus.Completed)
+            {
+                result.Status = ExtractionStatus.Partial;
+            }
+        }
+
         return result;
     }
 
@@ -305,7 +354,9 @@ public sealed class ExtractionPipeline(
     {
         item.Report.Status = "failed";
         item.Report.ErrorCode = ex.Code;
-        item.Report.ErrorMessage = notAttempted ? "Not attempted: an earlier page failed with the same provider error." : ex.Message;
+        item.Report.ErrorMessage = notAttempted && ex.Code != ExtractionErrorCodes.BudgetExceeded
+            ? "Not attempted: an earlier page failed with the same provider error."
+            : notAttempted ? "Not attempted: " + ex.Message : ex.Message;
     }
 
     private static void Add(PipelineResult result, ReadResult read)
@@ -355,7 +406,18 @@ public sealed class ExtractionPipeline(
         var matched = new HashSet<int>();
         foreach (var read in raw)
         {
-            var state = RowFactory.Build(read, source, locale, item.Grounding, item.Content.Number);
+            RowState state;
+            try
+            {
+                state = RowFactory.Build(read, source, locale, item.Grounding, item.Content.Number);
+            }
+            catch (Exception ex) when (ex is not OperationCanceledException)
+            {
+                // One bad row must not fail the extraction: keep what was read, flag it must_fix for a human.
+                logger.LogWarning(ex, "Row of page {Page} could not be normalised", item.Content.Number);
+                state = RowFactory.Unprocessable(read, source, item.Content.Number);
+            }
+
             var record = new ExtractedRowRecord { State = state, Page = item.Content.Number, Path = source };
             if (item.Table is not null)
             {
@@ -445,7 +507,21 @@ public sealed class ExtractionPipeline(
         {
             var name = record.State.Text(Fields.TagName);
             var others = name is not null && byTag.TryGetValue(name, out var same) ? same.Where(s => !ReferenceEquals(s, record.State)).ToList() : [];
-            RowAssessor.Assess(record.State, new AssessContext(projectTags, others, score));
+            try
+            {
+                RowAssessor.Assess(record.State, new AssessContext(projectTags, others, score));
+            }
+            catch (Exception ex) when (ex is not OperationCanceledException)
+            {
+                logger.LogWarning(ex, "Row {Seq} could not be assessed", record.State.Seq);
+                if (!record.State.Flags.Contains(RowFlags.ProcessingFailed))
+                {
+                    record.State.Flags.Add(RowFlags.ProcessingFailed);
+                }
+
+                record.State.Score = 0;
+                record.State.Band = Bands.MustFix;
+            }
         }
     }
 
@@ -463,6 +539,12 @@ public sealed class ExtractionPipeline(
         {
             // The second read is an extra check: if it cannot happen the first read stands, with no boost.
             logger.LogWarning("Dual read of page {Page} failed: {Code}", item.Content.Number, ex.Code);
+            item.Report.DualRead = false;
+            return;
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            logger.LogWarning(ex, "Dual read of page {Page} could not render the page", item.Content.Number);
             item.Report.DualRead = false;
             return;
         }
@@ -510,6 +592,31 @@ public sealed class ExtractionPipeline(
 /// <summary>Turns one model row into a normalised <see cref="RowState"/> (before rules and scoring).</summary>
 public static class RowFactory
 {
+    /// <summary>A row whose normalisation threw: raw text kept, no values, flagged and must_fix so a human fixes it.</summary>
+    public static RowState Unprocessable(ReadRow read, string source, int page)
+    {
+        var row = new RowState { Page = page, Band = Bands.MustFix, Score = 0 };
+        foreach (var field in Fields.All)
+        {
+            string? text = null;
+            try
+            {
+                text = read.Get(field)?.Trim();
+            }
+            catch (Exception)
+            {
+                // the raw value is not recoverable
+            }
+
+            row.Raw[field] = string.IsNullOrEmpty(text) ? null : text;
+            row.Values[field] = null;
+            row.Field(field).Source = source;
+        }
+
+        row.Flags.Add(RowFlags.ProcessingFailed);
+        return row;
+    }
+
     public static RowState Build(ReadRow read, string source, NumberLocale locale, GroundingIndex? grounding, int page)
     {
         var row = new RowState { Page = page };

@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace Bosun.Extraction;
+namespace Bosun.Application.Safety;
 
 /// <summary>One instruction-like phrase found in document text.</summary>
 public sealed record InjectionHit(string Pattern, string Match);

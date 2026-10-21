@@ -13,6 +13,9 @@ public interface IPageRenderer
     byte[] RenderPng(byte[] pdf, int page, int dpi, double[]? crop = null);
 }
 
+/// <summary>A page cannot be rendered within the pixel budget.</summary>
+public sealed class PageTooLargeException(string message) : Exception(message);
+
 // PDFtoImage ships native PDFium binaries for Windows, Linux and macOS (the platforms Bosun targets); the analyzer only sees that the
 // project is "any platform".
 #pragma warning disable CA1416
@@ -21,7 +24,63 @@ public sealed class PdfiumPageRenderer : IPageRenderer
 {
     public const int MaxSidePixels = 6000;
 
+    /// <summary>Below this resolution a page is not legible to a model: the page is refused instead of being rendered tiny.</summary>
+    public const int MinUsableDpi = 20;
+
     private static readonly object Gate = new();
+
+    public PdfiumPageRenderer(long maxPixels = 36_000_000)
+    {
+        MaxPixels = maxPixels;
+    }
+
+    /// <summary>A rendered bitmap never has more pixels than this (width x height).</summary>
+    public long MaxPixels { get; }
+
+    /// <summary>Resolution to render a page of the given size (points) at: the requested dpi, lowered so neither the side nor the pixel count passes its cap. Null = even <see cref="MinUsableDpi"/> would be too big.</summary>
+    public static int? EffectiveDpi(double widthPoints, double heightPoints, int requestedDpi, long maxPixels)
+    {
+        var w = Math.Max(widthPoints, 1) / 72.0;
+        var h = Math.Max(heightPoints, 1) / 72.0;
+        var bySide = MaxSidePixels / Math.Max(w, h);
+        var byPixels = Math.Sqrt(maxPixels / (w * h));
+        var dpi = (int)Math.Floor(Math.Min(Math.Min(requestedDpi, 600), Math.Min(bySide, byPixels)));
+        return dpi < MinUsableDpi ? null : dpi;
+    }
+
+    /// <summary>Largest side of any page (points) and the 1-based number of that page, read by PDFium without rendering. (0, 0) when PDFium cannot say.</summary>
+    internal static (double Side, int Page) LargestPageSide(byte[] pdf)
+    {
+        lock (Gate)
+        {
+            try
+            {
+                var sizes = Conversion.GetPageSizes(pdf);
+                float best = 0;
+                var page = 0;
+                for (var i = 0; i < sizes.Count; i++)
+                {
+                    var side = Math.Max(sizes[i].Width, sizes[i].Height);
+                    if (double.IsNaN(side))
+                    {
+                        side = float.PositiveInfinity;
+                    }
+
+                    if (side > best)
+                    {
+                        best = side;
+                        page = i + 1;
+                    }
+                }
+
+                return (best, page);
+            }
+            catch (Exception ex) when (ex is not OutOfMemoryException)
+            {
+                return (0, 0);
+            }
+        }
+    }
 
     public byte[] RenderPng(byte[] pdf, int page, int dpi, double[]? crop = null)
     {
@@ -29,8 +88,8 @@ public sealed class PdfiumPageRenderer : IPageRenderer
         {
             using var stream = new MemoryStream(pdf, writable: false);
             var size = Conversion.GetPageSize(stream, page - 1, leaveOpen: true);
-            var side = Math.Max(size.Width, size.Height) / 72.0;
-            var effectiveDpi = (int)Math.Clamp(Math.Min(dpi, MaxSidePixels / Math.Max(side, 0.1)), 36, 600);
+            var effectiveDpi = EffectiveDpi(size.Width, size.Height, dpi, MaxPixels)
+                ?? throw new PageTooLargeException($"Page {page} is {size.Width:0} x {size.Height:0} points: too large to render legibly within {MaxPixels:N0} pixels.");
 
             stream.Position = 0;
             using var bitmap = Conversion.ToImage(stream, page - 1, leaveOpen: true, options: new RenderOptions(Dpi: effectiveDpi));

@@ -66,7 +66,7 @@ public sealed class ToolSchemaTests
         using var scope = host.Scope().ServiceProvider.CreateScope();
         var registry = scope.ServiceProvider.GetRequiredService<ToolRegistry>();
 
-        registry.Tools.Should().HaveCount(10);
+        registry.Tools.Should().HaveCount(11);
         foreach (var tool in registry.Tools)
         {
             JsonSchemaValidator.Validate(new JsonObject(), tool.ParametersSchema); // throws on an unsupported keyword

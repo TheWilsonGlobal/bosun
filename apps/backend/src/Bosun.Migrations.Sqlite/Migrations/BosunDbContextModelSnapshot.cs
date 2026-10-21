@@ -180,6 +180,147 @@ namespace Bosun.Migrations.Sqlite.Migrations
                     b.ToTable("agent_steps");
                 });
 
+            modelBuilder.Entity("Bosun.Domain.Entities.Alarm", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime?>("AcknowledgedAt")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("acknowledged_at");
+
+                    b.Property<string>("AcknowledgedBy")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT")
+                        .HasColumnName("acknowledged_by");
+
+                    b.Property<DateTime?>("ClearedAt")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("cleared_at");
+
+                    b.Property<double>("DelayS")
+                        .HasColumnType("REAL")
+                        .HasColumnName("delay_s");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT")
+                        .HasColumnName("description");
+
+                    b.Property<double>("Hysteresis")
+                        .HasColumnType("REAL")
+                        .HasColumnName("hysteresis");
+
+                    b.Property<string>("Level")
+                        .IsRequired()
+                        .HasMaxLength(8)
+                        .HasColumnType("TEXT")
+                        .HasColumnName("level");
+
+                    b.Property<double>("LimitValue")
+                        .HasColumnType("REAL")
+                        .HasColumnName("limit_value");
+
+                    b.Property<double>("PeakValue")
+                        .HasColumnType("REAL")
+                        .HasColumnName("peak_value");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("project_id");
+
+                    b.Property<DateTime>("RaisedAt")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("raised_at");
+
+                    b.Property<double>("RaisedValue")
+                        .HasColumnType("REAL")
+                        .HasColumnName("raised_value");
+
+                    b.Property<DateTime?>("ReturnedAt")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("returned_at");
+
+                    b.Property<double?>("ReturnedValue")
+                        .HasColumnType("REAL")
+                        .HasColumnName("returned_value");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasMaxLength(24)
+                        .HasColumnType("TEXT")
+                        .HasColumnName("state");
+
+                    b.Property<string>("TagName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT")
+                        .HasColumnName("tag_name");
+
+                    b.Property<string>("Unit")
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT")
+                        .HasColumnName("unit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectId", "RaisedAt")
+                        .HasDatabaseName("ix_alarms_project_raised");
+
+                    b.HasIndex("ProjectId", "State")
+                        .HasDatabaseName("ix_alarms_project_state");
+
+                    b.HasIndex("TagName", "RaisedAt")
+                        .HasDatabaseName("ix_alarms_tag_raised");
+
+                    b.ToTable("alarms");
+                });
+
+            modelBuilder.Entity("Bosun.Domain.Entities.AlarmEvent", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Actor")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT")
+                        .HasColumnName("actor");
+
+                    b.Property<int>("AlarmId")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("alarm_id");
+
+                    b.Property<DateTime>("At")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("at");
+
+                    b.Property<string>("Kind")
+                        .IsRequired()
+                        .HasMaxLength(24)
+                        .HasColumnType("TEXT")
+                        .HasColumnName("kind");
+
+                    b.Property<string>("Note")
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT")
+                        .HasColumnName("note");
+
+                    b.Property<double?>("Value")
+                        .HasColumnType("REAL")
+                        .HasColumnName("value");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AlarmId", "At")
+                        .HasDatabaseName("ix_alarm_events_alarm_at");
+
+                    b.ToTable("alarm_events");
+                });
+
             modelBuilder.Entity("Bosun.Domain.Entities.AlarmGroup", b =>
                 {
                     b.Property<int>("Id")
@@ -954,6 +1095,73 @@ namespace Bosun.Migrations.Sqlite.Migrations
                     b.ToTable("io_modules");
                 });
 
+            modelBuilder.Entity("Bosun.Domain.Entities.KnowledgeChunk", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("id");
+
+                    b.Property<string>("ContentHash")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("TEXT")
+                        .HasColumnName("content_hash");
+
+                    b.Property<byte[]>("Embedding")
+                        .HasColumnType("BLOB")
+                        .HasColumnName("embedding");
+
+                    b.Property<string>("EmbeddingModel")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT")
+                        .HasColumnName("embedding_model");
+
+                    b.Property<DateTime>("IndexedAt")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("indexed_at");
+
+                    b.Property<int>("Ordinal")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("ordinal");
+
+                    b.Property<int>("Page")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("page");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("project_id");
+
+                    b.Property<string>("Section")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT")
+                        .HasColumnName("section");
+
+                    b.Property<string>("Source")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT")
+                        .HasColumnName("source");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectId", "ContentHash")
+                        .HasDatabaseName("ix_knowledge_chunks_project_hash");
+
+                    b.HasIndex("ProjectId", "Source", "Ordinal")
+                        .IsUnique()
+                        .HasDatabaseName("ux_knowledge_chunks_project_source_ordinal");
+
+                    b.ToTable("knowledge_chunks");
+                });
+
             modelBuilder.Entity("Bosun.Domain.Entities.LlmCall", b =>
                 {
                     b.Property<int>("Id")
@@ -1293,6 +1501,26 @@ namespace Bosun.Migrations.Sqlite.Migrations
                     b.Navigation("Run");
                 });
 
+            modelBuilder.Entity("Bosun.Domain.Entities.Alarm", b =>
+                {
+                    b.HasOne("Bosun.Domain.Entities.Project", null)
+                        .WithMany()
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Bosun.Domain.Entities.AlarmEvent", b =>
+                {
+                    b.HasOne("Bosun.Domain.Entities.Alarm", "Alarm")
+                        .WithMany()
+                        .HasForeignKey("AlarmId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Alarm");
+                });
+
             modelBuilder.Entity("Bosun.Domain.Entities.AlarmGroup", b =>
                 {
                     b.HasOne("Bosun.Domain.Entities.Project", "Project")
@@ -1408,6 +1636,17 @@ namespace Bosun.Migrations.Sqlite.Migrations
                         .IsRequired();
 
                     b.Navigation("Controller");
+                });
+
+            modelBuilder.Entity("Bosun.Domain.Entities.KnowledgeChunk", b =>
+                {
+                    b.HasOne("Bosun.Domain.Entities.Project", "Project")
+                        .WithMany()
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Project");
                 });
 
             modelBuilder.Entity("Bosun.Domain.Entities.Project", b =>

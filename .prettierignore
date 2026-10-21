@@ -16,3 +16,4 @@ evals/extraction/*.truth.json
 evals/safety/*.truth.json
 evals/extraction/*.pdf
 evals/safety/*.pdf
+evals/results/

@@ -54,7 +54,7 @@ public class AiEndpointTests
     {
         using var app = new AiApp();
         app.Llm.ThenOk(PingReply(), prompt: 41, candidates: 12, thoughts: 3);
-        var client = app.CreateClient(); // no session: open in Development
+        var client = (await app.LoginAsync()); // ping needs a session in every environment
 
         var response = await client.GetAsync("/api/ai/ping");
         var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync()).RootElement;
@@ -88,7 +88,7 @@ public class AiEndpointTests
     {
         using var app = new AiApp();
         app.Llm.ThenOk(PingReply("something else")).ThenOk(PingReply("hello 42"));
-        var client = app.CreateClient();
+        var client = (await app.LoginAsync());
 
         var response = await client.PostAsync("/api/ai/ping?echo=hello%2042", null);
         var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync()).RootElement;
@@ -106,7 +106,7 @@ public class AiEndpointTests
     public async Task Ping_rejects_an_echo_that_could_break_the_data_block(string echo)
     {
         using var app = new AiApp();
-        var response = await app.CreateClient().GetAsync($"/api/ai/ping?echo={echo}");
+        var response = await (await app.LoginAsync()).GetAsync($"/api/ai/ping?echo={echo}");
         (await response.ReadProblemAsync(400)).Code.Should().Be("invalid_request");
         app.Llm.Calls.Should().Be(0);
     }
@@ -116,7 +116,7 @@ public class AiEndpointTests
     {
         using var app = new AiApp();
         app.Llm.ThenOk(PingReply(), prompt: 100, candidates: 20, thoughts: 5).ThenOk(PingReply(), prompt: 50, candidates: 10);
-        var client = app.CreateClient();
+        var client = (await app.LoginAsync());
         await client.GetAsync("/api/ai/ping");
         await client.GetAsync("/api/ai/ping");
 
@@ -187,7 +187,7 @@ public class AiEndpointTests
                 break;
         }
 
-        var response = await app.CreateClient().GetAsync("/api/ai/ping");
+        var response = await (await app.LoginAsync()).GetAsync("/api/ai/ping");
         var (actualCode, problem) = await response.ReadProblemAsync(status);
 
         actualCode.Should().Be(code);
@@ -206,12 +206,27 @@ public class AiEndpointTests
     {
         using var app = new AiApp(extra: new() { ["Llm:ApiKey"] = "" });
 
-        var response = await app.CreateClient().GetAsync("/api/ai/ping");
+        var response = await (await app.LoginAsync()).GetAsync("/api/ai/ping");
 
         var (code, problem) = await response.ReadProblemAsync(503);
         code.Should().Be("llm_not_configured");
         problem.GetProperty("detail").GetString().Should().Contain("GEMINI_LLM_API_KEY");
         app.Llm.Calls.Should().Be(0);
+    }
+
+    [Fact]
+    public async Task Ping_needs_a_session_even_in_development_because_it_spends_tokens()
+    {
+        using var app = new AiApp();
+        app.Llm.ThenOk(PingReply());
+
+        foreach (var method in new[] { HttpMethod.Get, HttpMethod.Post })
+        {
+            using var request = new HttpRequestMessage(method, "/api/ai/ping");
+            (await (await app.CreateClient().SendAsync(request)).ReadProblemAsync(401)).Code.Should().Be("unauthorized");
+        }
+
+        app.Llm.Calls.Should().Be(0, "an anonymous page in the browser must not be able to spend tokens");
     }
 
     [Fact]

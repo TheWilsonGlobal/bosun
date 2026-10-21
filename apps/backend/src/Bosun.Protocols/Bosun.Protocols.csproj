@@ -1,0 +1,3 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Pure protocol code: no ASP.NET, no EF, no logging framework. Referenced by the backend and by the simulator. -->
+</Project>

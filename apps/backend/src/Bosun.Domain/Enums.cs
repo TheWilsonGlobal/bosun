@@ -88,3 +88,35 @@ public static class SafetyClassExtensions
 {
     public static bool RequiresSecondApprover(this SafetyClass value) => value is SafetyClass.SIL or SafetyClass.ESD;
 }
+
+/// <summary>
+/// Lifecycle of one alarm occurrence (ISA-18.2 style). Wire names are snake_case.
+/// <code>
+/// raise  -> unacknowledged --ack--> acknowledged --condition clears--> cleared
+///           unacknowledged --condition clears--> returned_unacknowledged --ack--> cleared
+/// </code>
+/// A returned-to-normal alarm stays on the list until an operator acknowledges it, so a short-lived alarm cannot go unnoticed.
+/// </summary>
+public enum AlarmState
+{
+    /// <summary>Condition active, nobody has acknowledged it yet.</summary>
+    [JsonStringEnumMemberName("unacknowledged")] Unacknowledged = 0,
+
+    /// <summary>Condition active, an operator acknowledged it.</summary>
+    [JsonStringEnumMemberName("acknowledged")] Acknowledged = 1,
+
+    /// <summary>The condition went away before anyone acknowledged it: still listed, waits for an acknowledgement.</summary>
+    [JsonStringEnumMemberName("returned_unacknowledged")] ReturnedUnacknowledged = 2,
+
+    /// <summary>Closed: the condition is gone and the alarm was acknowledged. History only.</summary>
+    [JsonStringEnumMemberName("cleared")] Cleared = 3,
+}
+
+/// <summary>Entries of the alarm event log (append-only).</summary>
+public enum AlarmEventKind
+{
+    [JsonStringEnumMemberName("raised")] Raised = 0,
+    [JsonStringEnumMemberName("acknowledged")] Acknowledged = 1,
+    [JsonStringEnumMemberName("returned_to_normal")] ReturnedToNormal = 2,
+    [JsonStringEnumMemberName("cleared")] Cleared = 3,
+}

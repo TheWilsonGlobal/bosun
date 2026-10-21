@@ -30,6 +30,9 @@ public interface IBosunDbContext
     DbSet<SourceDocument> SourceDocuments { get; }
     DbSet<Extraction> Extractions { get; }
     DbSet<ExtractedRow> ExtractedRows { get; }
+    DbSet<KnowledgeChunk> KnowledgeChunks { get; }
+    DbSet<Alarm> Alarms { get; }
+    DbSet<AlarmEvent> AlarmEvents { get; }
 
     DatabaseFacade Database { get; }
     ChangeTracker ChangeTracker { get; }

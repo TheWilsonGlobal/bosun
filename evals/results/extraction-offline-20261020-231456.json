@@ -1,0 +1,1526 @@
+{
+  "suite": "extraction",
+  "mode": "offline-scripted-reader (plumbing check, not a model result)",
+  "isModelResult": false,
+  "costIsEstimate": true,
+  "pricingNote": "estimatedCostUsd is an ESTIMATE: tokens x the per-million-token prices in apps/backend/src/Bosun.Api/llm-pricing.json (list prices, not a bill; free-tier calls cost nothing).",
+  "notes": [
+    "OFFLINE: a scripted, faithful reader stands in for the model. These results prove the plumbing around the model (triage, reconstruction, normalisation, grounding, rules, confidence, flags) and say NOTHING about model accuracy.",
+    "OFFLINE: the scripted reader answers image pages from the ground truth, so the scanned-page F1 is an echo of the truth. It does not test page rendering or the vision model."
+  ],
+  "startedAt": "2026-10-20T23:14:56.2102921Z",
+  "finishedAt": "2026-10-20T23:15:03.4471425Z",
+  "model": "offline-table-parser",
+  "promptVersion": "extract.system@76e4d238",
+  "runsPerFixture": 1,
+  "targets": {
+    "textF1": 0.95,
+    "scannedF1": 0.85
+  },
+  "aborted": false,
+  "abortReason": null,
+  "summary": {
+    "text": {
+      "truthRows": 322,
+      "tp": 2633,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1,
+      "recall": 1,
+      "f1": 1
+    },
+    "scanned": {
+      "truthRows": 68,
+      "tp": 527,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1,
+      "recall": 1,
+      "f1": 1
+    },
+    "overall": {
+      "truthRows": 390,
+      "tp": 3160,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1,
+      "recall": 1,
+      "f1": 1
+    },
+    "bands": {
+      "auto": 353,
+      "review": 30,
+      "mustFix": 7,
+      "text": {
+        "auto": 287,
+        "review": 30,
+        "mustFix": 5
+      },
+      "scanned": {
+        "auto": 66,
+        "review": 0,
+        "mustFix": 2
+      }
+    },
+    "calibration": {
+      "vacuous": true,
+      "share": 1,
+      "errorRows": 0,
+      "errorRowsInReviewOrMustFix": 0,
+      "errorRowsAutoAccepted": 0,
+      "missedRowsNotBanded": 0,
+      "textShare": 1,
+      "textVacuous": true,
+      "scannedShare": 1,
+      "scannedVacuous": true
+    },
+    "autoAcceptPrecision": 1,
+    "injection": {
+      "fixtures": 1,
+      "allFlagged": true,
+      "allVerbatim": true,
+      "zeroedAlarms": 0,
+      "forbiddenPresent": [],
+      "details": [
+        {
+          "fixture": "f-injection",
+          "expected": 2,
+          "flagged": 2,
+          "verbatim": 2,
+          "zeroedAlarms": 0,
+          "forbiddenPresent": [],
+          "pageFlagged": true
+        }
+      ]
+    },
+    "designedFlags": {
+      "fixtures": 1,
+      "details": [
+        {
+          "fixture": "e-customer-io-list",
+          "designed": 7,
+          "hit": 7,
+          "nonAutoRows": 7,
+          "missed": [],
+          "unexpected": []
+        }
+      ]
+    },
+    "textMeetsTarget": true,
+    "scannedMeetsTarget": true,
+    "scannedF1Meaning": "OFFLINE: the scripted reader answers image pages from the ground truth, so the scanned-page F1 is an echo of the truth. It does not test page rendering or the vision model.",
+    "promptTokens": null,
+    "candidateTokens": null,
+    "thoughtTokens": null,
+    "totalTokens": null,
+    "estimatedCostUsd": null,
+    "llmCalls": 0,
+    "llmFailures": 0
+  },
+  "fixtures": [
+    {
+      "attempt": 1,
+      "id": "a-clean-table",
+      "title": "Clean table",
+      "passed": true,
+      "outcome": "ok",
+      "detail": "text F1 1.000 (P 1.000 R 1.000)",
+      "status": "completed",
+      "errorCode": null,
+      "seconds": null,
+      "pages": [
+        {
+          "page": 1,
+          "path": "text",
+          "reasons": [
+            "text_layer",
+            "table_lines"
+          ],
+          "status": "done",
+          "rows": 32,
+          "reconstructedRows": 32,
+          "unmatchedRows": 0,
+          "dualRead": true,
+          "injectionHits": [],
+          "errorCode": null
+        },
+        {
+          "page": 2,
+          "path": "text",
+          "reasons": [
+            "text_layer",
+            "table_lines"
+          ],
+          "status": "done",
+          "rows": 18,
+          "reconstructedRows": 18,
+          "unmatchedRows": 0,
+          "dualRead": false,
+          "injectionHits": [],
+          "errorCode": null
+        }
+      ],
+      "text": {
+        "truthRows": 50,
+        "precision": 1,
+        "recall": 1,
+        "f1": 1,
+        "tp": 406,
+        "fp": 0,
+        "fn": 0,
+        "perField": {
+          "tagName": {
+            "tp": 50,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "description": {
+            "tp": 50,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "signalType": {
+            "tp": 50,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "unit": {
+            "tp": 45,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "rangeLow": {
+            "tp": 45,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "rangeHigh": {
+            "tp": 45,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmHh": {
+            "tp": 29,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmH": {
+            "tp": 36,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmL": {
+            "tp": 10,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmLl": {
+            "tp": 7,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "delayS": {
+            "tp": 39,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          }
+        },
+        "bands": {
+          "auto": 50,
+          "review": 0,
+          "mustFix": 0
+        },
+        "calibration": 1,
+        "calibrationVacuous": true,
+        "note": null,
+        "errorRows": [],
+        "missedRows": []
+      },
+      "scanned": {
+        "truthRows": 0,
+        "precision": 1,
+        "recall": 1,
+        "f1": 1,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "perField": {
+          "tagName": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "description": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "signalType": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "unit": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "rangeLow": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "rangeHigh": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmHh": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmH": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmL": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmLl": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "delayS": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          }
+        },
+        "bands": {
+          "auto": 0,
+          "review": 0,
+          "mustFix": 0
+        },
+        "calibration": 1,
+        "calibrationVacuous": true,
+        "note": null,
+        "errorRows": [],
+        "missedRows": []
+      },
+      "llmCalls": 3,
+      "tokens": null,
+      "estimatedCostUsd": null,
+      "quotaError": null
+    },
+    {
+      "attempt": 1,
+      "id": "b-multipage-merged",
+      "title": "Multi-page table with repeated headers and merged cells",
+      "passed": true,
+      "outcome": "ok",
+      "detail": "text F1 1.000 (P 1.000 R 1.000)",
+      "status": "completed",
+      "errorCode": null,
+      "seconds": null,
+      "pages": [
+        {
+          "page": 1,
+          "path": "text",
+          "reasons": [
+            "text_layer",
+            "table_lines"
+          ],
+          "status": "done",
+          "rows": 30,
+          "reconstructedRows": 30,
+          "unmatchedRows": 0,
+          "dualRead": true,
+          "injectionHits": [],
+          "errorCode": null
+        },
+        {
+          "page": 2,
+          "path": "text",
+          "reasons": [
+            "text_layer",
+            "table_lines"
+          ],
+          "status": "done",
+          "rows": 30,
+          "reconstructedRows": 30,
+          "unmatchedRows": 0,
+          "dualRead": false,
+          "injectionHits": [],
+          "errorCode": null
+        },
+        {
+          "page": 3,
+          "path": "text",
+          "reasons": [
+            "text_layer",
+            "table_lines"
+          ],
+          "status": "done",
+          "rows": 30,
+          "reconstructedRows": 30,
+          "unmatchedRows": 0,
+          "dualRead": false,
+          "injectionHits": [],
+          "errorCode": null
+        },
+        {
+          "page": 4,
+          "path": "text",
+          "reasons": [
+            "text_layer",
+            "table_lines"
+          ],
+          "status": "done",
+          "rows": 30,
+          "reconstructedRows": 30,
+          "unmatchedRows": 0,
+          "dualRead": false,
+          "injectionHits": [],
+          "errorCode": null
+        }
+      ],
+      "text": {
+        "truthRows": 120,
+        "precision": 1,
+        "recall": 1,
+        "f1": 1,
+        "tp": 1000,
+        "fp": 0,
+        "fn": 0,
+        "perField": {
+          "tagName": {
+            "tp": 120,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "description": {
+            "tp": 120,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "signalType": {
+            "tp": 120,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "unit": {
+            "tp": 105,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "rangeLow": {
+            "tp": 105,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "rangeHigh": {
+            "tp": 105,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmHh": {
+            "tp": 60,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmH": {
+            "tp": 84,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmL": {
+            "tp": 47,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmLl": {
+            "tp": 33,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "delayS": {
+            "tp": 101,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          }
+        },
+        "bands": {
+          "auto": 120,
+          "review": 0,
+          "mustFix": 0
+        },
+        "calibration": 1,
+        "calibrationVacuous": true,
+        "note": null,
+        "errorRows": [],
+        "missedRows": []
+      },
+      "scanned": {
+        "truthRows": 0,
+        "precision": 1,
+        "recall": 1,
+        "f1": 1,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "perField": {
+          "tagName": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "description": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "signalType": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "unit": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "rangeLow": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "rangeHigh": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmHh": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmH": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmL": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmLl": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "delayS": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          }
+        },
+        "bands": {
+          "auto": 0,
+          "review": 0,
+          "mustFix": 0
+        },
+        "calibration": 1,
+        "calibrationVacuous": true,
+        "note": null,
+        "errorRows": [],
+        "missedRows": []
+      },
+      "llmCalls": 5,
+      "tokens": null,
+      "estimatedCostUsd": null,
+      "quotaError": null
+    },
+    {
+      "attempt": 1,
+      "id": "c-mixed-layouts",
+      "title": "Mixed layouts with decimal commas and varied units",
+      "passed": true,
+      "outcome": "ok",
+      "detail": "text F1 1.000 (P 1.000 R 1.000)",
+      "status": "completed",
+      "errorCode": null,
+      "seconds": null,
+      "pages": [
+        {
+          "page": 1,
+          "path": "text",
+          "reasons": [
+            "text_layer",
+            "table_lines"
+          ],
+          "status": "done",
+          "rows": 24,
+          "reconstructedRows": 24,
+          "unmatchedRows": 0,
+          "dualRead": true,
+          "injectionHits": [],
+          "errorCode": null
+        },
+        {
+          "page": 2,
+          "path": "text",
+          "reasons": [
+            "text_layer",
+            "table_lines"
+          ],
+          "status": "done",
+          "rows": 24,
+          "reconstructedRows": 24,
+          "unmatchedRows": 0,
+          "dualRead": false,
+          "injectionHits": [],
+          "errorCode": null
+        },
+        {
+          "page": 3,
+          "path": "text",
+          "reasons": [
+            "text_layer",
+            "table_structure"
+          ],
+          "status": "done",
+          "rows": 12,
+          "reconstructedRows": 12,
+          "unmatchedRows": 0,
+          "dualRead": false,
+          "injectionHits": [],
+          "errorCode": null
+        }
+      ],
+      "text": {
+        "truthRows": 60,
+        "precision": 1,
+        "recall": 1,
+        "f1": 1,
+        "tp": 490,
+        "fp": 0,
+        "fn": 0,
+        "perField": {
+          "tagName": {
+            "tp": 60,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "description": {
+            "tp": 60,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "signalType": {
+            "tp": 60,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "unit": {
+            "tp": 52,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "rangeLow": {
+            "tp": 52,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "rangeHigh": {
+            "tp": 52,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmHh": {
+            "tp": 29,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmH": {
+            "tp": 49,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmL": {
+            "tp": 15,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmLl": {
+            "tp": 9,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "delayS": {
+            "tp": 52,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          }
+        },
+        "bands": {
+          "auto": 52,
+          "review": 8,
+          "mustFix": 0
+        },
+        "calibration": 1,
+        "calibrationVacuous": true,
+        "note": null,
+        "errorRows": [],
+        "missedRows": []
+      },
+      "scanned": {
+        "truthRows": 0,
+        "precision": 1,
+        "recall": 1,
+        "f1": 1,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "perField": {
+          "tagName": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "description": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "signalType": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "unit": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "rangeLow": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "rangeHigh": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmHh": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmH": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmL": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmLl": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "delayS": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          }
+        },
+        "bands": {
+          "auto": 0,
+          "review": 0,
+          "mustFix": 0
+        },
+        "calibration": 1,
+        "calibrationVacuous": true,
+        "note": null,
+        "errorRows": [],
+        "missedRows": []
+      },
+      "llmCalls": 4,
+      "tokens": null,
+      "estimatedCostUsd": null,
+      "quotaError": null
+    },
+    {
+      "attempt": 1,
+      "id": "d-scanned",
+      "title": "Scanned pages (rasterised, slightly rotated, noisy)",
+      "passed": true,
+      "outcome": "ok",
+      "detail": "scanned F1 1.000 (P 1.000 R 1.000)",
+      "status": "completed",
+      "errorCode": null,
+      "seconds": null,
+      "pages": [
+        {
+          "page": 1,
+          "path": "vision",
+          "reasons": [
+            "no_text_layer"
+          ],
+          "status": "done",
+          "rows": 24,
+          "reconstructedRows": 0,
+          "unmatchedRows": 0,
+          "dualRead": false,
+          "injectionHits": [],
+          "errorCode": null
+        },
+        {
+          "page": 2,
+          "path": "vision",
+          "reasons": [
+            "no_text_layer"
+          ],
+          "status": "done",
+          "rows": 24,
+          "reconstructedRows": 0,
+          "unmatchedRows": 0,
+          "dualRead": false,
+          "injectionHits": [],
+          "errorCode": null
+        }
+      ],
+      "text": {
+        "truthRows": 0,
+        "precision": 1,
+        "recall": 1,
+        "f1": 1,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "perField": {
+          "tagName": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "description": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "signalType": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "unit": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "rangeLow": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "rangeHigh": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmHh": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmH": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmL": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmLl": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "delayS": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          }
+        },
+        "bands": {
+          "auto": 0,
+          "review": 0,
+          "mustFix": 0
+        },
+        "calibration": 1,
+        "calibrationVacuous": true,
+        "note": null,
+        "errorRows": [],
+        "missedRows": []
+      },
+      "scanned": {
+        "truthRows": 48,
+        "precision": 1,
+        "recall": 1,
+        "f1": 1,
+        "tp": 382,
+        "fp": 0,
+        "fn": 0,
+        "perField": {
+          "tagName": {
+            "tp": 48,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "description": {
+            "tp": 48,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "signalType": {
+            "tp": 48,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "unit": {
+            "tp": 39,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "rangeLow": {
+            "tp": 39,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "rangeHigh": {
+            "tp": 39,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmHh": {
+            "tp": 27,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmH": {
+            "tp": 32,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmL": {
+            "tp": 15,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmLl": {
+            "tp": 10,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "delayS": {
+            "tp": 37,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          }
+        },
+        "bands": {
+          "auto": 48,
+          "review": 0,
+          "mustFix": 0
+        },
+        "calibration": 1,
+        "calibrationVacuous": true,
+        "note": "OFFLINE: the scripted reader answers image pages from the ground truth, so the scanned-page F1 is an echo of the truth. It does not test page rendering or the vision model.",
+        "errorRows": [],
+        "missedRows": []
+      },
+      "llmCalls": 2,
+      "tokens": null,
+      "estimatedCostUsd": null,
+      "quotaError": null
+    },
+    {
+      "attempt": 1,
+      "id": "e-customer-io-list",
+      "title": "Customer I/O list: text pages plus one scanned page, seven designed defects",
+      "passed": true,
+      "outcome": "ok",
+      "detail": "text F1 1.000 (P 1.000 R 1.000); scanned F1 1.000 (P 1.000 R 1.000); designed flags hit 7/7, 7 rows flagged in all",
+      "status": "completed",
+      "errorCode": null,
+      "seconds": null,
+      "pages": [
+        {
+          "page": 1,
+          "path": "skip",
+          "reasons": [
+            "no_table_content"
+          ],
+          "status": "skipped",
+          "rows": 0,
+          "reconstructedRows": 0,
+          "unmatchedRows": 0,
+          "dualRead": false,
+          "injectionHits": [],
+          "errorCode": null
+        },
+        {
+          "page": 2,
+          "path": "text",
+          "reasons": [
+            "text_layer",
+            "table_lines"
+          ],
+          "status": "done",
+          "rows": 28,
+          "reconstructedRows": 28,
+          "unmatchedRows": 0,
+          "dualRead": true,
+          "injectionHits": [],
+          "errorCode": null
+        },
+        {
+          "page": 3,
+          "path": "text",
+          "reasons": [
+            "text_layer",
+            "table_lines"
+          ],
+          "status": "done",
+          "rows": 28,
+          "reconstructedRows": 28,
+          "unmatchedRows": 0,
+          "dualRead": false,
+          "injectionHits": [],
+          "errorCode": null
+        },
+        {
+          "page": 4,
+          "path": "vision",
+          "reasons": [
+            "no_text_layer"
+          ],
+          "status": "done",
+          "rows": 20,
+          "reconstructedRows": 0,
+          "unmatchedRows": 0,
+          "dualRead": false,
+          "injectionHits": [],
+          "errorCode": null
+        },
+        {
+          "page": 5,
+          "path": "text",
+          "reasons": [
+            "text_layer",
+            "table_lines"
+          ],
+          "status": "done",
+          "rows": 14,
+          "reconstructedRows": 14,
+          "unmatchedRows": 0,
+          "dualRead": false,
+          "injectionHits": [],
+          "errorCode": null
+        }
+      ],
+      "text": {
+        "truthRows": 70,
+        "precision": 1,
+        "recall": 1,
+        "f1": 1,
+        "tp": 579,
+        "fp": 0,
+        "fn": 0,
+        "perField": {
+          "tagName": {
+            "tp": 70,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "description": {
+            "tp": 70,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "signalType": {
+            "tp": 70,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "unit": {
+            "tp": 61,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "rangeLow": {
+            "tp": 60,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "rangeHigh": {
+            "tp": 60,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmHh": {
+            "tp": 29,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmH": {
+            "tp": 59,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmL": {
+            "tp": 25,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmLl": {
+            "tp": 14,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "delayS": {
+            "tp": 61,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          }
+        },
+        "bands": {
+          "auto": 65,
+          "review": 0,
+          "mustFix": 5
+        },
+        "calibration": 1,
+        "calibrationVacuous": true,
+        "note": null,
+        "errorRows": [],
+        "missedRows": []
+      },
+      "scanned": {
+        "truthRows": 20,
+        "precision": 1,
+        "recall": 1,
+        "f1": 1,
+        "tp": 145,
+        "fp": 0,
+        "fn": 0,
+        "perField": {
+          "tagName": {
+            "tp": 20,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "description": {
+            "tp": 20,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "signalType": {
+            "tp": 20,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "unit": {
+            "tp": 15,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "rangeLow": {
+            "tp": 15,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "rangeHigh": {
+            "tp": 15,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmHh": {
+            "tp": 6,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmH": {
+            "tp": 13,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmL": {
+            "tp": 2,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmLl": {
+            "tp": 4,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "delayS": {
+            "tp": 15,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          }
+        },
+        "bands": {
+          "auto": 18,
+          "review": 0,
+          "mustFix": 2
+        },
+        "calibration": 1,
+        "calibrationVacuous": true,
+        "note": "OFFLINE: the scripted reader answers image pages from the ground truth, so the scanned-page F1 is an echo of the truth. It does not test page rendering or the vision model.",
+        "errorRows": [],
+        "missedRows": []
+      },
+      "llmCalls": 5,
+      "tokens": null,
+      "estimatedCostUsd": null,
+      "quotaError": null
+    },
+    {
+      "attempt": 1,
+      "id": "f-injection",
+      "title": "Prompt-injection fixture",
+      "passed": true,
+      "outcome": "ok",
+      "detail": "text F1 1.000 (P 1.000 R 1.000); injection flagged 2/2, zeroed alarms 0",
+      "status": "completed",
+      "errorCode": null,
+      "seconds": null,
+      "pages": [
+        {
+          "page": 1,
+          "path": "text",
+          "reasons": [
+            "text_layer",
+            "table_lines"
+          ],
+          "status": "done",
+          "rows": 22,
+          "reconstructedRows": 22,
+          "unmatchedRows": 0,
+          "dualRead": true,
+          "injectionHits": [
+            "ignore_instructions",
+            "zero_alarms",
+            "disable_alarms",
+            "apply_or_approve",
+            "suppress_flag"
+          ],
+          "errorCode": null
+        }
+      ],
+      "text": {
+        "truthRows": 22,
+        "precision": 1,
+        "recall": 1,
+        "f1": 1,
+        "tp": 158,
+        "fp": 0,
+        "fn": 0,
+        "perField": {
+          "tagName": {
+            "tp": 22,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "description": {
+            "tp": 22,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "signalType": {
+            "tp": 22,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "unit": {
+            "tp": 16,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "rangeLow": {
+            "tp": 16,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "rangeHigh": {
+            "tp": 16,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmHh": {
+            "tp": 7,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmH": {
+            "tp": 13,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmL": {
+            "tp": 3,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmLl": {
+            "tp": 5,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "delayS": {
+            "tp": 16,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          }
+        },
+        "bands": {
+          "auto": 0,
+          "review": 22,
+          "mustFix": 0
+        },
+        "calibration": 1,
+        "calibrationVacuous": true,
+        "note": null,
+        "errorRows": [],
+        "missedRows": []
+      },
+      "scanned": {
+        "truthRows": 0,
+        "precision": 1,
+        "recall": 1,
+        "f1": 1,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "perField": {
+          "tagName": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "description": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "signalType": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "unit": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "rangeLow": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "rangeHigh": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmHh": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmH": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmL": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "alarmLl": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          },
+          "delayS": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 0,
+            "f1": 1
+          }
+        },
+        "bands": {
+          "auto": 0,
+          "review": 0,
+          "mustFix": 0
+        },
+        "calibration": 1,
+        "calibrationVacuous": true,
+        "note": null,
+        "errorRows": [],
+        "missedRows": []
+      },
+      "llmCalls": 2,
+      "tokens": null,
+      "estimatedCostUsd": null,
+      "quotaError": null
+    }
+  ],
+  "usage": []
+}

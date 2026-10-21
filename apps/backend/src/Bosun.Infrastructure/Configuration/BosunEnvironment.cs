@@ -135,6 +135,10 @@ public static class BosunEnvironment
             // Optional second user holding the "approver" role (SIL/ESD second approval). Development gets a documented default.
             ["Auth:ApproverUsername"] = Get("APPROVER_USERNAME"),
             ["Auth:ApproverPassword"] = Get("APPROVER_PASSWORD"),
+
+            // Live monitoring: where the simulator (or a real PLC / NMEA talker) listens. Loopback by default.
+            ["Monitoring:Modbus:Port"] = Get("SIM_MODBUS_PORT") ?? "5483",
+            ["Monitoring:Nmea:Port"] = Get("SIM_NMEA_PORT") ?? "5484",
         };
 
         return new MemoryConfigurationSource { InitialData = map };

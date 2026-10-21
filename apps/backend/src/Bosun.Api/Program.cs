@@ -2,11 +2,13 @@ using Bosun.Agent;
 using Bosun.Api;
 using Bosun.Api.Auth;
 using Bosun.Application;
+using Bosun.Application.Monitoring;
 using Bosun.Application.Llm;
 using Bosun.Domain;
 using Bosun.Extraction;
 using Bosun.Infrastructure.Configuration;
 using Bosun.Infrastructure.Llm;
+using Bosun.Infrastructure.Monitoring;
 using Bosun.Infrastructure.Persistence;
 using Bosun.Infrastructure.Seed;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -62,6 +64,13 @@ builder.Services.AddHostedService<ExtractionLifecycle>();
 builder.Services.AddSignalR().AddJsonProtocol(o => BosunJson.Configure(o.PayloadSerializerOptions));
 builder.Services.AddSingleton<IAgentEventSink, SignalRAgentEventSink>();
 builder.Services.AddHostedService<AgentLifecycle>();
+
+// Live monitoring (plan s6.5): Modbus poller + NMEA listener + alarm engine, pushed to clients through /hubs/monitoring.
+// Monitoring:Enabled=false (integration tests) opens no socket.
+builder.Services.AddBosunMonitoring();
+builder.Services.AddSingleton<IMonitoringNotifier, SignalRMonitoringNotifier>();
+builder.Services.AddScoped<MimicService>();
+builder.Services.AddHostedService<ValuesBroadcaster>();
 builder.Services.Configure<ForwardedHeadersOptions>(o =>
 {
     // Behind nginx/another TLS terminator: trust X-Forwarded-For/-Proto from loopback proxies only (the framework default).
@@ -137,6 +146,29 @@ if (args.Contains("--llm-usage"))
     return;
 }
 
+// `--kb-index [--project N] [--cache-only]`: chunk seed/docs and embed what is new (spends embedding quota; unchanged text and anything
+// already in data/rag-embedding-cache.json costs nothing). Backs `pnpm run kb:index`.
+if (args.Contains("--kb-index"))
+{
+    await DatabaseInitializer.MigrateAsync(app.Services);
+    var kbProject = int.Parse(ArgValue("--project") ?? "1", System.Globalization.CultureInfo.InvariantCulture);
+    await using var kbScope = app.Services.CreateAsyncScope();
+    try
+    {
+        var report = await kbScope.ServiceProvider.GetRequiredService<Bosun.Application.Rag.KnowledgeIngestService>().ReindexAsync(kbProject, args.Contains("--cache-only"), CancellationToken.None);
+        Console.WriteLine(report.Skipped
+            ? $"Skipped: {report.Chunks} chunks, not all cached (cache-only). Run without --cache-only to embed."
+            : $"Indexed {report.Chunks} chunks of {report.Documents} documents with {report.Model} ({report.Dimensions} dims): {report.Embedded} embedded in {report.EmbeddingRequests} request(s) / {report.PromptTokens} tokens, {report.FromStore} kept, {report.FromCache} from cache, {report.ElapsedMs} ms.");
+    }
+    catch (Exception ex) when (ex is LlmException or AppException)
+    {
+        Console.Error.WriteLine($"kb:index failed: {(ex as LlmException)?.Code ?? (ex as AppException)?.Code}: {ex.Message}");
+        Environment.ExitCode = 1;
+    }
+
+    return;
+}
+
 if (args.Contains("--reset-db") || args.Contains("--seed"))
 {
     var watch = System.Diagnostics.Stopwatch.StartNew();
@@ -158,6 +190,12 @@ if (args.Contains("--reset-db") || args.Contains("--seed"))
 
     var settings = DatabaseSettings.From(app.Configuration);
     Console.WriteLine($"Database ready at {new Microsoft.Data.Sqlite.SqliteConnectionStringBuilder(settings.ConnectionString).DataSource}: {tags} tags seeded in {watch.ElapsedMilliseconds} ms.");
+
+    // Knowledge base: indexed only when every chunk is already in the embedding cache (no network); otherwise it starts empty.
+    var kb = await DatabaseInitializer.IndexKnowledgeFromCacheAsync(app.Services);
+    Console.WriteLine(kb is { Skipped: false }
+        ? $"Knowledge base indexed from the embedding cache: {kb.Chunks} chunks of {kb.Documents} documents."
+        : "Knowledge base not indexed (embeddings not cached yet). Run `pnpm run kb:index` to build it.");
     return;
 }
 
@@ -186,6 +224,8 @@ app.MapBosunApi(readsRequireLogin: !app.Environment.IsDevelopment());
 app.MapAi(requireLogin: !app.Environment.IsDevelopment());
 app.MapAgent(readsRequireLogin: !app.Environment.IsDevelopment());
 app.MapExtraction(readsRequireLogin: !app.Environment.IsDevelopment());
+app.MapKnowledge(readsRequireLogin: !app.Environment.IsDevelopment());
+app.MapMonitoring(readsRequireLogin: !app.Environment.IsDevelopment());
 
 app.Run();
 

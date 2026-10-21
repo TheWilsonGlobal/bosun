@@ -89,14 +89,18 @@ public static class GeminiErrors
         var header = response.Headers.RetryAfter;
         if (header?.Delta is { } delta)
         {
-            return delta;
+            return delta < TimeSpan.Zero ? TimeSpan.Zero : delta;
         }
 
-        return header?.Date is { } date ? date - DateTimeOffset.UtcNow : null;
+        // A date in the past means "now", not a negative wait.
+        return header?.Date is { } date ? Max0(date - DateTimeOffset.UtcNow) : null;
     }
 
     /// <summary>The wait Gemini asks for: Retry-After header, else error.details[].retryDelay ("33s").</summary>
-    public static TimeSpan? RetryDelay(HttpResponseMessage response, string body) => ParseError(body).RetryDelay ?? RetryAfterHeader(response);
+    public static TimeSpan? RetryDelay(HttpResponseMessage response, string body) =>
+        (ParseError(body).RetryDelay is { } parsed ? Max0(parsed) : (TimeSpan?)null) ?? RetryAfterHeader(response);
+
+    private static TimeSpan Max0(TimeSpan value) => value < TimeSpan.Zero ? TimeSpan.Zero : value;
 
     public static string Redact(string text, params string?[] secrets)
     {

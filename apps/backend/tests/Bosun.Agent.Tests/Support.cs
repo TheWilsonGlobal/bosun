@@ -165,6 +165,17 @@ public static class SeedFile
 }
 
 /// <summary>The real agent stack (tools, runner, manager, EF on a copy of the seeded file) with a scripted model.</summary>
+/// <summary>The agent tests never embed anything; search_docs needs the dependency to exist, and says 'not indexed' before it would be used.</summary>
+public sealed class UnconfiguredEmbeddings : IEmbeddingClient
+{
+    public string Model => "none";
+
+    public int Dimensions => 768;
+
+    public Task<EmbeddingResult> EmbedAsync(IReadOnlyList<string> texts, EmbeddingTask task, string feature, CancellationToken cancellationToken) =>
+        throw new LlmException(LlmErrorCodes.NotConfigured, "No embedding client in this test host.", attempts: 0);
+}
+
 public sealed class AgentHost : IDisposable
 {
     private readonly ServiceProvider provider;
@@ -199,6 +210,7 @@ public sealed class AgentHost : IDisposable
         services.AddBosunApplication();
         services.AddBosunAgent();
         services.AddSingleton<ILlmClient>(llm);
+        services.AddSingleton<IEmbeddingClient, UnconfiguredEmbeddings>();
         services.AddSingleton<StructuredLlm>();
         services.AddSingleton<IAgentEventSink>(Events);
         provider = services.BuildServiceProvider();

@@ -68,7 +68,8 @@ async function toError(res: Response): Promise<ApiError> {
 }
 
 export interface RequestOptions {
-  method?: 'GET' | 'POST';
+  method?: 'GET' | 'POST' | 'PATCH' | 'DELETE';
+  /** A FormData body is sent as multipart (the browser sets the boundary); anything else as JSON. */
   body?: unknown;
   signal?: AbortSignal;
 }
@@ -76,6 +77,7 @@ export interface RequestOptions {
 export async function apiFetch<T>(path: string, options: RequestOptions = {}): Promise<T> {
   const { method = 'GET', body, signal } = options;
   let res: Response;
+  const multipart = typeof FormData !== 'undefined' && body instanceof FormData;
   try {
     res = await fetch(path, {
       method,
@@ -83,9 +85,9 @@ export async function apiFetch<T>(path: string, options: RequestOptions = {}): P
       signal,
       headers: {
         Accept: 'application/json, application/problem+json',
-        ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}),
+        ...(body !== undefined && !multipart ? { 'Content-Type': 'application/json' } : {}),
       },
-      body: body !== undefined ? JSON.stringify(body) : undefined,
+      body: body === undefined ? undefined : multipart ? (body as FormData) : JSON.stringify(body),
     });
   } catch (cause) {
     if (cause instanceof DOMException && cause.name === 'AbortError') throw cause;
@@ -105,3 +107,29 @@ export async function apiFetch<T>(path: string, options: RequestOptions = {}): P
 export const get = <T>(path: string, signal?: AbortSignal) => apiFetch<T>(path, { signal });
 export const post = <T>(path: string, body?: unknown) =>
   apiFetch<T>(path, { method: 'POST', body: body ?? undefined });
+export const patch = <T>(path: string, body: unknown) =>
+  apiFetch<T>(path, { method: 'PATCH', body });
+
+export const del = (path: string) => apiFetch<void>(path, { method: 'DELETE' });
+
+/** GET a binary body (a page image). Same status / offline semantics as apiFetch. */
+export async function fetchBlob(path: string, signal?: AbortSignal): Promise<Blob> {
+  let res: Response;
+  try {
+    res = await fetch(path, { credentials: 'same-origin', signal });
+  } catch (cause) {
+    if (cause instanceof DOMException && cause.name === 'AbortError') throw cause;
+    offlineListener?.(true);
+    throw new ApiError(0, 'backend_offline', 'The backend is not reachable.');
+  }
+  if (!res.ok) {
+    const error = await toError(res);
+    if (error.isOffline) offlineListener?.(true);
+    throw error;
+  }
+  offlineListener?.(false);
+  if (!(res.headers.get('content-type') ?? '').includes('image/')) {
+    throw new ApiError(res.status, 'not_an_image', 'The backend did not return an image.');
+  }
+  return res.blob();
+}

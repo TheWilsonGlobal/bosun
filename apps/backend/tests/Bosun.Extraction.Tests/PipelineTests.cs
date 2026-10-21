@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Bosun.Application.Llm;
+using Bosun.Application.Safety;
 using Bosun.Domain.Entities;
 using Bosun.Evals.Extraction;
 using Bosun.Evals.Fixtures;
@@ -413,9 +414,23 @@ public sealed class PipelineTests
     }
 
     [Fact]
-    public async Task A_short_rate_limit_is_a_per_page_failure_and_the_other_pages_still_run()
+    public async Task A_rate_limit_the_client_gave_up_on_stops_the_remaining_pages_even_when_it_is_short()
     {
+        // The Gemini client has already retried (Polly) before this error reaches the pipeline, so more pages would only burn more retries.
         var llm = new FailingLlm(new TableParsingLlm(), r => PageOf(r) == "1" ? new LlmException(LlmErrorCodes.RateLimited, "slow down", 429, TimeSpan.FromSeconds(10)) : null);
+
+        var result = await Pipeline(llm, new ExtractionOptions { MaxConcurrentPages = 1, DualReadSamplePages = 0 }).RunAsync(Fx.Pdf("b-multipage-merged"), SeedTags);
+
+        result.Status.Should().Be(ExtractionStatus.Failed);
+        result.ErrorCode.Should().Be(LlmErrorCodes.RateLimited);
+        llm.Calls.Should().Be(1, "the other pages were not attempted");
+        result.Pages.Skip(1).Should().OnlyContain(p => p.ErrorMessage!.StartsWith("Not attempted", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task A_provider_error_that_is_not_a_rate_limit_still_leaves_the_other_pages_running()
+    {
+        var llm = new FailingLlm(new TableParsingLlm(), r => PageOf(r) == "1" ? new LlmException(LlmErrorCodes.Unavailable, "down", 503) : null);
 
         var result = await Pipeline(llm, new ExtractionOptions { MaxConcurrentPages = 1, DualReadSamplePages = 0 }).RunAsync(Fx.Pdf("a-clean-table"), SeedTags);
 
