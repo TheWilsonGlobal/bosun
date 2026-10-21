@@ -8,6 +8,7 @@ TODO.md
 # Ignore runtime-generated files inside data/…
 data/logs/
 data/coverage/
+data/documents/
 data/db/*.db
 data/db/*.db-shm
 data/db/*.db-wal
