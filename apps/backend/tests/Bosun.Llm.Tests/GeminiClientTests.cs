@@ -295,7 +295,7 @@ public class GeminiErrorMappingTests
         var failure = await FailureAsync(host);
 
         failure.Code.Should().Be(LlmErrorCodes.AuthFailed);
-        failure.ProviderStatus.Should().Be(status);
+        failure.Message.Should().Contain("[rejected key: GEMINI_LLM_API_KEY]");
         failure.Message.Should().Contain("GEMINI_LLM_API_KEY");
         handler.Calls.Should().Be(1, "a wrong key does not get better with retries");
     }

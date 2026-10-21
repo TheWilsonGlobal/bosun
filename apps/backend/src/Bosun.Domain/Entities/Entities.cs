@@ -351,6 +351,9 @@ public sealed class KnowledgeChunk
     public byte[]? Embedding { get; set; }
     public string? EmbeddingModel { get; set; }
     public DateTime IndexedAt { get; set; }
+
+    /// <summary>The section only lists what the documents do NOT cover (see Chunker.ExclusionMarker). Never support for an answer.</summary>
+    public bool IsExclusion { get; set; }
 }
 
 /// <summary>

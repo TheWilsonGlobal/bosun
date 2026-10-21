@@ -58,6 +58,8 @@ An operator may shelve a Priority 2 or Priority 3 alarm when the equipment is kn
 
 ## What this document does not cover
 
+<!-- scope: exclusion -->
+
 This document is limited to the configuration of process alarms in the integrated alarm and monitoring system. It deliberately does not cover the following topics, and no other document in this project's document set covers them either:
 
 - Bridge navigational watch alarm system (BNWAS) settings and timings.

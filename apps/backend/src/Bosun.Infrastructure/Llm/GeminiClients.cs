@@ -63,7 +63,15 @@ internal static partial class GeminiRequests
 
             if (!response.IsSuccessStatusCode)
             {
-                throw GeminiErrors.FromHttp(response.StatusCode, text, GeminiErrors.RetryAfterHeader(response), counter.Count, apiKey);
+                var failure = GeminiErrors.FromHttp(response.StatusCode, text, GeminiErrors.RetryAfterHeader(response), counter.Count, apiKey);
+                if (failure.Code == LlmErrorCodes.AuthFailed)
+                {
+                    // Say WHICH key was rejected (text/vision/agent vs the separate embedding key); never the value.
+                    var variable = clientName == GeminiHttp.EmbeddingClientName ? "GEMINI_EMBEDDING_API_KEY" : "GEMINI_LLM_API_KEY";
+                    failure = new LlmException(failure.Code, $"{failure.Message} [rejected key: {variable}]", failure.ProviderStatus, null, failure.Attempts);
+                }
+
+                throw failure;
             }
 
             try

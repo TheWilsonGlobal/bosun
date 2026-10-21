@@ -173,7 +173,7 @@ public sealed class KnowledgeIngestService(
         }
 
         var records = inputs.Select((x, i) => new ChunkRecord(
-            x.Chunk.Source, x.Chunk.Section, x.Chunk.Page, x.Chunk.Ordinal, x.Chunk.Text, x.Hash, vectors[i], model)).ToList();
+            x.Chunk.Source, x.Chunk.Section, x.Chunk.Page, x.Chunk.Ordinal, x.Chunk.Text, x.Hash, vectors[i], model, x.Chunk.IsExclusion)).ToList();
         await store.ReplaceAllAsync(projectId, records, ct);
         return new IndexReport(chunks.Select(c => c.Source).Distinct().Count(), chunks.Count, embedded, fromStore, fromCache, requests, tokens, false, model, dimensions, watch.ElapsedMilliseconds);
     }

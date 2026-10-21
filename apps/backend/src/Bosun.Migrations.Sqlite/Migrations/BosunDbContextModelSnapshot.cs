@@ -1121,6 +1121,12 @@ namespace Bosun.Migrations.Sqlite.Migrations
                         .HasColumnType("TEXT")
                         .HasColumnName("indexed_at");
 
+                    b.Property<bool>("IsExclusion")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_exclusion");
+
                     b.Property<int>("Ordinal")
                         .HasColumnType("INTEGER")
                         .HasColumnName("ordinal");

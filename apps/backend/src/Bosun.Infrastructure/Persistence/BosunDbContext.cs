@@ -276,6 +276,7 @@ public class BosunDbContext(DbContextOptions<BosunDbContext> options) : DbContex
             e.Property(x => x.Text).IsRequired();
             e.Property(x => x.ContentHash).HasMaxLength(64).IsRequired();
             e.Property(x => x.EmbeddingModel).HasMaxLength(100);
+            e.Property(x => x.IsExclusion).HasDefaultValue(false);
             e.HasIndex(x => new { x.ProjectId, x.Source, x.Ordinal }).IsUnique().HasDatabaseName("ux_knowledge_chunks_project_source_ordinal");
             e.HasIndex(x => new { x.ProjectId, x.ContentHash }).HasDatabaseName("ix_knowledge_chunks_project_hash");
         });

@@ -4,7 +4,8 @@ using System.Text.RegularExpressions;
 namespace Bosun.Application.Rag;
 
 /// <summary>One searchable slice of a document, with the fields a citation needs.</summary>
-public sealed record DocumentChunk(string Source, string Section, int Page, int Ordinal, string Text);
+/// <param name="IsExclusion">The section is a scope statement ("what this document does not cover"). See <see cref="Chunker.ExclusionMarker"/>.</param>
+public sealed record DocumentChunk(string Source, string Section, int Page, int Ordinal, string Text, bool IsExclusion = false);
 
 /// <param name="TargetTokens">Window size when a section has to be split.</param>
 /// <param name="MaxTokens">A section up to this size stays ONE chunk (headings are hard boundaries, so small sections stay small).</param>
@@ -31,6 +32,19 @@ public static partial class Chunker
 
     public static int PageOf(int offset, int pageChars) => (Math.Max(0, offset) / Math.Max(1, pageChars)) + 1;
 
+    /// <summary>
+    /// Explicit marker line for an exclusion section, written in the Markdown right under the heading: <c>&lt;!-- scope: exclusion --&gt;</c>.
+    /// The line is removed from the chunk text (so it never changes the embedded text or its hash). Headings that contain
+    /// "does not cover" are treated as exclusion sections too, so a document without the marker still behaves.
+    /// An exclusion chunk can be retrieved and shown, but is never accepted as support for an answer.
+    /// </summary>
+    public const string ExclusionMarker = "<!-- scope: exclusion -->";
+
+    [GeneratedRegex(@"^<!--\s*scope:\s*exclusion\s*-->$", RegexOptions.IgnoreCase)]
+    private static partial Regex ExclusionLine();
+
+    public static bool IsExclusionHeading(string title) => title.Contains("does not cover", StringComparison.OrdinalIgnoreCase);
+
     [GeneratedRegex(@"^(?<hashes>#{1,3})[ \t]+(?<title>.+?)[ \t]*#*[ \t]*$")]
     private static partial Regex HeadingPattern();
 
@@ -41,6 +55,8 @@ public static partial class Chunker
         public string Title { get; } = title;
 
         public List<(string Text, int Offset)> Paragraphs { get; } = [];
+
+        public bool IsExclusion { get; set; } = IsExclusionHeading(title);
     }
 
     public static IReadOnlyList<DocumentChunk> Chunk(string source, string markdown, ChunkerOptions? options = null)
@@ -55,13 +71,13 @@ public static partial class Chunker
             var body = string.Join("\n\n", section.Paragraphs.Select(p => p.Text));
             if (EstimateTokens(body) <= options.MaxTokens)
             {
-                chunks.Add(new DocumentChunk(source, section.Title, PageOf(section.Paragraphs[0].Offset, options.PageChars), chunks.Count, body));
+                chunks.Add(new DocumentChunk(source, section.Title, PageOf(section.Paragraphs[0].Offset, options.PageChars), chunks.Count, body, section.IsExclusion));
                 continue;
             }
 
             foreach (var (windowText, offset) in Windows(section, options))
             {
-                chunks.Add(new DocumentChunk(source, section.Title, PageOf(offset, options.PageChars), chunks.Count, windowText));
+                chunks.Add(new DocumentChunk(source, section.Title, PageOf(offset, options.PageChars), chunks.Count, windowText, section.IsExclusion));
             }
         }
 
@@ -94,6 +110,12 @@ public static partial class Chunker
             if (line.TrimStart().StartsWith("```", StringComparison.Ordinal))
             {
                 inFence = !inFence;
+            }
+
+            if (!inFence && current is not null && ExclusionLine().IsMatch(line.Trim()))
+            {
+                current.IsExclusion = true;
+                continue;
             }
 
             var heading = inFence ? null : HeadingPattern().Match(line);

@@ -129,4 +129,65 @@ public sealed class StoreTests : IDisposable
         KeywordTerms.Extract("Why is the delay 10 s and not 5 for the exhaust, exhaust gas?").Should().Equal("delay", "10", "5", "exhaust", "gas");
         KeywordTerms.Extract("the of a").Should().BeEmpty();
     }
+
+    [Fact]
+    public async Task The_exclusion_flag_round_trips_through_the_store_and_into_search_hits()
+    {
+        await using var scope = host.Scope();
+        var store = scope.ServiceProvider.GetRequiredService<IVectorStore>();
+        await store.ReplaceAllAsync(1,
+        [
+            Chunk(0, "real facts about delay", Unit(1, 0, 0)),
+            Chunk(1, "delay is not covered here", Unit(0.9f, 0.1f, 0), section: "Scope") with { IsExclusion = true },
+        ], CancellationToken.None);
+
+        var vector = await store.SearchByVectorAsync(1, Unit(1, 0, 0), 5, CancellationToken.None);
+        var keyword = await store.SearchByKeywordAsync(1, "delay", 5, CancellationToken.None);
+
+        vector.Single(h => h.Section == "Scope").IsExclusion.Should().BeTrue();
+        vector.Single(h => h.Section == "S").IsExclusion.Should().BeFalse();
+        keyword.Single(h => h.Section == "Scope").IsExclusion.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task Replace_all_waits_for_the_write_gate_like_every_other_writer()
+    {
+        await using var scope = host.Scope();
+        var store = scope.ServiceProvider.GetRequiredService<IVectorStore>();
+        var gate = host.Get<WriteGate>();
+
+        Task replace;
+        using (await gate.EnterAsync(CancellationToken.None))
+        {
+            replace = store.ReplaceAllAsync(1, [Chunk(0, "gated", Unit(1, 0, 0))], CancellationToken.None);
+            await Task.Delay(300);
+            replace.IsCompleted.Should().BeFalse("the gate is held by someone else");
+        }
+
+        await replace.WaitAsync(TimeSpan.FromSeconds(10));
+        (await store.ListAsync(1, CancellationToken.None)).Should().ContainSingle();
+    }
+
+    [Fact]
+    public async Task A_chunk_that_disappears_between_the_keyword_query_and_the_read_is_skipped_not_thrown()
+    {
+        await using var scope = host.Scope();
+        var store = scope.ServiceProvider.GetRequiredService<IVectorStore>();
+        await store.ReplaceAllAsync(1, [Chunk(0, "alpha delay", Unit(1, 0, 0)), Chunk(1, "beta delay", Unit(0, 1, 0))], CancellationToken.None);
+
+        // Concurrent reindexes while searching: every search must either see a consistent index or an empty one, never throw.
+        var searches = Enumerable.Range(0, 20).Select(async _ =>
+        {
+            await using var inner = host.Scope();
+            return await inner.ServiceProvider.GetRequiredService<IVectorStore>().SearchByKeywordAsync(1, "delay", 5, CancellationToken.None);
+        }).ToList();
+        var reindexes = Enumerable.Range(0, 5).Select(async _ =>
+        {
+            await using var inner = host.Scope();
+            await inner.ServiceProvider.GetRequiredService<IVectorStore>().ReplaceAllAsync(1, [Chunk(0, "alpha delay", Unit(1, 0, 0)), Chunk(1, "beta delay", Unit(0, 1, 0))], CancellationToken.None);
+        }).ToList();
+
+        var act = async () => await Task.WhenAll(searches.Cast<Task>().Concat(reindexes));
+        await act.Should().NotThrowAsync();
+    }
 }

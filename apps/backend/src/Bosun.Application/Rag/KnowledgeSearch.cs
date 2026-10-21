@@ -1,4 +1,5 @@
 using Bosun.Application.Llm;
+using Bosun.Application.Safety;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -9,6 +10,8 @@ namespace Bosun.Application.Rag;
 /// <param name="Cosine">Cosine similarity to the question, null when the vector retriever did not return the chunk.</param>
 /// <param name="Bm25">Keyword score (higher is better), null when the keyword retriever did not return the chunk.</param>
 /// <param name="AboveThreshold">Cosine at or above the relevance threshold: only these chunks may be used to answer.</param>
+/// <param name="IsExclusion">The chunk is a scope statement ("does not cover"); retrievable, but never support for an answer.</param>
+/// <param name="Flagged">InjectionScanner found instruction-like text in the chunk. Surfaced to the UI; the text stays data for the model either way.</param>
 public sealed record RetrievedChunk(
     int Id,
     string Source,
@@ -20,7 +23,9 @@ public sealed record RetrievedChunk(
     double? Bm25,
     int? VectorRank,
     int? KeywordRank,
-    bool AboveThreshold);
+    bool AboveThreshold,
+    bool IsExclusion = false,
+    bool Flagged = false);
 
 /// <param name="Chunks">The fused top-k ranking, threshold flags included (what the debug endpoint shows, and what hit@k is measured on).</param>
 /// <param name="Relevant">The chunks of <paramref name="Chunks"/> that passed the threshold: all that an answer may be based on.</param>
@@ -91,7 +96,7 @@ public sealed class KnowledgeSearchService(
             double? bm25 = keywordIndex is null ? null : byKeyword[keywordIndex.Value].Score;
             return new RetrievedChunk(
                 hit.Id, hit.Source, hit.Section, hit.Page, hit.Text, f.Score, cosine, bm25,
-                vectorIndex + 1, keywordIndex + 1, cosine >= settings.MinCosine);
+                vectorIndex + 1, keywordIndex + 1, cosine >= settings.MinCosine, hit.IsExclusion, InjectionScanner.Scan(hit.Text).Count > 0);
         }).ToList();
 
         return new RetrievalResult(query, chunks, chunks.Where(c => c.AboveThreshold).ToList(), byVector.Count == 0 ? null : byVector[0].Score, settings.MinCosine, indexed);

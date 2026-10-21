@@ -146,4 +146,32 @@ public class RrfTests
         Rrf.Fuse([[1], [2]], [1.0, 3.0], 60).Select(f => f.Id).Should().Equal(2, 1);
         Rrf.Fuse([[], []], [1.0, 1.0], 60).Should().BeEmpty();
     }
+
+    [Fact]
+    public void The_exclusion_marker_or_a_does_not_cover_heading_flags_the_section_and_the_marker_never_reaches_the_text()
+    {
+        var chunks = Chunker.Chunk("doc", "# T\n\n## Real\n\nAlpha.\n\n## Out of scope\n\n<!-- scope: exclusion -->\n\nNot here: fire.\n\n## What this doc does not cover\n\nBeta.\n");
+
+        chunks.Select(c => c.IsExclusion).Should().Equal(false, true, true);
+        chunks[1].Text.Should().Be("Not here: fire.", "the marker line is stripped, so the embedded text and its hash are unchanged");
+        chunks.Should().OnlyContain(c => !c.Text.Contains("<!--"));
+    }
+
+    [Fact]
+    public void A_marker_inside_a_code_fence_is_text_not_a_flag()
+    {
+        var chunks = Chunker.Chunk("doc", "## Code\n\n```\n<!-- scope: exclusion -->\n```\n");
+
+        chunks.Single().IsExclusion.Should().BeFalse();
+    }
+
+    [Fact]
+    public void The_seed_alarm_philosophy_marks_exactly_its_scope_section()
+    {
+        var path = Path.Combine(RagHost.SeedDocsDirectory, "alarm-philosophy.md");
+        var chunks = Chunker.Chunk("alarm-philosophy", File.ReadAllText(path));
+
+        chunks.Where(c => c.IsExclusion).Select(c => c.Section).Should().Equal("What this document does not cover");
+        File.ReadAllText(path).Should().Contain(Chunker.ExclusionMarker, "the seed uses the explicit marker, not only the heading convention");
+    }
 }

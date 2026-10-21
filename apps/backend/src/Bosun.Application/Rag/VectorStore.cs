@@ -1,12 +1,12 @@
 namespace Bosun.Application.Rag;
 
 /// <summary>A chunk to store; <see cref="Embedding"/> is L2-normalised, <see cref="ContentHash"/> hashes the embedded text.</summary>
-public sealed record ChunkRecord(string Source, string Section, int Page, int Ordinal, string Text, string ContentHash, float[]? Embedding, string? EmbeddingModel);
+public sealed record ChunkRecord(string Source, string Section, int Page, int Ordinal, string Text, string ContentHash, float[]? Embedding, string? EmbeddingModel, bool IsExclusion = false);
 
 public sealed record StoredChunk(int Id, string Source, string Section, int Page, int Ordinal, string ContentHash, bool HasEmbedding, string? EmbeddingModel, DateTime IndexedAt);
 
 /// <param name="Score">Cosine similarity for vector search; a positive keyword score (higher is better, that is -bm25) for keyword search.</param>
-public sealed record ChunkHit(int Id, string Source, string Section, int Page, int Ordinal, string Text, double Score);
+public sealed record ChunkHit(int Id, string Source, string Section, int Page, int Ordinal, string Text, double Score, bool IsExclusion = false);
 
 /// <summary>
 /// Provider-neutral storage and retrieval of knowledge chunks (plan s5.1). SQLite: <c>SqliteVectorStore</c> (BLOB + in-process

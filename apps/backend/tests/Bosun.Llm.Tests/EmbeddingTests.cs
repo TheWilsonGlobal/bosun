@@ -93,7 +93,7 @@ public class EmbeddingClientTests
         using var rejected = new LlmHost();
         rejected.EmbeddingHandler.Then(HttpStatusCode.BadRequest, FakeHandler.Error(400, "INVALID_ARGUMENT", "API key not valid. Please pass a valid API key.", ("API_KEY_INVALID", null)));
         var act2 = async () => await rejected.Embeddings.EmbedAsync(["a"], EmbeddingTask.Document, "t", CancellationToken.None);
-        (await act2.Should().ThrowAsync<LlmException>()).Which.Message.Should().Contain("GEMINI_LLM_API_KEY", "the shared message names both variables");
+        (await act2.Should().ThrowAsync<LlmException>()).Which.Message.Should().Contain("[rejected key: GEMINI_EMBEDDING_API_KEY]");
     }
 
     [Fact]

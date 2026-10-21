@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using Bosun.Application;
 using Bosun.Application.Rag;
 using Bosun.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +12,7 @@ namespace Bosun.Infrastructure.Persistence.Sqlite;
 /// At demo size (tens to a few hundred chunks) that is a few milliseconds. The keyword search is FTS5 <c>bm25()</c> on
 /// <c>knowledge_fts</c>, kept in sync by triggers. Every SQL value goes in as a parameter.
 /// </summary>
-public sealed class SqliteVectorStore(BosunDbContext db, TimeProvider clock) : IVectorStore
+public sealed class SqliteVectorStore(BosunDbContext db, TimeProvider clock, WriteGate gate) : IVectorStore
 {
     private sealed record KeywordRow(int Id, double Score);
 
@@ -39,6 +40,8 @@ public sealed class SqliteVectorStore(BosunDbContext db, TimeProvider clock) : I
 
     public async Task ReplaceAllAsync(int projectId, IReadOnlyList<ChunkRecord> chunks, CancellationToken ct)
     {
+        // Same single-writer gate as change-set applies and the alarm writer: a reindex must not interleave with them.
+        using var held = await gate.EnterAsync(ct);
         var now = clock.GetUtcNow().UtcDateTime;
         await using var transaction = await db.Database.BeginTransactionAsync(ct);
         await db.KnowledgeChunks.Where(c => c.ProjectId == projectId).ExecuteDeleteAsync(ct);
@@ -54,6 +57,7 @@ public sealed class SqliteVectorStore(BosunDbContext db, TimeProvider clock) : I
             Embedding = c.Embedding is null ? null : Encode(c.Embedding),
             EmbeddingModel = c.EmbeddingModel,
             IndexedAt = now,
+            IsExclusion = c.IsExclusion,
         }));
         await db.SaveChangesAsync(ct);
         await transaction.CommitAsync(ct);
@@ -64,12 +68,12 @@ public sealed class SqliteVectorStore(BosunDbContext db, TimeProvider clock) : I
     {
         var rows = await db.KnowledgeChunks.AsNoTracking()
             .Where(c => c.ProjectId == projectId && c.Embedding != null)
-            .Select(c => new { c.Id, c.Source, c.Section, c.Page, c.Ordinal, c.Text, c.Embedding })
+            .Select(c => new { c.Id, c.Source, c.Section, c.Page, c.Ordinal, c.Text, c.Embedding, c.IsExclusion })
             .ToListAsync(ct);
         return rows
             .Select(r => (Row: r, Vector: Decode(r.Embedding!)))
             .Where(x => x.Vector.Length == query.Length)
-            .Select(x => new ChunkHit(x.Row.Id, x.Row.Source, x.Row.Section, x.Row.Page, x.Row.Ordinal, x.Row.Text, Dot(query, x.Vector)))
+            .Select(x => new ChunkHit(x.Row.Id, x.Row.Source, x.Row.Section, x.Row.Page, x.Row.Ordinal, x.Row.Text, Dot(query, x.Vector), x.Row.IsExclusion))
             .OrderByDescending(h => h.Score)
             .ThenBy(h => h.Id)
             .Take(Math.Max(1, k))
@@ -97,7 +101,12 @@ public sealed class SqliteVectorStore(BosunDbContext db, TimeProvider clock) : I
 
         var ids = rows.Select(r => r.Id).ToList();
         var chunks = await db.KnowledgeChunks.AsNoTracking().Where(c => ids.Contains(c.Id)).ToDictionaryAsync(c => c.Id, ct);
-        return rows.Select(r => chunks[r.Id]).Zip(rows, (c, r) => new ChunkHit(c.Id, c.Source, c.Section, c.Page, c.Ordinal, c.Text, r.Score)).ToList();
+        // A concurrent reindex can delete a chunk between the FTS query and this read: skip it instead of throwing.
+        return rows
+            .Where(r => chunks.ContainsKey(r.Id))
+            .Select(r => (Chunk: chunks[r.Id], r.Score))
+            .Select(x => new ChunkHit(x.Chunk.Id, x.Chunk.Source, x.Chunk.Section, x.Chunk.Page, x.Chunk.Ordinal, x.Chunk.Text, x.Score, x.Chunk.IsExclusion))
+            .ToList();
     }
 
     public static byte[] Encode(float[] vector)

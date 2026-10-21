@@ -63,7 +63,7 @@ public sealed class AskTests : IDisposable
         var (source, section, page) = await RetrievedExhaustAsync();
         host.Llm.Reply(ScriptedLlm.Json(
             true,
-            $"Thermocouple lag {Citation.Format(source, section, page)} and a rule from IEC 99 [made-up-doc §Imaginary clause p.7].",
+            $"Thermocouple lag {Citation.Format(source, section, page)}. A rule from IEC 99 applies [made-up-doc §Imaginary clause p.7].",
             (source, section, page),
             ("made-up-doc", "Imaginary clause", 7),
             (source, section, page + 5)));
@@ -73,7 +73,8 @@ public sealed class AskTests : IDisposable
         response.Answered.Should().BeTrue();
         response.Citations.Should().Equal(new AskCitation(source, section, page));
         response.DroppedCitations.Should().Be(3, "two invented list entries (unknown document, wrong page) and one invented inline marker");
-        response.Answer.Should().NotContain("made-up-doc").And.NotContain("Imaginary");
+        response.UnsupportedSentencesRemoved.Should().Be(1, "the sentence that carried the invented marker is cut, not just the marker");
+        response.Answer.Should().NotContain("made-up-doc").And.NotContain("Imaginary").And.NotContain("IEC 99");
         response.Answer.Should().Contain($"[{source} §{section} p.{page}]");
     }
 
@@ -90,17 +91,20 @@ public sealed class AskTests : IDisposable
         response.Citations.Should().BeEmpty();
         response.Answer.Should().Be(RagAskService.NotCovered);
         response.DroppedCitations.Should().Be(2);
+        response.UnsupportedSentencesRemoved.Should().Be(1);
     }
 
     [Fact]
     public async Task A_model_that_cites_only_in_the_list_gets_real_markers_appended_to_the_text()
     {
         var (source, section, page) = await RetrievedExhaustAsync();
-        host.Llm.Reply(ScriptedLlm.Json(true, "Two time constants of the sensor [alarm-philosophy §Exhaust gas temperature delay p.99].", (source, section, page)));
+        host.Llm.Reply(ScriptedLlm.Json(true, "Two time constants of the sensor. Nuisance trips otherwise [alarm-philosophy §Exhaust gas temperature delay p.99].", (source, section, page)));
 
         var response = await AskAsync();
 
         response.DroppedCitations.Should().Be(1, "the inline marker had a wrong page");
+        response.UnsupportedSentencesRemoved.Should().Be(1);
+        response.Answer.Should().NotContain("Nuisance").And.Contain("Two time constants");
         response.Answer.Should().EndWith($"[{source} §{section} p.{page}]");
         response.Citations.Should().HaveCount(1);
     }
@@ -179,13 +183,69 @@ public sealed class AskTests : IDisposable
     {
         var allowed = new[] { new AskCitation("alarm-philosophy", "Delay times", 2) };
 
-        var (answer, citations, dropped) = RagAskService.Ground(
-            new AskModelOutput("See [Alarm-Philosophy.md §delay TIMES p.2] and [alarm-philosophy §Delay times p.3].", [new AskCitation("ALARM-PHILOSOPHY", "delay times", 2), new AskCitation("alarm-philosophy", "Other", 2)], true),
+        var grounded = RagAskService.Ground(
+            new AskModelOutput("See [Alarm-Philosophy.md §delay TIMES p.2]. Also [alarm-philosophy §Delay times p.3].", [new AskCitation("ALARM-PHILOSOPHY", "delay times", 2), new AskCitation("alarm-philosophy", "Other", 2)], true),
             allowed);
 
-        citations.Should().Equal(allowed);
-        dropped.Should().Be(2);
-        answer.Should().Be("See [alarm-philosophy §Delay times p.2] and.");
+        grounded.Citations.Should().Equal(allowed);
+        grounded.Dropped.Should().Be(2);
+        grounded.UnsupportedSentencesRemoved.Should().Be(1);
+        grounded.Answer.Should().Be("See [alarm-philosophy §Delay times p.2].");
+    }
+
+    [Fact]
+    public void A_sentence_with_a_valid_and_an_invented_marker_is_removed_whole_and_a_trailing_marker_belongs_to_its_sentence()
+    {
+        var allowed = new[] { new AskCitation("doc", "Sec", 1) };
+
+        var mixed = RagAskService.Ground(new AskModelOutput("Fact one [doc §Sec p.1] and fact two [x §Y p.9]. Fact three. [doc §Sec p.1]", [], true), allowed);
+        mixed.Answer.Should().Be("Fact three. [doc §Sec p.1]");
+        mixed.UnsupportedSentencesRemoved.Should().Be(1);
+
+        var trailingInvented = RagAskService.Ground(new AskModelOutput("Fact one [doc §Sec p.1]. Fact two. [x §Y p.9]", [new AskCitation("doc", "Sec", 1)], true), allowed);
+        trailingInvented.Answer.Should().Be("Fact one [doc §Sec p.1].");
+        trailingInvented.UnsupportedSentencesRemoved.Should().Be(1, "the marker after the full stop belongs to 'Fact two'");
+
+        var nothingLeft = RagAskService.Ground(new AskModelOutput("Everything is invented [x §Y p.9].", [new AskCitation("doc", "Sec", 1)], true), allowed);
+        nothingLeft.Answer.Should().BeEmpty();
+        nothingLeft.Citations.Should().BeEmpty("list entries cannot stand in for removed text");
+    }
+
+    [Fact]
+    public async Task An_answer_supported_only_by_the_does_not_cover_section_is_a_model_declined_refusal()
+    {
+        await RetrievedExhaustAsync();
+        await using (var scope = host.Scope())
+        {
+            var found = await scope.ServiceProvider.GetRequiredService<KnowledgeSearchService>().SearchAsync(1, "What is the policy for remote access cybersecurity of the alarm system?", null, CancellationToken.None);
+            var scope17 = found.Chunks.Single(c => c.IsExclusion);
+            scope17.Section.Should().Be("What this document does not cover");
+            scope17.AboveThreshold.Should().BeTrue("the exclusion section is exactly what a cybersecurity question matches best");
+            host.Llm.Reply(ScriptedLlm.Json(true, $"Remote access is covered in the cybersecurity policy {Citation.Format(scope17.Source, scope17.Section, scope17.Page)}.", (scope17.Source, scope17.Section, scope17.Page)));
+        }
+
+        var response = await AskAsync("What is the policy for remote access cybersecurity of the alarm system?");
+
+        response.Answered.Should().BeFalse();
+        response.RefusalReason.Should().Be(RefusalReasons.ModelDeclined);
+        response.Answer.Should().Be(RagAskService.NotCovered);
+        response.Citations.Should().BeEmpty();
+        response.Retrieved.Should().OnlyContain(r => !r.UsedForAnswer);
+        response.Retrieved.Should().Contain(r => r.IsExclusion);
+    }
+
+    [Fact]
+    public async Task A_normal_question_is_not_affected_by_the_exclusion_rule()
+    {
+        var (source, section, page) = await RetrievedExhaustAsync();
+        await using var scope = host.Scope();
+        var found = await scope.ServiceProvider.GetRequiredService<KnowledgeSearchService>().SearchAsync(1, Question, null, CancellationToken.None);
+        found.Relevant.Should().NotContain(c => c.IsExclusion, "the exhaust question does not match the scope statement");
+        host.Llm.Reply(ScriptedLlm.Json(true, $"Thermocouple lag {Citation.Format(source, section, page)}.", (source, section, page)));
+
+        var response = await AskAsync();
+
+        response.Answered.Should().BeTrue();
     }
 }
 
