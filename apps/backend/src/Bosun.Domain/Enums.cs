@@ -119,4 +119,5 @@ public enum AlarmEventKind
     [JsonStringEnumMemberName("acknowledged")] Acknowledged = 1,
     [JsonStringEnumMemberName("returned_to_normal")] ReturnedToNormal = 2,
     [JsonStringEnumMemberName("cleared")] Cleared = 3,
+    [JsonStringEnumMemberName("limit_changed")] LimitChanged = 4,
 }

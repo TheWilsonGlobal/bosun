@@ -45,6 +45,25 @@ public sealed class StoreTests : IDisposable
     }
 
     [Fact]
+    public async Task Replace_all_waits_for_the_shared_write_gate()
+    {
+        await using var scope = host.Scope();
+        var store = scope.ServiceProvider.GetRequiredService<IVectorStore>();
+        var gate = scope.ServiceProvider.GetRequiredService<WriteGate>();
+
+        Task replace;
+        using (await gate.EnterAsync(CancellationToken.None))
+        {
+            replace = store.ReplaceAllAsync(1, [Chunk(0, "gated", Unit(1, 0, 0))], CancellationToken.None);
+            await Task.Delay(300);
+            replace.IsCompleted.Should().BeFalse("a change-set apply or the alarm writer holds the single-writer gate");
+        }
+
+        await replace.WaitAsync(TimeSpan.FromSeconds(10));
+        (await store.ListAsync(1, CancellationToken.None)).Should().ContainSingle();
+    }
+
+    [Fact]
     public async Task Embeddings_round_trip_as_a_blob_and_replace_all_swaps_the_whole_index()
     {
         await using var scope = host.Scope();

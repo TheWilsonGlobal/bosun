@@ -33,10 +33,11 @@ public static class KnowledgeEndpoints
 
         writes.MapGet("/projects/{projectId:int}/knowledge/search", async (int projectId, string? q, int? k, KnowledgeSearchService search, CancellationToken ct) =>
                 TypedResults.Ok(await search.SearchAsync(projectId, q ?? "", k, ct)))
-            .WithSummary("Hybrid retrieval for debugging: the fused top-k chunks with rrf score, cosine, bm25, ranks and aboveThreshold. 400 invalid_question; 409 knowledge_not_indexed; llm_* codes when the question cannot be embedded.");
+            .WithSummary("Hybrid retrieval for debugging: the fused top-k chunks with rrf score, cosine, bm25, ranks, aboveThreshold and flagged (instruction-like text found in the chunk; it stays data for the model). 400 invalid_question; 409 knowledge_not_indexed; llm_* codes when the question cannot be embedded.");
 
         writes.MapPost("/projects/{projectId:int}/ask", async (int projectId, AskBody? body, RagAskService ask, CancellationToken ct) =>
                 TypedResults.Ok(await ask.AskAsync(projectId, body?.Question ?? "", ct)))
-            .WithSummary("Grounded answer from the project documents: { question, answered, answer, citations[{source, section, page}], refusalReason, droppedCitations, retrieved[], model, promptVersion, usage, latencyMs }. answered=false is a refusal (not in the project documents). Citations are verified against the retrieved passages. 400 invalid_question; 409 knowledge_not_indexed; llm_* codes on provider failures.");
+            .RequireRateLimiting(Auth.AuthSetup.AskRateLimitPolicy)
+            .WithSummary("Rate limited per user (20 per minute; 429 rate_limited with Retry-After). Grounded answer from the project documents: { question, answered, answer, citations[{source, section, page}], refusalReason, droppedCitations, retrieved[{source, section, page, score, cosine, aboveThreshold, usedForAnswer, flagged, isExclusion}], model, promptVersion, usage, latencyMs }. answered=false is a refusal (not in the project documents). Citations are verified against the retrieved passages. 400 invalid_question; 409 knowledge_not_indexed; llm_* codes on provider failures.");
     }
 }

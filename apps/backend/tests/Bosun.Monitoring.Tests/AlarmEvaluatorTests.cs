@@ -131,7 +131,7 @@ public class AlarmEvaluatorTests
         e.Evaluate("T-1", 96, At(0)).Should().ContainSingle();
 
         // limit raised to 100: 96 is now below 100 - hysteresis, so the alarm returns on the next sample
-        e.SetLimits([Tag(H(value: 100, delay: 0, hysteresis: 1))], At(1)).Should().BeEmpty();
+        e.SetLimits([Tag(H(value: 100, delay: 0, hysteresis: 1))], At(1)).Should().ContainSingle().Which.Kind.Should().Be(AlarmEventKind.LimitChanged);
         e.Evaluate("T-1", 96, At(2)).Select(t => t.Kind).Should().Equal(AlarmEventKind.ReturnedToNormal);
 
         var e2 = Make(H(delay: 0));
@@ -150,5 +150,69 @@ public class AlarmEvaluatorTests
         e.Evaluate("T-1", 97, At(1)).Should().BeEmpty("the alarm is already open");
         e.OpenAlarms.Should().ContainSingle().Which.Id.Should().Be(41);
         e.Acknowledge(41, "carol", At(2)).Outcome.Should().Be(AckOutcome.Acknowledged);
+    }
+
+    private AlarmEvaluator MakeWithGap(double gapSeconds, params AlarmLimitSpec[] limits)
+    {
+        var evaluator = new AlarmEvaluator(1, () => ++ids, TimeSpan.FromSeconds(gapSeconds));
+        evaluator.SetLimits([Tag(limits)], T0);
+        return evaluator;
+    }
+
+    [Fact]
+    public void A_gap_in_the_samples_restarts_a_pending_delay_instead_of_raising_from_stale_data()
+    {
+        var e = MakeWithGap(8, H(delay: 10));
+        e.Evaluate("T-1", 96, At(0)).Should().BeEmpty();
+        e.Evaluate("T-1", 96, At(2)).Should().BeEmpty();
+
+        // the link was down for a minute; the first sample afterwards must not complete the old delay
+        e.Evaluate("T-1", 96, At(62)).Should().BeEmpty("the delay starts again at the first sample after the gap");
+        e.Evaluate("T-1", 96, At(66)).Should().BeEmpty();
+        e.Evaluate("T-1", 96, At(71.9)).Should().BeEmpty();
+        e.Evaluate("T-1", 96, At(72)).Should().ContainSingle().Which.Kind.Should().Be(AlarmEventKind.Raised);
+    }
+
+    [Fact]
+    public void Samples_without_a_hole_still_complete_the_delay()
+    {
+        var e = MakeWithGap(5, H(delay: 10));
+        for (var t = 0; t < 10; t += 2)
+        {
+            e.Evaluate("T-1", 96, At(t)).Should().BeEmpty();
+        }
+
+        e.Evaluate("T-1", 96, At(10)).Should().ContainSingle();
+    }
+
+    [Fact]
+    public void Losing_the_link_discards_pending_delays_but_keeps_active_alarms()
+    {
+        var e = Make(H(delay: 10), new AlarmLimitSpec(AlarmLevel.HH, 99, 0, 1));
+        e.Evaluate("T-1", 100, At(0)).Should().ContainSingle("HH has no delay and is active at once");
+        e.Evaluate("T-1", 100, At(5));
+        e.ResetPending();
+
+        e.OpenAlarms.Should().ContainSingle().Which.Level.Should().Be(AlarmLevel.HH);
+        e.Evaluate("T-1", 100, At(11)).Should().BeEmpty("H was pending since 0, but the link loss discarded that");
+        e.Evaluate("T-1", 100, At(21)).Select(t => t.Alarm.Level).Should().Equal(AlarmLevel.H);
+    }
+
+    [Fact]
+    public void Changing_the_limit_of_an_active_alarm_updates_it_and_publishes_a_limit_changed_event()
+    {
+        var e = Make(H(value: 95, delay: 0, hysteresis: 2));
+        e.Evaluate("T-1", 96, At(0)).Should().ContainSingle();
+
+        var changed = e.SetLimits([Tag(H(value: 90, delay: 3, hysteresis: 1))], At(5));
+
+        var transition = changed.Should().ContainSingle().Subject;
+        transition.Kind.Should().Be(AlarmEventKind.LimitChanged);
+        transition.Alarm.LimitValue.Should().Be(90);
+        transition.Alarm.DelayS.Should().Be(3);
+        transition.Alarm.Hysteresis.Should().Be(1);
+        transition.Note.Should().Contain("95").And.Contain("90");
+        e.OpenAlarms.Single().LimitValue.Should().Be(90);
+        e.SetLimits([Tag(H(value: 90, delay: 3, hysteresis: 1))], At(6)).Should().BeEmpty("an unchanged limit publishes nothing");
     }
 }

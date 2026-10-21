@@ -12,8 +12,16 @@ namespace Bosun.Simulator;
 /// by default), CR LF terminated, with valid checksums. The ship steers 045 degrees at about 12 knots from a point in Ha Long Bay;
 /// the position advances with scenario time, so a fast time scale also makes the ship sail faster.
 /// </summary>
-public sealed class NmeaTalker(ScenarioClock clock, TimeProvider time, IPAddress address, int port, TimeSpan? interval = null, ILogger? logger = null) : IAsyncDisposable
+public sealed class NmeaTalker(ScenarioClock clock, TimeProvider time, IPAddress address, int port, TimeSpan? interval = null, ILogger? logger = null, TimeSpan? writeTimeout = null) : IAsyncDisposable
 {
+    /// <summary>A client that does not take a sentence pair within this long (it stopped reading) is dropped, so it cannot stall the others.</summary>
+    public static readonly TimeSpan DefaultWriteTimeout = TimeSpan.FromSeconds(2);
+
+    /// <summary>Most simultaneous listeners.</summary>
+    public const int MaxConnections = 16;
+
+    private readonly TimeSpan writeTimeout = writeTimeout ?? DefaultWriteTimeout;
+
     public const double StartLatitude = 20.95;
     public const double StartLongitude = 107.05;
     public const double CourseDegrees = 45.0;
@@ -121,6 +129,12 @@ public sealed class NmeaTalker(ScenarioClock clock, TimeProvider time, IPAddress
                 client.NoDelay = true;
                 lock (gate)
                 {
+                    if (clients.Count >= MaxConnections)
+                    {
+                        client.Dispose();
+                        continue;
+                    }
+
                     clients.Add(client);
                 }
             }
@@ -146,27 +160,33 @@ public sealed class NmeaTalker(ScenarioClock clock, TimeProvider time, IPAddress
                     snapshot = [.. clients];
                 }
 
-                foreach (var client in snapshot)
-                {
-                    try
-                    {
-                        await client.GetStream().WriteAsync(bytes, stop.Token);
-                    }
-                    catch (Exception ex) when (ex is IOException or SocketException or ObjectDisposedException or InvalidOperationException)
-                    {
-                        lock (gate)
-                        {
-                            clients.Remove(client);
-                        }
-
-                        client.Dispose();
-                    }
-                }
+                // All clients in parallel: one that stopped reading costs its own timeout, not everybody's.
+                await Task.WhenAll(snapshot.Select(client => SendAsync(client, bytes)));
             }
         }
         catch (OperationCanceledException)
         {
             // stopping
+        }
+    }
+
+    private async Task SendAsync(TcpClient client, byte[] bytes)
+    {
+        try
+        {
+            using var limit = CancellationTokenSource.CreateLinkedTokenSource(stop.Token);
+            limit.CancelAfter(writeTimeout);
+            await client.GetStream().WriteAsync(bytes, limit.Token);
+        }
+        catch (Exception ex) when (ex is IOException or SocketException or ObjectDisposedException or InvalidOperationException
+                                   || (ex is OperationCanceledException && !stop.IsCancellationRequested))
+        {
+            lock (gate)
+            {
+                clients.Remove(client);
+            }
+
+            client.Dispose();
         }
     }
 }

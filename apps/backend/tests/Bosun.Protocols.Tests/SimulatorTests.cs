@@ -202,6 +202,126 @@ public class SimulatorIntegrationTests
         Hex.Of(frame.Value.Pdu).Should().Be("86 01");
     }
 
+    [Theory]
+    [InlineData("00 2B 00 00 00 04 01 03 00 00")] // FC03 with a 3 byte PDU
+    [InlineData("00 2B 00 00 00 08 01 04 00 00 00 01 00 00")] // FC04 with a 7 byte PDU
+    public async Task A_read_request_with_the_wrong_length_gets_exception_0x03_and_the_connection_stays_usable(string request)
+    {
+        await using var host = StartSimulator();
+        using var tcp = new TcpClient();
+        await tcp.ConnectAsync("127.0.0.1", host.ModbusPort);
+        var stream = tcp.GetStream();
+
+        await stream.WriteAsync(Hex.Bytes(request));
+        var bad = await ModbusFraming.ReadFrameAsync(stream, CancellationToken.None);
+        bad!.Value.Pdu[1].Should().Be(0x03);
+        (bad.Value.Pdu[0] & 0x80).Should().Be(0x80);
+
+        await stream.WriteAsync(ModbusFrame.BuildReadRequest(9, 1, ModbusFunction.ReadHoldingRegisters, 0, 1));
+        var good = await ModbusFraming.ReadFrameAsync(stream, CancellationToken.None);
+        good!.Value.Header.TransactionId.Should().Be(9);
+    }
+
+    [Fact]
+    public async Task More_than_sixteen_connections_are_refused_and_finished_handlers_are_pruned()
+    {
+        await using var server = new ModbusTcpServer(() => new ushort[4], System.Net.IPAddress.Loopback, 0);
+        server.Start();
+        var open = new List<TcpClient>();
+        try
+        {
+            for (var i = 0; i < ModbusTcpServer.MaxConnections; i++)
+            {
+                var c = new TcpClient();
+                await c.ConnectAsync("127.0.0.1", server.Port);
+                open.Add(c);
+            }
+
+            await WaitUntil(() => server.ActiveConnections == ModbusTcpServer.MaxConnections);
+            using var extra = new TcpClient();
+            await extra.ConnectAsync("127.0.0.1", server.Port);
+            var closed = await ReadsEndOfStream(extra);
+            closed.Should().BeTrue("the 17th connection is closed at once");
+            server.ActiveConnections.Should().Be(ModbusTcpServer.MaxConnections);
+
+            foreach (var c in open)
+            {
+                c.Dispose();
+            }
+
+            await WaitUntil(() => server.ActiveConnections == 0);
+            using var again = new TcpClient();
+            await again.ConnectAsync("127.0.0.1", server.Port);
+            await WaitUntil(() => server.ActiveConnections == 1);
+            server.TrackedHandlers.Should().BeLessThanOrEqualTo(2, "the 16 finished handlers were dropped when the next connection arrived");
+        }
+        finally
+        {
+            foreach (var c in open)
+            {
+                c.Dispose();
+            }
+        }
+    }
+
+    [Fact]
+    public async Task A_silent_client_is_disconnected_after_the_idle_timeout()
+    {
+        await using var server = new ModbusTcpServer(() => new ushort[4], System.Net.IPAddress.Loopback, 0, idleTimeout: TimeSpan.FromMilliseconds(300));
+        server.Start();
+        using var tcp = new TcpClient();
+        await tcp.ConnectAsync("127.0.0.1", server.Port);
+
+        (await ReadsEndOfStream(tcp)).Should().BeTrue();
+        await WaitUntil(() => server.ActiveConnections == 0);
+    }
+
+    [Fact]
+    public void Only_SIM_keys_of_the_env_file_are_loaded()
+    {
+        var path = Path.Combine(Path.GetTempPath(), "bosun-sim-env-" + Guid.NewGuid().ToString("N")[..8] + ".env");
+        File.WriteAllLines(path, ["SIM_TIME_SCALE=5", "GEMINI_LLM_API_KEY=not-a-real-key", "AUTH_ADMIN_PASSWORD=x"]);
+        try
+        {
+            var env = new SimulatorEnvironment(path);
+            env.Get("SIM_TIME_SCALE").Should().Be("5");
+            env.Get("AUTH_ADMIN_PASSWORD").Should().BeNull();
+
+            // a key that is only in the file must not be visible (a real environment variable of the same name is not the file's doing)
+            if (string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("GEMINI_LLM_API_KEY")))
+            {
+                env.Get("GEMINI_LLM_API_KEY").Should().BeNull();
+            }
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    private static async Task WaitUntil(Func<bool> condition)
+    {
+        var until = DateTime.UtcNow.AddSeconds(10);
+        while (!condition())
+        {
+            DateTime.UtcNow.Should().BeBefore(until, "the condition should have become true");
+            await Task.Delay(20);
+        }
+    }
+
+    private static async Task<bool> ReadsEndOfStream(TcpClient client)
+    {
+        using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+        try
+        {
+            return await client.GetStream().ReadAsync(new byte[8], timeout.Token) == 0;
+        }
+        catch (IOException)
+        {
+            return true;
+        }
+    }
+
     [Fact]
     public async Task Two_requests_in_one_segment_are_both_answered_in_order()
     {

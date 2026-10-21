@@ -10,8 +10,16 @@ namespace Bosun.Simulator;
 /// exception 0x01 to any other function, 0x02 to a range outside the bank and 0x03 to a quantity of 0 or more than 125.
 /// The unit id is echoed (the simulator is a single device, so it does not filter on it). Writes are not supported.
 /// </summary>
-public sealed class ModbusTcpServer(Func<ushort[]> snapshot, IPAddress address, int port, ILogger? logger = null) : IAsyncDisposable
+public sealed class ModbusTcpServer(Func<ushort[]> snapshot, IPAddress address, int port, ILogger? logger = null, TimeSpan? idleTimeout = null) : IAsyncDisposable
 {
+    /// <summary>More simultaneous connections than this are closed at once (the simulator serves one backend and the odd debugging tool).</summary>
+    public const int MaxConnections = 16;
+
+    /// <summary>A client that sends nothing for this long is disconnected, so a silent peer cannot hold a slot forever.</summary>
+    public static readonly TimeSpan DefaultIdleTimeout = TimeSpan.FromSeconds(60);
+
+    private readonly TimeSpan idleTimeout = idleTimeout ?? DefaultIdleTimeout;
+
     private readonly TcpListener listener = new(address, port);
     private readonly CancellationTokenSource stop = new();
     private readonly List<Task> handlers = [];
@@ -22,6 +30,18 @@ public sealed class ModbusTcpServer(Func<ushort[]> snapshot, IPAddress address, 
 
     /// <summary>The bound port (useful when started on port 0).</summary>
     public int Port => ((IPEndPoint)listener.LocalEndpoint).Port;
+
+    /// <summary>Handler tasks still tracked (finished ones are pruned as new connections arrive).</summary>
+    public int TrackedHandlers
+    {
+        get
+        {
+            lock (gate)
+            {
+                return handlers.Count;
+            }
+        }
+    }
 
     public long RequestsServed => Interlocked.Read(ref requests);
 
@@ -121,6 +141,14 @@ public sealed class ModbusTcpServer(Func<ushort[]> snapshot, IPAddress address, 
             client.NoDelay = true;
             lock (gate)
             {
+                handlers.RemoveAll(t => t.IsCompleted); // finished connections must not pile up for the life of the process
+                if (clients.Count >= MaxConnections)
+                {
+                    client.Dispose();
+                    logger?.LogWarning("Refused a connection: {Max} are already open", MaxConnections);
+                    continue;
+                }
+
                 clients.Add(client);
                 handlers.Add(Task.Run(() => HandleAsync(client)));
             }
@@ -134,13 +162,34 @@ public sealed class ModbusTcpServer(Func<ushort[]> snapshot, IPAddress address, 
             var stream = client.GetStream();
             while (!stop.IsCancellationRequested)
             {
-                var frame = await ModbusFraming.ReadFrameAsync(stream, stop.Token);
+                using var idle = CancellationTokenSource.CreateLinkedTokenSource(stop.Token);
+                idle.CancelAfter(idleTimeout);
+                (MbapHeader Header, byte[] Pdu)? frame;
+                try
+                {
+                    frame = await ModbusFraming.ReadFrameAsync(stream, idle.Token);
+                }
+                catch (OperationCanceledException) when (!stop.IsCancellationRequested)
+                {
+                    logger?.LogInformation("Closing an idle connection (nothing received for {Seconds} s)", idleTimeout.TotalSeconds);
+                    return;
+                }
+
                 if (frame is null)
                 {
                     return; // peer closed
                 }
 
-                var request = ModbusFrame.ParseRequest(frame.Value.Header, frame.Value.Pdu);
+                var (header, pdu) = frame.Value;
+                if (pdu.Length > 0 && pdu[0] is (byte)ModbusFunction.ReadHoldingRegisters or (byte)ModbusFunction.ReadInputRegisters && pdu.Length != 5)
+                {
+                    // Well-framed but the wrong size for a read request: the device answers "illegal data value" and stays connected.
+                    await stream.WriteAsync(ModbusFrame.BuildExceptionResponse(header.TransactionId, header.UnitId, pdu[0], ModbusExceptionCode.IllegalDataValue), stop.Token);
+                    Interlocked.Increment(ref requests);
+                    continue;
+                }
+
+                var request = ModbusFrame.ParseRequest(header, pdu);
                 await stream.WriteAsync(Respond(request, snapshot()), stop.Token);
                 Interlocked.Increment(ref requests);
             }

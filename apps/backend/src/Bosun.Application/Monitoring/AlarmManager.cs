@@ -1,3 +1,5 @@
+using System.Diagnostics;
+using System.Threading.Channels;
 using Bosun.Domain;
 using Bosun.Domain.Entities;
 using Microsoft.Extensions.Logging;
@@ -52,8 +54,11 @@ public readonly record struct Sample(string Tag, double Value, DateTime At);
 /// strictly in the order they happened. Alarm ids are allocated here, so a client can acknowledge an alarm it was told about
 /// before the writer has stored it.
 /// </summary>
-public sealed class AlarmManager
+public sealed class AlarmManager : IDisposable
 {
+    /// <summary>Alarm pushes waiting for the hub. When a slow or dead hub lets this fill up, the OLDEST pushes are dropped (clients re-read the list over REST).</summary>
+    public const int NotificationQueueCapacity = 1000;
+
     private readonly MonitoringOptions options;
     private readonly IReadOnlyCollection<string> tags;
     private readonly IAlarmRepository repository;
@@ -69,6 +74,13 @@ public sealed class AlarmManager
     private volatile bool limitsStale = true;
     private DateTime limitsLoadedAt = DateTime.MinValue;
     private int limitsGeneration;
+    private readonly Channel<AlarmNotification> outbox = System.Threading.Channels.Channel.CreateBounded<AlarmNotification>(
+        new BoundedChannelOptions(NotificationQueueCapacity) { FullMode = BoundedChannelFullMode.DropOldest, SingleReader = true });
+    private readonly CancellationTokenSource stopPump = new();
+    private Task? pump;
+    private long droppedNotifications;
+    private long pendingPushes;
+    private long lastPushErrorLog;
 
     public AlarmManager(
         MonitoringOptions options,
@@ -87,7 +99,7 @@ public sealed class AlarmManager
         this.notifier = notifier;
         this.time = time;
         this.logger = logger;
-        evaluator = new AlarmEvaluator(options.ProjectId, () => nextAlarmId++);
+        evaluator = new AlarmEvaluator(options.ProjectId, () => nextAlarmId++, TimeSpan.FromSeconds(Math.Max(0, options.AlarmPendingMaxGapSeconds)));
         changes.Applied += projectId =>
         {
             if (projectId == options.ProjectId)
@@ -135,6 +147,20 @@ public sealed class AlarmManager
             }
 
             await PublishAsync(transitions);
+        }
+        finally
+        {
+            gate.Release();
+        }
+    }
+
+    /// <summary>The Modbus link dropped: pending delays are discarded so they restart on fresh data (active alarms stay).</summary>
+    public async Task LinkLostAsync(CancellationToken ct)
+    {
+        await gate.WaitAsync(ct);
+        try
+        {
+            evaluator.ResetPending();
         }
         finally
         {
@@ -266,14 +292,82 @@ public sealed class AlarmManager
             }
 
             writer.Enqueue(t);
-            try
+            EnqueuePush(new AlarmNotification(t.Kind, AlarmDto.From(t.Alarm), t.At, t.Value));
+        }
+    }
+
+    /// <summary>
+    /// Hands a push to the single sender task. The gate is held by the caller, so this must never wait for the hub: a slow or
+    /// failing client connection would otherwise freeze alarm evaluation, acknowledgement and the alarm list.
+    /// </summary>
+    private void EnqueuePush(AlarmNotification notification)
+    {
+        if (Volatile.Read(ref pump) is null)
+        {
+            Interlocked.CompareExchange(ref pump, Task.Run(PumpAsync), null);
+        }
+
+        if (outbox.Reader.Count >= NotificationQueueCapacity)
+        {
+            Interlocked.Increment(ref droppedNotifications); // DropOldest below evicts one; the pending count stays the same
+        }
+        else
+        {
+            Interlocked.Increment(ref pendingPushes);
+        }
+
+        outbox.Writer.TryWrite(notification);
+    }
+
+    /// <summary>Pushes dropped because the sender fell more than <see cref="NotificationQueueCapacity"/> behind.</summary>
+    public long DroppedNotifications => Interlocked.Read(ref droppedNotifications);
+
+    private async Task PumpAsync()
+    {
+        try
+        {
+            await foreach (var notification in outbox.Reader.ReadAllAsync(stopPump.Token))
             {
-                await notifier.AlarmAsync(new AlarmNotification(t.Kind, AlarmDto.From(t.Alarm), t.At, t.Value));
-            }
-            catch (Exception ex)
-            {
-                logger?.LogDebug(ex, "Pushing an alarm event to clients failed; the alarm itself is unaffected");
+                try
+                {
+                    await notifier.AlarmAsync(notification);
+                }
+                catch (Exception ex) when (ex is not OperationCanceledException)
+                {
+                    var now = time.GetTimestamp();
+                    var last = Interlocked.Read(ref lastPushErrorLog);
+                    if ((last == 0 || time.GetElapsedTime(last, now) >= TimeSpan.FromMinutes(1))
+                        && Interlocked.CompareExchange(ref lastPushErrorLog, now, last) == last)
+                    {
+                        logger?.LogWarning(ex, "Pushing an alarm event to clients failed; the alarm itself is unaffected (logged once per minute)");
+                    }
+                }
+                finally
+                {
+                    Interlocked.Decrement(ref pendingPushes);
+                }
             }
         }
+        catch (OperationCanceledException)
+        {
+            // stopping
+        }
+    }
+
+    /// <summary>Waits until every push queued so far was handed to the notifier (tests; shutdown).</summary>
+    public async Task DrainNotificationsAsync(TimeSpan timeout)
+    {
+        var started = Stopwatch.GetTimestamp();
+        while (Interlocked.Read(ref pendingPushes) > 0 && Stopwatch.GetElapsedTime(started) < timeout)
+        {
+            await Task.Delay(10);
+        }
+    }
+
+    public void Dispose()
+    {
+        outbox.Writer.TryComplete();
+        stopPump.Cancel();
+        stopPump.Dispose();
     }
 }

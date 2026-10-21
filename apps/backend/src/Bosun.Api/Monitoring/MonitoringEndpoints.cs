@@ -76,11 +76,24 @@ public sealed class MimicService(IBosunDbContext db, IConfiguration configuratio
             throw new AppException(ErrorKind.NotFound, "mimic_not_found", "No mimic layout is configured (seed/mimic.json is missing).");
         }
 
-        var document = JsonNode.Parse(await File.ReadAllTextAsync(path, ct))?.AsObject()
-            ?? throw new AppException(ErrorKind.Unprocessable, "mimic_invalid", "mimic.json is empty.");
-        var bindings = document["bindings"] as JsonArray ?? [];
+        JsonObject document;
+        try
+        {
+            document = JsonNode.Parse(await File.ReadAllTextAsync(path, ct)) as JsonObject
+                ?? throw Invalid("mimic.json must be a JSON object.");
+        }
+        catch (System.Text.Json.JsonException ex)
+        {
+            throw Invalid($"mimic.json is not valid JSON: {ex.Message}");
+        }
 
-        var wanted = bindings.Select(b => b?["tag"]?.GetValue<string>()).Where(t => t is not null).Select(t => t!).Distinct().ToList();
+        if (document["bindings"] is not null and not JsonArray)
+        {
+            throw Invalid("\"bindings\" must be an array.");
+        }
+
+        var bindings = document["bindings"] as JsonArray ?? [];
+        var wanted = bindings.Select(TagOf).Where(t => t is not null).Select(t => t!).Distinct().ToList();
         var found = await db.Tags.AsNoTracking()
             .Where(t => t.ProjectId == projectId && wanted.Contains(t.TagName))
             .Select(t => new { t.TagName, t.Unit, t.RangeLow, t.RangeHigh, t.Description, t.SafetyClass })
@@ -90,7 +103,7 @@ public sealed class MimicService(IBosunDbContext db, IConfiguration configuratio
         var missing = new JsonArray();
         foreach (var binding in bindings.ToList())
         {
-            var tag = binding?["tag"]?.GetValue<string>();
+            var tag = TagOf(binding);
             if (tag is not null && !known.ContainsKey(tag))
             {
                 bindings.Remove(binding);
@@ -115,5 +128,23 @@ public sealed class MimicService(IBosunDbContext db, IConfiguration configuratio
         document["tags"] = info;
         document["missingTags"] = missing;
         return document;
+    }
+
+    private static AppException Invalid(string message) => new(ErrorKind.Unprocessable, "mimic_invalid", message);
+
+    /// <summary>The binding's tag name; null for a binding without one (navigation). A binding that is not an object or whose tag is not a string makes the file invalid.</summary>
+    private static string? TagOf(JsonNode? binding)
+    {
+        if (binding is not JsonObject obj)
+        {
+            throw Invalid("Every entry of \"bindings\" must be an object.");
+        }
+
+        return obj["tag"] switch
+        {
+            null => null,
+            JsonValue value when value.TryGetValue<string>(out var tag) => tag,
+            _ => throw Invalid("A binding's \"tag\" must be a string."),
+        };
     }
 }

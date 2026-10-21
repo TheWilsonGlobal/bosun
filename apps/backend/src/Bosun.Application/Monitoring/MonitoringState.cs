@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using Microsoft.Extensions.Logging;
 
 namespace Bosun.Application.Monitoring;
 
@@ -36,6 +37,18 @@ public sealed class LiveValueStore
         }
     }
 
+    /// <summary>Flags just these tags (their register range is refused by the device); other tags keep their quality.</summary>
+    public void MarkStale(IEnumerable<string> tags)
+    {
+        foreach (var tag in tags)
+        {
+            if (values.TryGetValue(tag, out var current) && current.Quality != ValueQuality.Stale)
+            {
+                values[tag] = current with { Quality = ValueQuality.Stale, Version = Interlocked.Increment(ref version) };
+            }
+        }
+    }
+
     public IReadOnlyList<LiveValue> All() => [.. values.Values.OrderBy(v => v.Tag, StringComparer.Ordinal)];
 
     /// <summary>Values changed after <paramref name="sinceVersion"/>; <paramref name="newest"/> is the version to pass next time.</summary>
@@ -67,8 +80,11 @@ public sealed class NullMonitoringNotifier : IMonitoringNotifier
 }
 
 /// <summary>Everything the live side knows besides alarms: values, the two link states and the ship's position and heading.</summary>
-public sealed class MonitoringState(IMonitoringNotifier notifier, TimeProvider time)
+public sealed class MonitoringState(IMonitoringNotifier notifier, TimeProvider time, ILogger<MonitoringState>? logger = null)
 {
+    private static readonly TimeSpan NotifierErrorLogInterval = TimeSpan.FromMinutes(1);
+    private long lastNotifierErrorLog;
+
     public const string ModbusName = "modbus";
     public const string NmeaName = "nmea";
 
@@ -126,7 +142,29 @@ public sealed class MonitoringState(IMonitoringNotifier notifier, TimeProvider t
 
         if (changed)
         {
-            await notifier.ConnectionAsync(next);
+            await PushAsync(() => notifier.ConnectionAsync(next), "connection");
+        }
+    }
+
+    /// <summary>
+    /// A push to clients (SignalR) is best effort: if it throws, the Modbus/NMEA link and the stored state must not be affected.
+    /// The failure is logged at most once per minute so a broken hub cannot flood the log either.
+    /// </summary>
+    private async Task PushAsync(Func<Task> push, string what)
+    {
+        try
+        {
+            await push();
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            var now = time.GetTimestamp();
+            var last = Interlocked.Read(ref lastNotifierErrorLog);
+            if ((last == 0 || time.GetElapsedTime(last, now) >= NotifierErrorLogInterval)
+                && Interlocked.CompareExchange(ref lastNotifierErrorLog, now, last) == last)
+            {
+                logger?.LogWarning(ex, "Pushing a {What} update to clients failed; the live state is unaffected (logged once per minute)", what);
+            }
         }
     }
 
@@ -140,7 +178,7 @@ public sealed class MonitoringState(IMonitoringNotifier notifier, TimeProvider t
             navigation = next;
         }
 
-        await notifier.NavigationAsync(next);
+        await PushAsync(() => notifier.NavigationAsync(next), "navigation");
     }
 
     public void ClearNavigation()

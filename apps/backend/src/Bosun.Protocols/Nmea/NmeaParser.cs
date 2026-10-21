@@ -87,10 +87,13 @@ public static class NmeaParser
         }
 
         var body = text[1..star];
-        if (!byte.TryParse(text.AsSpan(star + 1, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var expected))
+        // Strictly two hex digits: byte.TryParse(HexNumber) would also accept surrounding spaces and a "0x" style prefix.
+        if (!char.IsAsciiHexDigit(text[star + 1]) || !char.IsAsciiHexDigit(text[star + 2]))
         {
             throw new NmeaException(NmeaError.Malformed, "The checksum is not two hex digits.");
         }
+
+        var expected = Convert.ToByte(text.Substring(star + 1, 2), 16);
 
         if (Checksum(body) != expected)
         {
@@ -138,9 +141,21 @@ public static class NmeaParser
         }
 
         var valid = f[1] == "A";
-        double? lat = Coordinate(f[2], f[3], 2, 'N', 'S');
-        double? lon = Coordinate(f[4], f[5], 3, 'E', 'W');
-        return new NmeaRmc(valid, TimeOf(f[0], f[8]), lat, lon, Number(f[6]), Number(f[7]));
+        double? lat = Coordinate(f[2], f[3], 2, 'N', 'S', 90);
+        double? lon = Coordinate(f[4], f[5], 3, 'E', 'W', 180);
+        var speed = Number(f[6]);
+        var course = Number(f[7]);
+        if (speed is < 0)
+        {
+            throw new NmeaException(NmeaError.Malformed, $"Speed over ground {speed} is negative.");
+        }
+
+        if (course is < 0 or > 360)
+        {
+            throw new NmeaException(NmeaError.Malformed, $"Course {course} is outside 0..360.");
+        }
+
+        return new NmeaRmc(valid, TimeOf(f[0], f[8]), lat, lon, speed, course);
     }
 
     public static NmeaHdt ParseHdt(NmeaSentence sentence)
@@ -174,7 +189,7 @@ public static class NmeaParser
     }
 
     /// <summary>ddmm.mmmm (latitude, 2 degree digits) or dddmm.mmmm (longitude, 3) + hemisphere letter.</summary>
-    private static double? Coordinate(string value, string hemisphere, int degreeDigits, char positive, char negative)
+    private static double? Coordinate(string value, string hemisphere, int degreeDigits, char positive, char negative, double maxDegrees)
     {
         if (value.Length == 0 && hemisphere.Length == 0)
         {
@@ -190,6 +205,11 @@ public static class NmeaParser
         }
 
         var result = degrees + (minutes / 60.0);
+        if (result > maxDegrees)
+        {
+            throw new NmeaException(NmeaError.Malformed, $"Coordinate '{value},{hemisphere}' is beyond {maxDegrees} degrees.");
+        }
+
         return hemisphere[0] == negative ? -result : result;
     }
 
@@ -236,7 +256,9 @@ public sealed class NmeaLineReader(Stream stream, int maxLineBytes = 512)
     private bool discarding;
 
     /// <summary>Number of over-long lines dropped so far.</summary>
-    public int Overflows { get; private set; }
+    public int Overflows => Volatile.Read(ref overflows);
+
+    private int overflows;
 
     /// <summary>Next complete line (without line terminator), or null at end of stream. A trailing partial line at EOF is dropped.</summary>
     public async Task<string?> ReadLineAsync(CancellationToken cancellationToken)
@@ -267,7 +289,7 @@ public sealed class NmeaLineReader(Stream stream, int maxLineBytes = 512)
                     if (current.Length >= maxLineBytes)
                     {
                         discarding = true;
-                        Overflows++;
+                        Interlocked.Increment(ref overflows);
                         current.Clear();
                     }
                     else

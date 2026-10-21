@@ -43,8 +43,15 @@ public sealed record AckResult(AckOutcome Outcome, Alarm? Alarm, IReadOnlyList<A
 /// while acknowledged = <c>cleared</c>; going away while still unacknowledged = <c>returned_unacknowledged</c>, which stays open until
 /// the operator acknowledges it (then <c>cleared</c>). A condition that comes back after that starts a NEW alarm.
 /// </para>
+/// <para>
+/// Delays are measured in the wall-clock time of the SAMPLES (the timestamp passed to <see cref="Evaluate"/>), not in the number
+/// of samples. A pending delay is only valid across an unbroken run of samples: when a tag gets no sample for longer than
+/// <c>maxPendingGap</c>, or the link is reported lost (<see cref="ResetPending"/>), the pending delay is discarded and starts again
+/// at the next sample, so one sample after an outage never raises an alarm on the strength of data from before the outage. An
+/// ACTIVE alarm is left as it is during a gap (nothing is known about the value; the live values are shown stale meanwhile).
+/// </para>
 /// </summary>
-public sealed class AlarmEvaluator(int projectId, Func<int> nextId)
+public sealed class AlarmEvaluator(int projectId, Func<int> nextId, TimeSpan? maxPendingGap = null)
 {
     private enum Phase
     {
@@ -60,6 +67,8 @@ public sealed class AlarmEvaluator(int projectId, Func<int> nextId)
         public Phase Phase { get; set; }
 
         public DateTime PendingSince { get; set; }
+
+        public DateTime LastSampleAt { get; set; }
 
         public Alarm? Alarm { get; set; }
     }
@@ -94,7 +103,8 @@ public sealed class AlarmEvaluator(int projectId, Func<int> nextId)
 
     /// <summary>
     /// Replaces the configured limits. A limit that disappeared ends its alarm like a return to normal; a limit whose numbers changed
-    /// restarts a pending delay, and an active alarm is judged against the NEW numbers from the next sample on.
+    /// restarts a pending delay, and an active alarm is judged against the NEW numbers from the next sample on. The active alarm's
+    /// row shows the new numbers and a <see cref="AlarmEventKind.LimitChanged"/> event is published and stored (note: old -> new).
     /// </summary>
     public IReadOnlyList<AlarmTransition> SetLimits(IEnumerable<TagAlarmConfig> limits, DateTime now)
     {
@@ -146,9 +156,11 @@ public sealed class AlarmEvaluator(int projectId, Func<int> nextId)
             }
             else if (tracker is { Phase: Phase.Active, Alarm: { } active })
             {
+                var note = $"limit {active.LimitValue:G} -> {spec.Value:G}, delay {active.DelayS:G} -> {spec.DelayS:G} s, hysteresis {active.Hysteresis:G} -> {spec.Hysteresis:G}";
                 active.LimitValue = spec.Value;
                 active.DelayS = spec.DelayS;
                 active.Hysteresis = spec.Hysteresis;
+                transitions.Add(new AlarmTransition(AlarmEventKind.LimitChanged, active.Clone(), now, null, null, note));
             }
         }
 
@@ -185,12 +197,19 @@ public sealed class AlarmEvaluator(int projectId, Func<int> nextId)
                     {
                         tracker.Phase = Phase.Pending;
                         tracker.PendingSince = now;
+                        tracker.LastSampleAt = now;
                         TryRaise(tracker, config, value, now, transitions);
                     }
 
                     break;
 
                 case Phase.Pending:
+                    if (maxPendingGap is { } gap && gap > TimeSpan.Zero && now - tracker.LastSampleAt > gap)
+                    {
+                        tracker.PendingSince = now; // a hole in the samples: the delay starts again from this sample
+                    }
+
+                    tracker.LastSampleAt = now;
                     if (!spec.Exceeded(value))
                     {
                         tracker.Phase = Phase.Normal;
@@ -215,6 +234,18 @@ public sealed class AlarmEvaluator(int projectId, Func<int> nextId)
         }
 
         return transitions;
+    }
+
+    /// <summary>The source of samples went away: every pending delay is discarded (active alarms are untouched).</summary>
+    public void ResetPending()
+    {
+        foreach (var tracker in trackers.Values)
+        {
+            if (tracker.Phase == Phase.Pending)
+            {
+                tracker.Phase = Phase.Normal;
+            }
+        }
     }
 
     /// <summary>An operator acknowledges alarm <paramref name="id"/>.</summary>

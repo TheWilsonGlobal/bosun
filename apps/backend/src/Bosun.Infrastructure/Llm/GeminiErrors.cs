@@ -14,6 +14,7 @@ namespace Bosun.Infrastructure.Llm;
 /// <item>a wrong AIza-style key: HTTP 400, status INVALID_ARGUMENT, reason API_KEY_INVALID, "API key not valid. Please pass a valid API key."</item>
 /// <item>a wrong AQ.-style key: HTTP 401, status UNAUTHENTICATED, reason ACCESS_TOKEN_TYPE_UNSUPPORTED, the same message</item>
 /// <item>no key at all: HTTP 403, status PERMISSION_DENIED, "Method doesn't allow unregistered callers"</item>
+/// <item>a valid key whose project is blocked: HTTP 403, status PERMISSION_DENIED, "... project ... denied access" (mapped to llm_auth_failed with its own message)</item>
 /// </list>
 /// so auth failure is detected from status, reason AND message, never from "401" alone.
 /// </summary>
@@ -32,6 +33,15 @@ public static class GeminiErrors
             var wait = retryAfter is { } r ? $" Retry in about {Math.Ceiling(r.TotalSeconds)} s." : "";
             return new LlmException(LlmErrorCodes.RateLimited,
                 $"Gemini {quota} exceeded (HTTP 429).{wait} Provider message: {Shorten(message)}", code, retryAfter, attempts);
+        }
+
+        if (IsProjectDenied(code, error))
+        {
+            // The key was accepted as a key, but Google refused the PROJECT behind it (suspended, API disabled, access removed).
+            // Replacing the key variable with the same project's key will not help, so do not say "bad key".
+            return new LlmException(LlmErrorCodes.AuthFailed,
+                $"Gemini denied access for the Google Cloud project behind this API key (HTTP {code} PERMISSION_DENIED); the key itself was recognised. Fix it in Google AI Studio / Cloud Console (project suspended, Generative Language API disabled, or access removed), or use a key from another project in GEMINI_LLM_API_KEY / GEMINI_EMBEDDING_API_KEY. Provider message: {Shorten(message)}",
+                code, null, attempts);
         }
 
         if (IsAuthFailure(code, error))
@@ -114,6 +124,12 @@ public static class GeminiErrors
 
         return text;
     }
+
+    /// <summary>403 PERMISSION_DENIED whose message says the project was denied access (recorded: "Your project has been denied access. Please contact support.").</summary>
+    private static bool IsProjectDenied(int code, ParsedError error) =>
+        code == 403
+        && string.Equals(error.Status, "PERMISSION_DENIED", StringComparison.Ordinal)
+        && (error.Message?.Contains("denied access", StringComparison.OrdinalIgnoreCase) ?? false);
 
     private static bool IsAuthFailure(int code, ParsedError error) =>
         code is 401 or 403

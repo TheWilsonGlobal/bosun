@@ -18,9 +18,12 @@ public sealed class NmeaListener(MonitoringOptions options, MonitoringState stat
     private bool reportedDown;
 
     /// <summary>Sentences accepted / rejected (bad checksum, truncated, malformed) since start.</summary>
-    public long Accepted { get; private set; }
+    public long Accepted => Interlocked.Read(ref accepted);
 
-    public long Rejected { get; private set; }
+    public long Rejected => Interlocked.Read(ref rejected);
+
+    private long accepted;
+    private long rejected;
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -141,10 +144,10 @@ public sealed class NmeaListener(MonitoringOptions options, MonitoringState stat
         }
         catch (NmeaException ex)
         {
-            Rejected++;
-            if (Rejected is 1 or 10 or 100 or 1000)
+            var count = Interlocked.Increment(ref rejected);
+            if (count is 1 or 10 or 100 or 1000)
             {
-                logger.LogWarning("Dropped NMEA sentence #{Count} ({Reason}): {Message}", Rejected, ex.Error, ex.Message);
+                logger.LogWarning("Dropped NMEA sentence #{Count} ({Reason}): {Message}", count, ex.Error, ex.Message);
             }
 
             return false;
@@ -176,12 +179,12 @@ public sealed class NmeaListener(MonitoringOptions options, MonitoringState stat
         }
         catch (NmeaException ex)
         {
-            Rejected++;
+            Interlocked.Increment(ref rejected);
             logger.LogDebug("Dropped NMEA {Type}: {Message}", sentence.Type, ex.Message);
             return false;
         }
 
-        Accepted++;
+        Interlocked.Increment(ref accepted);
         progressed = true;
         return true;
     }

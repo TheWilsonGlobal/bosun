@@ -84,6 +84,9 @@ public static class AuthSetup
 
     public const string LoginRateLimitPolicy = "login";
 
+    /// <summary>Per signed-in user: POST /api/projects/{id}/ask spends LLM quota. Default 20 per minute (Knowledge:AskRateLimit:PermitLimit / WindowSeconds).</summary>
+    public const string AskRateLimitPolicy = "ask";
+
     public static IServiceCollection AddBosunAuth(this IServiceCollection services)
     {
         services.AddSingleton<UserStore>();
@@ -125,6 +128,21 @@ public static class AuthSetup
                     http.Connection.RemoteIpAddress?.ToString() ?? "unknown",
                     _ => new FixedWindowRateLimiterOptions { PermitLimit = permits, Window = TimeSpan.FromSeconds(window), QueueLimit = 0 });
             });
+            options.AddPolicy(AskRateLimitPolicy, http =>
+            {
+                // The limiter runs after authentication; an anonymous call is not counted here (authorization answers it with 401).
+                if (http.User.Identity is not { IsAuthenticated: true, Name: { Length: > 0 } user })
+                {
+                    return RateLimitPartition.GetNoLimiter("anonymous");
+                }
+
+                var config = http.RequestServices.GetRequiredService<IConfiguration>();
+                var permits = config.GetValue("Knowledge:AskRateLimit:PermitLimit", 20);
+                var window = config.GetValue("Knowledge:AskRateLimit:WindowSeconds", 60);
+                return RateLimitPartition.GetFixedWindowLimiter(
+                    "ask:" + user,
+                    _ => new FixedWindowRateLimiterOptions { PermitLimit = permits, Window = TimeSpan.FromSeconds(window), QueueLimit = 0 });
+            });
             options.OnRejected = async (context, ct) =>
             {
                 if (context.Lease.TryGetMetadata(MetadataName.RetryAfter, out var retryAfter))
@@ -132,7 +150,10 @@ public static class AuthSetup
                     context.HttpContext.Response.Headers.RetryAfter = ((int)Math.Ceiling(retryAfter.TotalSeconds)).ToString(System.Globalization.CultureInfo.InvariantCulture);
                 }
 
-                var problem = Problems.Build(StatusCodes.Status429TooManyRequests, "login_rate_limited", "Too many sign-in attempts. Wait a minute and try again.");
+                var policy = context.HttpContext.GetEndpoint()?.Metadata.GetMetadata<EnableRateLimitingAttribute>()?.PolicyName;
+                var problem = policy == AskRateLimitPolicy
+                    ? Problems.Build(StatusCodes.Status429TooManyRequests, "rate_limited", "Too many questions in a short time (limit: 20 per minute per user). Wait for the Retry-After seconds and ask again.")
+                    : Problems.Build(StatusCodes.Status429TooManyRequests, "login_rate_limited", "Too many sign-in attempts. Wait a minute and try again.");
                 context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
                 await context.HttpContext.Response.WriteAsJsonAsync(problem, (System.Text.Json.JsonSerializerOptions?)null, "application/problem+json", ct);
             };

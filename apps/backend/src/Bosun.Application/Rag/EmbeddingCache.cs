@@ -2,6 +2,7 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using Bosun.Application.Llm;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 

@@ -301,6 +301,32 @@ public class GeminiErrorMappingTests
     }
 
     [Fact]
+    public async Task A_denied_project_is_llm_auth_failed_with_its_own_message_not_bad_key()
+    {
+        var handler = new FakeHandler().Then(
+            HttpStatusCode.Forbidden,
+            FakeHandler.Error(403, "PERMISSION_DENIED", "Your project has been denied access. Please contact support."));
+        using var host = new LlmHost(handler);
+
+        var failure = await FailureAsync(host);
+
+        failure.Code.Should().Be(LlmErrorCodes.AuthFailed);
+        failure.Message.Should().Contain("project").And.Contain("denied access").And.Contain("the key itself was recognised");
+        failure.Message.Should().NotContain("rejected the API key");
+        failure.Message.Should().Contain("[rejected key: GEMINI_LLM_API_KEY]", "the failing variable is still named");
+        handler.Calls.Should().Be(1);
+    }
+
+    [Fact]
+    public async Task An_empty_key_names_the_exact_variable_for_text_and_for_embeddings()
+    {
+        using var llm = new LlmHost(new FakeHandler(), new() { ["Llm:ApiKey"] = "" });
+        var failure = await FailureAsync(llm);
+        failure.Code.Should().Be(LlmErrorCodes.NotConfigured);
+        failure.Message.Should().Contain("GEMINI_LLM_API_KEY");
+    }
+
+    [Fact]
     public async Task Other_400s_are_a_bad_request_not_an_auth_failure()
     {
         var handler = new FakeHandler().Then(HttpStatusCode.BadRequest, FakeHandler.Error(400, "INVALID_ARGUMENT", "Request contains an invalid argument."));

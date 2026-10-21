@@ -250,6 +250,34 @@ public class MonitoringApiTests
     }
 
     [Fact]
+    public async Task A_refused_register_range_marks_those_tags_stale_and_the_link_degraded_then_recovers()
+    {
+        // A device that first answers everything, then refuses the registers (exception 0x02), then answers again.
+        await using var reference = StartSim(1, 0);
+        var full = reference.Plant.Snapshot();
+        var bank = full;
+        await using var server = new sim::Bosun.Simulator.ModbusTcpServer(() => bank, IPAddress.Loopback, 0);
+        server.Start();
+        using var app = MonitoringApp(server.Port, FreePort());
+        var client = await app.LoginAsync();
+
+        async Task<MonitoringStatusDto> Status() => (await client.GetFromJsonAsync<MonitoringStatusDto>("/api/monitoring/status", BosunJson.Options))!;
+        async Task<ValuesBatchDto> Values() => (await client.GetFromJsonAsync<ValuesBatchDto>("/api/monitoring/values", BosunJson.Options))!;
+        await WaitForAsync(async () => (await Status()).Modbus.State == ConnectionState.Connected && (await Values()).Values.Count > 0 ? "ok" : null, what: "connected with values");
+        (await Values()).Values.Should().OnlyContain(v => v.Quality == "good");
+
+        bank = full[..1];
+        var degraded = await WaitForAsync(async () => (await Status()).Modbus is { State: ConnectionState.Degraded } m ? m : null, what: "degraded link");
+        degraded.LastError.Should().Contain("refused");
+        (await Values()).Values.Should().Contain(v => v.Quality == "stale");
+        (await client.GetAsync("/health")).EnsureSuccessStatusCode();
+
+        bank = full;
+        await WaitForAsync(async () => (await Status()).Modbus.State == ConnectionState.Connected ? "ok" : null, what: "recovered link");
+        await WaitForAsync(async () => (await Values()).Values.All(v => v.Quality == "good") ? "ok" : null, what: "fresh values");
+    }
+
+    [Fact]
     public async Task With_no_simulator_the_backend_degrades_cleanly()
     {
         using var app = MonitoringApp(FreePort(), FreePort());
@@ -276,6 +304,26 @@ public class MonitoringApiTests
         var got = await WaitFor(() => snapshot, what: "snapshot");
         got.Status.Enabled.Should().BeFalse();
         got.Status.Modbus.State.Should().Be(ConnectionState.Disabled);
+    }
+
+    [Fact]
+    public async Task Calling_GetSnapshot_in_a_loop_builds_one_snapshot_per_second()
+    {
+        using var app = new CustomApp("Development");
+        await using var hub = Hub(app, await CookieAsync(app));
+        await hub.StartAsync();
+        var throttle = app.Services.GetRequiredService<Bosun.Api.SnapshotThrottle>();
+        var before = throttle.Builds;
+
+        var started = DateTime.UtcNow;
+        for (var i = 0; i < 40; i++)
+        {
+            (await hub.InvokeAsync<MonitoringSnapshotDto>("GetSnapshot")).Status.Should().NotBeNull();
+        }
+
+        var seconds = (DateTime.UtcNow - started).TotalSeconds;
+        (throttle.Builds - before).Should().BeLessThanOrEqualTo((int)Math.Ceiling(seconds) + 1, "one build per second at most, not one per call");
+        (throttle.Builds - before).Should().BeLessThan(40);
     }
 
     [Fact]
@@ -343,5 +391,31 @@ public class MonitoringApiTests
         mimic.GetProperty("shapes").GetArrayLength().Should().BeGreaterThan(10);
 
         (await (await client.GetAsync("/api/projects/9999/mimic")).ReadProblemAsync(404)).Code.Should().Be("not_found");
+    }
+
+    [Theory]
+    [InlineData("""{ "bindings": [ { "id": "a", "tag": 42 } ] }""")]
+    [InlineData("""{ "bindings": [ { "id": "a", "tag": { "x": 1 } } ] }""")]
+    [InlineData("""{ "bindings": [ "ME-EXH-TT01" ] }""")]
+    [InlineData("""{ "bindings": { "tag": "ME-EXH-TT01" } }""")]
+    [InlineData("""[ 1, 2 ]""")]
+    [InlineData("""{ "bindings": [ """)]
+    public async Task A_malformed_mimic_file_is_a_422_mimic_invalid_not_a_500(string content)
+    {
+        var file = Path.Combine(Path.GetTempPath(), "bosun-mimic-" + Guid.NewGuid().ToString("N")[..8] + ".json");
+        await File.WriteAllTextAsync(file, content);
+        try
+        {
+            using var app = new CustomApp("Development", new Dictionary<string, string?> { ["Monitoring:MimicPath"] = file });
+            var client = await app.LoginAsync();
+
+            var (code, _) = await (await client.GetAsync("/api/projects/1/mimic")).ReadProblemAsync(422);
+
+            code.Should().Be("mimic_invalid");
+        }
+        finally
+        {
+            File.Delete(file);
+        }
     }
 }

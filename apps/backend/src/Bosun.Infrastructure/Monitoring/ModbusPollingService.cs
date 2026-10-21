@@ -57,6 +57,7 @@ public sealed class ModbusPollingService(
             catch (Exception ex)
             {
                 state.Values.MarkAllStale();
+                await ForgetPendingAsync();
                 var delay = policy.NextDelay();
                 if (!reportedDown)
                 {
@@ -81,6 +82,18 @@ public sealed class ModbusPollingService(
         }
     }
 
+    private async Task ForgetPendingAsync()
+    {
+        try
+        {
+            await alarms.LinkLostAsync(CancellationToken.None);
+        }
+        catch (Exception ex)
+        {
+            logger.LogDebug(ex, "Could not reset pending alarm delays after the link dropped");
+        }
+    }
+
     /// <summary>Polls until something throws (link failure) or the service stops.</summary>
     private async Task PollAsync(ModbusClient client, ReconnectPolicy policy, string endpoint, CancellationToken stop)
     {
@@ -89,12 +102,14 @@ public sealed class ModbusPollingService(
         var announced = false;
         var refusedBlocks = new HashSet<int>();
         var lastAlarmError = DateTime.MinValue;
+        var degradedRanges = new List<string>();
 
         while (!stop.IsCancellationRequested)
         {
             var started = time.GetTimestamp();
             var now = time.GetUtcNow().UtcDateTime;
             var samples = new List<Sample>(map.Registers.Count);
+            degradedRanges.Clear();
             foreach (var block in blocks)
             {
                 ushort[] raw;
@@ -112,6 +127,9 @@ public sealed class ModbusPollingService(
                         logger.LogError("Modbus device refused registers {From}..{To}: {Reason}. Check apps/simulator/mapping/registers.json against the device.", block.Address, block.Address + block.Count - 1, ex.Message);
                     }
 
+                    // Not a dead link, but these tags are not being read any more: never show their old value as current.
+                    state.Values.MarkStale(block.Entries.Select(e => e.Tag));
+                    degradedRanges.Add($"{block.Address}..{block.Address + block.Count - 1}");
                     continue;
                 }
 
@@ -126,7 +144,6 @@ public sealed class ModbusPollingService(
                 {
                     announced = true;
                     policy.Reset();
-                    await state.SetConnectionAsync(MonitoringState.ModbusName, ConnectionState.Connected, null, 0, endpoint);
                     if (reportedDown)
                     {
                         reportedDown = false;
@@ -137,6 +154,15 @@ public sealed class ModbusPollingService(
                         logger.LogInformation("Modbus link to {Endpoint} established ({Registers} registers)", endpoint, map.Registers.Count);
                     }
                 }
+            }
+
+            if (degradedRanges.Count > 0)
+            {
+                await state.SetConnectionAsync(MonitoringState.ModbusName, ConnectionState.Degraded, $"the device refused register range(s) {string.Join(", ", degradedRanges)}; those tags are stale", 0, endpoint);
+            }
+            else if (announced)
+            {
+                await state.SetConnectionAsync(MonitoringState.ModbusName, ConnectionState.Connected, null, 0, endpoint);
             }
 
             try

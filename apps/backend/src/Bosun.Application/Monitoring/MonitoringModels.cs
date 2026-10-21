@@ -50,6 +50,13 @@ public sealed class MonitoringOptions
     /// <summary>Limits are re-read at least this often even without an apply notification (changes made outside the API).</summary>
     public int LimitsMaxAgeSeconds { get; set; } = 60;
 
+    /// <summary>
+    /// A pending alarm delay is only counted over a run of samples without a hole: if a tag gets no sample for longer than this (the
+    /// link dropped, the poller stalled), the delay restarts with the next sample instead of raising an alarm from stale data.
+    /// 0 turns the rule off.
+    /// </summary>
+    public int AlarmPendingMaxGapSeconds { get; set; } = 10;
+
     /// <summary>Closed (cleared) alarms kept in memory for the alarm list.</summary>
     public int RecentAlarmHistory { get; set; } = 200;
 }
@@ -98,6 +105,9 @@ public enum ConnectionState
     [JsonStringEnumMemberName("connected")] Connected,
     [JsonStringEnumMemberName("connecting")] Connecting,
     [JsonStringEnumMemberName("disconnected")] Disconnected,
+
+    /// <summary>The device answers, but refused one or more register ranges (a mapping mismatch): those tags are stale, the others keep flowing.</summary>
+    [JsonStringEnumMemberName("degraded")] Degraded,
 
     /// <summary>Turned off by configuration (Monitoring:Enabled, Monitoring:Modbus:Enabled ...).</summary>
     [JsonStringEnumMemberName("disabled")] Disabled,

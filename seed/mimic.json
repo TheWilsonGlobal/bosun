@@ -843,9 +843,9 @@
       "kind": "tank",
       "label": "HFO 1",
       "x": 1030,
-      "y": 330,
+      "y": 362,
       "width": 60,
-      "height": 250,
+      "height": 218,
       "decimals": 0,
       "group": "tank"
     },
@@ -855,9 +855,9 @@
       "kind": "tank",
       "label": "MDO 1",
       "x": 1105,
-      "y": 330,
+      "y": 362,
       "width": 60,
-      "height": 250,
+      "height": 218,
       "decimals": 0,
       "group": "tank"
     },

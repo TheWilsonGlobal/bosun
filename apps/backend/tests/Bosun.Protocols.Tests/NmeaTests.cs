@@ -197,4 +197,61 @@ public class NmeaTests
         (await reader.ReadLineAsync(CancellationToken.None)).Should().Be(Hdt);
         reader.Overflows.Should().Be(1);
     }
+
+    [Theory]
+    [InlineData("GPRMC,010203,A,9100.000,N,01000.000,E,5.0,10.0,010125,,")] // latitude 91
+    [InlineData("GPRMC,010203,A,4500.000,N,18100.000,E,5.0,10.0,010125,,")] // longitude 181
+    [InlineData("GPRMC,010203,A,4500.000,N,01000.000,E,-5.0,10.0,010125,,")] // negative speed
+    [InlineData("GPRMC,010203,A,4500.000,N,01000.000,E,5.0,361.0,010125,,")] // course > 360
+    [InlineData("GPRMC,010203,A,4500.000,N,01000.000,E,5.0,-1.0,010125,,")] // course < 0
+    public void Out_of_range_RMC_values_are_rejected_as_malformed(string body)
+    {
+        var sentence = NmeaParser.Parse(NmeaParser.Build(body));
+
+        var act = () => NmeaParser.ParseRmc(sentence);
+
+        act.Should().Throw<NmeaException>().Which.Error.Should().Be(NmeaError.Malformed);
+    }
+
+    [Fact]
+    public void Range_edges_are_accepted()
+    {
+        var rmc = NmeaParser.ParseRmc(NmeaParser.Parse(NmeaParser.Build("GPRMC,010203,A,9000.000,S,18000.000,W,0.0,360.0,010125,,")));
+
+        rmc.Latitude.Should().Be(-90);
+        rmc.Longitude.Should().Be(-180);
+        rmc.SpeedKnots.Should().Be(0);
+        rmc.CourseTrueDeg.Should().Be(360);
+    }
+
+    [Theory]
+    [InlineData("$HEHDT,274.07,T* 5")]
+    [InlineData("$HEHDT,274.07,T*+5")]
+    [InlineData("$HEHDT,274.07,T*G5")]
+    [InlineData("$HEHDT,274.07,T*\t5")]
+    public void A_checksum_must_be_exactly_two_hex_digits(string line)
+    {
+        var act = () => NmeaParser.Parse(line);
+
+        act.Should().Throw<NmeaException>().Which.Error.Should().Be(NmeaError.Malformed);
+    }
+
+    [Fact]
+    public void Lowercase_hex_checksums_are_accepted()
+    {
+        var upper = NmeaParser.Build("HEHDT,274.07,T");
+
+        NmeaParser.Parse(upper[..^2] + upper[^2..].ToLowerInvariant()).Type.Should().Be("HDT");
+    }
+
+    [Fact]
+    public async Task An_over_long_line_is_dropped_and_counted_once()
+    {
+        var reader = new NmeaLineReader(new MemoryStream(Encoding.ASCII.GetBytes(new string('x', 2000) + "\n$A*00\n")), maxLineBytes: 100);
+        while (await reader.ReadLineAsync(CancellationToken.None) is not null)
+        {
+        }
+
+        reader.Overflows.Should().Be(1);
+    }
 }

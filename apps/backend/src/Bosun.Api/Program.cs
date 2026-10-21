@@ -70,6 +70,7 @@ builder.Services.AddHostedService<AgentLifecycle>();
 builder.Services.AddBosunMonitoring();
 builder.Services.AddSingleton<IMonitoringNotifier, SignalRMonitoringNotifier>();
 builder.Services.AddScoped<MimicService>();
+builder.Services.AddSingleton<SnapshotThrottle>();
 builder.Services.AddHostedService<ValuesBroadcaster>();
 builder.Services.Configure<ForwardedHeadersOptions>(o =>
 {
@@ -216,8 +217,8 @@ if (app.Environment.IsDevelopment())
 app.UseForwardedHeaders();
 app.UseExceptionHandler();
 app.UseStatusCodePages();
-app.UseRateLimiter();
 app.UseAuthentication();
+app.UseRateLimiter(); // after authentication: the ask limit is per signed-in user
 app.UseAuthorization();
 
 app.MapBosunApi(readsRequireLogin: !app.Environment.IsDevelopment());

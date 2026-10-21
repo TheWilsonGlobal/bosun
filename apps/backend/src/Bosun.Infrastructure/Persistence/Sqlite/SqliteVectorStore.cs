@@ -102,11 +102,16 @@ public sealed class SqliteVectorStore(BosunDbContext db, TimeProvider clock, Wri
         var ids = rows.Select(r => r.Id).ToList();
         var chunks = await db.KnowledgeChunks.AsNoTracking().Where(c => ids.Contains(c.Id)).ToDictionaryAsync(c => c.Id, ct);
         // A concurrent reindex can delete a chunk between the FTS query and this read: skip it instead of throwing.
-        return rows
-            .Where(r => chunks.ContainsKey(r.Id))
-            .Select(r => (Chunk: chunks[r.Id], r.Score))
-            .Select(x => new ChunkHit(x.Chunk.Id, x.Chunk.Source, x.Chunk.Section, x.Chunk.Page, x.Chunk.Ordinal, x.Chunk.Text, x.Score, x.Chunk.IsExclusion))
-            .ToList();
+        var hits = new List<ChunkHit>(rows.Count);
+        foreach (var row in rows)
+        {
+            if (chunks.TryGetValue(row.Id, out var chunk))
+            {
+                hits.Add(new ChunkHit(chunk.Id, chunk.Source, chunk.Section, chunk.Page, chunk.Ordinal, chunk.Text, row.Score, chunk.IsExclusion));
+            }
+        }
+
+        return hits;
     }
 
     public static byte[] Encode(float[] vector)

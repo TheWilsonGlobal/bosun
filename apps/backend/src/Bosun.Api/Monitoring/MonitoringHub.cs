@@ -27,7 +27,7 @@ public interface IMonitoringClient
 }
 
 [Authorize]
-public sealed class MonitoringHub(MonitoringState state, AlarmManager alarms, MonitoringOptions options) : Hub<IMonitoringClient>
+public sealed class MonitoringHub(MonitoringState state, AlarmManager alarms, MonitoringOptions options, SnapshotThrottle throttle) : Hub<IMonitoringClient>
 {
     public override async Task OnConnectedAsync()
     {
@@ -35,8 +35,13 @@ public sealed class MonitoringHub(MonitoringState state, AlarmManager alarms, Mo
         await Clients.Caller.Snapshot(await BuildSnapshotAsync(state, alarms, options, Context.ConnectionAborted));
     }
 
-    /// <summary>The same catch-up message on demand (for example after the client re-subscribed its handlers).</summary>
-    public Task<MonitoringSnapshotDto> GetSnapshot() => BuildSnapshotAsync(state, alarms, options, Context.ConnectionAborted);
+    /// <summary>
+    /// The same catch-up message on demand (for example after the client re-subscribed its handlers). It copies every value and takes
+    /// the alarm lock, so one build is shared by all callers for <see cref="SnapshotThrottle.Ttl"/> (1 s): calling it in a loop
+    /// costs one build per second, and the answer is at most that old.
+    /// </summary>
+    public Task<MonitoringSnapshotDto> GetSnapshot() =>
+        throttle.GetAsync(() => BuildSnapshotAsync(state, alarms, options, CancellationToken.None), Context.ConnectionAborted);
 
     public static async Task<MonitoringSnapshotDto> BuildSnapshotAsync(MonitoringState state, AlarmManager alarms, MonitoringOptions options, CancellationToken ct) =>
         new(
@@ -57,6 +62,40 @@ public sealed class MonitoringHub(MonitoringState state, AlarmManager alarms, Mo
             active,
             unacknowledged,
             state.Values.LastUpdate);
+    }
+}
+
+/// <summary>Shares one snapshot build between all <c>GetSnapshot</c> callers within <see cref="Ttl"/>.</summary>
+public sealed class SnapshotThrottle(TimeProvider time)
+{
+    public static readonly TimeSpan Ttl = TimeSpan.FromSeconds(1);
+
+    private readonly SemaphoreSlim gate = new(1, 1);
+    private MonitoringSnapshotDto? cached;
+    private long builtAt;
+    private int builds;
+
+    /// <summary>How many snapshots were really built (tests).</summary>
+    public int Builds => Volatile.Read(ref builds);
+
+    public async Task<MonitoringSnapshotDto> GetAsync(Func<Task<MonitoringSnapshotDto>> build, CancellationToken ct)
+    {
+        await gate.WaitAsync(ct);
+        try
+        {
+            if (cached is null || time.GetElapsedTime(builtAt) >= Ttl)
+            {
+                cached = await build();
+                builtAt = time.GetTimestamp();
+                Interlocked.Increment(ref builds);
+            }
+
+            return cached;
+        }
+        finally
+        {
+            gate.Release();
+        }
     }
 }
 
