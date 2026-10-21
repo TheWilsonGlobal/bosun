@@ -118,7 +118,7 @@ public static class BosunEnvironment
             ["Bosun:RepoRoot"] = root,
             ["Server:Port"] = Get("BACKEND_PORT") ?? "5480",
             ["Database:Provider"] = (Get("DB_PROVIDER") ?? "sqlite").ToLowerInvariant(),
-            ["Database:ConnectionString"] = ResolveConnection(Get("DB_CONNECTION") ?? "Data Source=data/bosun.db", Get("DB_PROVIDER") ?? "sqlite", root),
+            ["Database:ConnectionString"] = ResolveConnection(Get("DB_CONNECTION") ?? "Data Source=data/db/bosun.db", Get("DB_PROVIDER") ?? "sqlite", root),
             ["Auth:AdminUsername"] = Get("ADMIN_USERNAME") ?? "admin",
             ["Auth:AdminPassword"] = Get("ADMIN_PASSWORD") ?? DefaultAdminPassword,
 

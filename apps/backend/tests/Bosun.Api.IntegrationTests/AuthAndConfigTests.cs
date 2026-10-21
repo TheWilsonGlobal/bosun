@@ -212,7 +212,7 @@ public class ConfigurationTests
         try
         {
             File.WriteAllText(Path.Combine(root, "Bosun.sln"), "");
-            File.WriteAllText(Path.Combine(root, ".env"), "BACKEND_PORT=5480\nDB_CONNECTION=Data Source=data/bosun.db\n");
+            File.WriteAllText(Path.Combine(root, ".env"), "BACKEND_PORT=5480\nDB_CONNECTION=Data Source=data/db/bosun.db\n");
             Environment.SetEnvironmentVariable("BACKEND_PORT", "5555");
             try
             {
@@ -250,7 +250,7 @@ public class ConfigurationTests
             .ToList();
 
         outputs.Should().OnlyContain(o => o == outputs[0]);
-        outputs[0].Should().Contain($"root={repoRoot}").And.Contain($"db={Path.Combine(repoRoot, "data", "bosun.db")}");
+        outputs[0].Should().Contain($"root={repoRoot}").And.Contain($"db={Path.Combine(repoRoot, "data", "db", "bosun.db")}");
     }
 
     private static string RunPrintConfig(string dll, string workingDirectory)

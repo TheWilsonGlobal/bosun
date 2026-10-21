@@ -32,7 +32,7 @@ You need the **.NET SDK 10**, **Node 24** and **pnpm**. Docker is not needed.
 ```bash
 pnpm install
 cp .env.example .env     # then fill in the two Gemini keys
-pnpm run db:reset        # creates and seeds data/bosun.db (about 5,000 tags)
+pnpm run db:reset        # creates and seeds data/db/bosun.db (about 5,000 tags)
 pnpm run dev             # API + frontend + admin + simulator
 ```
 
@@ -64,7 +64,7 @@ One root `.env` (git-ignored; `.env.example` documents every variable). Real env
 | ------------------------------------------------- | -------------------------------------------- |
 | `LLM_PROVIDER`, `LLM_MODEL`, `GEMINI_LLM_API_KEY` | chat, agent, extraction and Ask              |
 | `EMBEDDING_MODEL`, `GEMINI_EMBEDDING_API_KEY`     | knowledge-base search (`EMBEDDING_DIMS=768`) |
-| `DB_PROVIDER`, `DB_CONNECTION`                    | `sqlite` and `Data Source=data/bosun.db`     |
+| `DB_PROVIDER`, `DB_CONNECTION`                    | `sqlite` and `Data Source=data/db/bosun.db`     |
 | `BACKEND_PORT`, `FRONTEND_PORT`, `ADMIN_PORT`     | service ports                                |
 | `SIM_MODBUS_PORT`, `SIM_NMEA_PORT`                | simulator ports                              |
 

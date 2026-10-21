@@ -9,7 +9,7 @@ namespace Bosun.Migrations.Sqlite;
 /// <summary>
 /// Design-time factory for <c>dotnet ef</c>. It always targets SQLite (this assembly only holds SQLite migrations;
 /// Phase 8 adds Bosun.Migrations.Postgres with its own factory) and resolves the database from the root .env, so
-/// <c>dotnet ef</c> sees the same data/bosun.db as <c>dotnet run</c> whatever the cwd is.
+/// <c>dotnet ef</c> sees the same data/db/bosun.db as <c>dotnet run</c> whatever the cwd is.
 /// </summary>
 public sealed class BosunDbContextFactory : IDesignTimeDbContextFactory<BosunDbContext>
 {

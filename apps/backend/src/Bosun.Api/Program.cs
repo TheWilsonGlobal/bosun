@@ -201,7 +201,7 @@ if (args.Contains("--reset-db") || args.Contains("--seed"))
 }
 
 // Development: migrate on startup, and seed an empty database so a fresh clone has data.
-// Elsewhere migrations are an explicit deployment step.
+// Production (container): migrate + seed when the database file is new (first boot or fresh disk mount).
 if (app.Environment.IsDevelopment())
 {
     await DatabaseInitializer.MigrateAsync(app.Services);
@@ -213,6 +213,22 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.MapScalarApiReference(o => o.WithTitle("Bosun API"));
 }
+else
+{
+    // Render / Docker: run EF migrations so a brand-new persistent disk gets the schema,
+    // then seed demo data if the vessel table is still empty.
+    await DatabaseInitializer.MigrateAsync(app.Services);
+    if (app.Configuration.GetValue("Seed:Enabled", true))
+    {
+        await DatabaseInitializer.SeedAsync(app.Services);
+    }
+
+    // Knowledge base: index from the pre-computed embedding cache (no network call needed).
+    var kb = await DatabaseInitializer.IndexKnowledgeFromCacheAsync(app.Services);
+    Console.WriteLine(kb is { Skipped: false }
+        ? $"Knowledge base indexed from cache: {kb.Chunks} chunks of {kb.Documents} documents."
+        : "Knowledge base not indexed (embeddings not cached). Run `pnpm run kb:index` once.");
+}
 
 app.UseForwardedHeaders();
 app.UseExceptionHandler();
@@ -221,12 +237,27 @@ app.UseAuthentication();
 app.UseRateLimiter(); // after authentication: the ask limit is per signed-in user
 app.UseAuthorization();
 
+// Serve the Vite-built frontend from wwwroot when the container includes it.
+// In development the Vite dev server handles static assets via proxy.
+var webRoot = app.Environment.WebRootPath ?? Path.Combine(AppContext.BaseDirectory, "wwwroot");
+if (Directory.Exists(webRoot) && File.Exists(Path.Combine(webRoot, "index.html")))
+{
+    app.UseDefaultFiles();
+    app.UseStaticFiles();
+}
+
 app.MapBosunApi(readsRequireLogin: !app.Environment.IsDevelopment());
 app.MapAi(requireLogin: !app.Environment.IsDevelopment());
 app.MapAgent(readsRequireLogin: !app.Environment.IsDevelopment());
 app.MapExtraction(readsRequireLogin: !app.Environment.IsDevelopment());
 app.MapKnowledge(readsRequireLogin: !app.Environment.IsDevelopment());
 app.MapMonitoring(readsRequireLogin: !app.Environment.IsDevelopment());
+
+// SPA fallback: any unknown path returns index.html so client-side routing works.
+if (Directory.Exists(webRoot) && File.Exists(Path.Combine(webRoot, "index.html")))
+{
+    app.MapFallbackToFile("index.html");
+}
 
 app.Run();
 

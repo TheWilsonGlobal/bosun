@@ -25,7 +25,7 @@ public sealed record DatabaseSettings(string Provider, string ConnectionString)
         var connection = configuration["Database:ConnectionString"];
         if (string.IsNullOrWhiteSpace(connection))
         {
-            throw new InvalidOperationException("DB_CONNECTION is empty. Example: Data Source=data/bosun.db");
+            throw new InvalidOperationException("DB_CONNECTION is empty. Example: Data Source=data/db/bosun.db");
         }
 
         return new DatabaseSettings(provider, connection);

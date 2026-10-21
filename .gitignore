@@ -3,7 +3,24 @@
 .env.*
 !.env.example
 TODO.md
-data/
+
+# ---- data/ directory rules ----
+# Ignore runtime-generated files inside data/…
+data/logs/
+data/coverage/
+data/db/*.db
+data/db/*.db-shm
+data/db/*.db-wal
+*.db
+*.db-shm
+*.db-wal
+
+# …but keep the directory stubs and the pre-computed RAG cache
+!data/
+!data/db/
+!data/**/.gitkeep
+!data/rag-embedding-cache.json
+
 bin/
 obj/
 node_modules/
