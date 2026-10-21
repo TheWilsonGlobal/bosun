@@ -23,6 +23,10 @@ const ports = {
   frontend: Number(env.FRONTEND_PORT ?? 5481),
   admin: Number(env.ADMIN_PORT ?? 5482),
 };
+const simPorts = {
+  'sim modbus': Number(env.SIM_MODBUS_PORT ?? 5483),
+  'sim nmea': Number(env.SIM_NMEA_PORT ?? 5484),
+};
 
 function isFree(port) {
   return new Promise((resolve) => {
@@ -36,6 +40,16 @@ function isFree(port) {
 const busy = [];
 for (const [name, port] of Object.entries(ports)) {
   if (!(await isFree(port))) busy.push(`${name} (${port})`);
+}
+// The simulator is optional: when its ports are taken (another simulator, or a real PLC feed) it is skipped and the API still runs.
+let startSim = true;
+for (const [name, port] of Object.entries(simPorts)) {
+  if (!(await isFree(port))) {
+    startSim = false;
+    console.warn(
+      `${name} port ${port} is in use: not starting the simulator (the API will use whatever is listening there).`,
+    );
+  }
 }
 if (busy.length > 0) {
   console.error(`Port(s) already in use: ${busy.join(', ')}. Stop whatever holds them and retry.`);
@@ -127,6 +141,7 @@ console.log(
   `API http://127.0.0.1:${ports.api}  |  frontend http://127.0.0.1:${ports.frontend}  |  admin http://127.0.0.1:${ports.admin}/admin/`,
 );
 
+if (startSim) start('sim', 'dotnet', ['run', '--project', 'apps/simulator'], { survivable: true });
 start('api', 'dotnet', ['run', '--project', 'apps/backend/src/Bosun.Api'], { survivable: true });
 
 // pnpm skips packages that do not exist or have no `dev` script (--if-present), so the API also starts before the SPAs are scaffolded.

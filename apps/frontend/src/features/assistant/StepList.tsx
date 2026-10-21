@@ -1,7 +1,7 @@
 import { AlertCircle, CheckCircle2, ListChecks, ShieldCheck, Square, Wrench } from 'lucide-react';
 import { ViolationsList } from '@/features/changesets/parts';
 import { cn } from '@/lib/utils';
-import { describeErrorCode } from './messages';
+import { describeErrorCode, ERROR_MESSAGES } from './messages';
 import {
   errorOf,
   finalOf,
@@ -184,10 +184,17 @@ function FinalStep({ step }: { step: AgentStep }) {
 function ErrorStep({ step }: { step: AgentStep }) {
   const e = errorOf(step.payload);
   const known = describeErrorCode(e.code, e.message);
+  const isKnown = !!e.code && e.code in ERROR_MESSAGES;
   return (
     <Row step={step} tone="bad" icon={<AlertCircle className="text-destructive size-4" />}>
       <p className="font-medium">{known.title}</p>
-      {e.message && <p className="text-muted-foreground text-xs">{e.message}</p>}
+      {e.message && !isKnown && <p className="text-muted-foreground text-xs">{e.message}</p>}
+      {e.message && isKnown && (
+        <details className="text-xs">
+          <summary className="text-muted-foreground cursor-pointer">Details</summary>
+          <p className="text-muted-foreground mt-1 break-words">{e.message}</p>
+        </details>
+      )}
     </Row>
   );
 }

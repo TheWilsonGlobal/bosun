@@ -1,5 +1,6 @@
 import { NavLink, Outlet } from 'react-router-dom';
 import {
+  Activity,
   Anchor,
   FileSearch,
   GitPullRequest,
@@ -28,6 +29,7 @@ import { cn } from '@/lib/utils';
 import { BackendBanner } from './BackendBanner';
 
 const NAV = [
+  { to: '/monitoring', label: 'Live', icon: Activity },
   { to: '/tags', label: 'Tags', icon: Table2 },
   { to: '/documents', label: 'Documents', icon: FileSearch },
   { to: '/change-sets', label: 'Change sets', icon: GitPullRequest },

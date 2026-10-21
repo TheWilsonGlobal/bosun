@@ -9,6 +9,7 @@
   },
   "scripts": {
     "dev": "node scripts/dev.mjs",
+    "sim": "node scripts/dotnet.mjs run --project apps/simulator --",
     "dev:backend": "node scripts/dotnet.mjs run --project apps/backend/src/Bosun.Api",
     "test": "node scripts/dotnet.mjs test Bosun.sln && pnpm -r --if-present test",
     "test:backend": "node scripts/dotnet.mjs test Bosun.sln",

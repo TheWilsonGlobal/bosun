@@ -15,7 +15,7 @@ import {
 } from '@/test/utils';
 import { AssistantPanel } from './AssistantPanel';
 import type { CreateHub, HubHandlers } from './hub';
-import { ERROR_CODES, describeErrorCode, describeOutcome } from './messages';
+import { ERROR_CODES, ERROR_MESSAGES, describeErrorCode, describeOutcome } from './messages';
 import { RunView } from './RunView';
 import { initialRunState, liveBudgets, runReducer } from './runState';
 import type { AgentRun, AgentRunStatus, AgentStep } from './types';
@@ -384,6 +384,45 @@ describe('RunView', () => {
     const outcome = await screen.findByTestId('run-outcome');
     expect(outcome).toHaveAttribute('data-error-code', 'llm_safety_blocked');
     expect(outcome).toHaveTextContent(/safety filter/i);
+  });
+
+  it('a failed run shows the friendly message once, with the raw provider text collapsed under Details', async () => {
+    const raw = 'RESOURCE_EXHAUSTED: Quota exceeded for metric generate_content_free_tier';
+    const friendly = ERROR_MESSAGES.llm_rate_limited.message;
+    const failed = run({
+      status: 'failed',
+      phase: null,
+      errorCode: 'llm_rate_limited',
+      errorMessage: raw,
+      steps: [plan, step(2, 'error', { code: 'llm_rate_limited', message: raw })],
+    });
+    setup(failed, { 'GET /api/agent/runs/5': () => json(failed) });
+    const outcome = await screen.findByTestId('run-outcome');
+    expect(screen.getAllByText(friendly)).toHaveLength(1);
+    expect(outcome).toHaveTextContent('Model is rate limited');
+    const rawNodes = screen.getAllByText(raw);
+    expect(rawNodes.length).toBeGreaterThan(0);
+    for (const node of rawNodes) {
+      expect(node.closest('details')).not.toBeNull();
+      expect(node).not.toBeVisible();
+    }
+    expect(within(outcome).getByText('Details')).toBeInTheDocument();
+    await userEvent.setup().click(within(outcome).getByText('Details'));
+    expect(within(outcome).getByText(raw)).toBeVisible();
+  });
+
+  it('an unknown error code still shows its raw text (there is no friendly text to prefer)', async () => {
+    const failed = run({
+      status: 'failed',
+      phase: null,
+      errorCode: 'weird_code',
+      errorMessage: 'something odd happened',
+      steps: [],
+    });
+    setup(failed, { 'GET /api/agent/runs/5': () => json(failed) });
+    const outcome = await screen.findByTestId('run-outcome');
+    expect(outcome).toHaveTextContent('something odd happened');
+    expect(outcome.querySelector('details')).toBeNull();
   });
 
   it('Cancel posts to the cancel endpoint', async () => {

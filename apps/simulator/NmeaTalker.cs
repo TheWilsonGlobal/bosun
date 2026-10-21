@@ -48,8 +48,16 @@ public sealed class NmeaTalker(ScenarioClock clock, TimeProvider time, IPAddress
         logger?.LogInformation("NMEA 0183 talker listening on {Endpoint} ({Interval} ms per sentence pair)", listener.LocalEndpoint, interval.TotalMilliseconds);
     }
 
+    private bool stopped;
+
     public async Task StopAsync()
     {
+        if (stopped)
+        {
+            return;
+        }
+
+        stopped = true;
         await stop.CancelAsync();
         listener.Stop();
         lock (gate)

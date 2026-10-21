@@ -25,6 +25,10 @@ const ExtractionPage = lazy(() =>
   import('@/features/extraction/ExtractionPage').then((m) => ({ default: m.ExtractionPage })),
 );
 
+const MonitoringPage = lazy(() =>
+  import('@/features/monitoring/MonitoringPage').then((m) => ({ default: m.MonitoringPage })),
+);
+
 export function App() {
   return (
     <Suspense fallback={<Status>Loading...</Status>}>
@@ -36,6 +40,7 @@ export function App() {
           <Route path="/change-sets/:id" element={<ChangeSetDetailPage />} />
           <Route path="/documents" element={<DocumentsPage />} />
           <Route path="/extractions/:id" element={<ExtractionPage />} />
+          <Route path="/monitoring" element={<MonitoringPage />} />
           <Route path="/audit" element={<AuditPage />} />
           <Route
             path="*"

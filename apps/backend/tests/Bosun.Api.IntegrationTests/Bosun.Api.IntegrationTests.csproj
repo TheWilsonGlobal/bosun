@@ -7,6 +7,7 @@
     <ProjectReference Include="..\..\src\Bosun.Api\Bosun.Api.csproj" />
     <ProjectReference Include="..\Bosun.Llm.Tests\Bosun.Llm.Tests.csproj" />
     <ProjectReference Include="..\Bosun.Agent.Tests\Bosun.Agent.Tests.csproj" />
+    <ProjectReference Include="..\..\..\simulator\Bosun.Simulator.csproj" Aliases="sim" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />

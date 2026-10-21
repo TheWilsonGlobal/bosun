@@ -15,6 +15,11 @@ export function setConnection(next: ConnectionState) {
   listeners.forEach((l) => l());
 }
 
+export function subscribeConnection(cb: () => void): () => void {
+  listeners.add(cb);
+  return () => listeners.delete(cb);
+}
+
 export const getConnection = () => state;
 
 export function useConnection(): ConnectionState {

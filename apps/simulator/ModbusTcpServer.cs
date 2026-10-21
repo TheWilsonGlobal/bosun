@@ -36,6 +36,8 @@ public sealed class ModbusTcpServer(Func<ushort[]> snapshot, IPAddress address, 
         }
     }
 
+    private bool stopped;
+
     public void Start()
     {
         listener.Start();
@@ -45,6 +47,12 @@ public sealed class ModbusTcpServer(Func<ushort[]> snapshot, IPAddress address, 
 
     public async Task StopAsync()
     {
+        if (stopped)
+        {
+            return;
+        }
+
+        stopped = true;
         await stop.CancelAsync();
         listener.Stop();
         lock (gate)

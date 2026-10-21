@@ -97,3 +97,18 @@
     outline-offset: 1px;
   }
 }
+
+/* Unacknowledged alarms blink. The marker text stays, so removing the animation loses nothing. */
+@keyframes mimic-blink {
+  50% {
+    opacity: 0.3;
+  }
+}
+.mimic-blink {
+  animation: mimic-blink 1s steps(1, end) infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .mimic-blink {
+    animation: none;
+  }
+}

@@ -3,10 +3,10 @@ import { useQueryClient } from '@tanstack/react-query';
 import { CloudOff, DatabaseZap, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { fetchHealth } from '@/lib/api/endpoints';
-import { getConnection, setConnection, useConnection } from '@/lib/connection';
+import { getConnection, setConnection, subscribeConnection, useConnection } from '@/lib/connection';
 
 export const OFFLINE_RECHECK_MS = 4000;
-export const ONLINE_RECHECK_MS = 30_000;
+export const ONLINE_RECHECK_MS = 8000;
 
 /**
  * Backend-offline banner. Offline is detected two ways: any API call that comes back as a (resolved) proxy 502 or
@@ -31,7 +31,11 @@ export function BackendBanner({
     let timer: ReturnType<typeof setTimeout> | undefined;
     const controller = new AbortController();
 
+    let inFlight = false;
     const probe = async () => {
+      if (inFlight) return;
+      inFlight = true;
+      clearTimeout(timer);
       const wasOffline = getConnection() === 'offline';
       setChecking(true);
       try {
@@ -44,6 +48,7 @@ export function BackendBanner({
         if (stopped) return;
         setConnection('offline');
       } finally {
+        inFlight = false;
         if (!stopped) setChecking(false);
       }
       if (!stopped) {
@@ -54,8 +59,22 @@ export function BackendBanner({
       }
     };
 
+    // Re-check right away when the tab becomes visible/focused, and when any API call reports the backend offline
+    // (that also moves the schedule onto the short offline interval).
+    const recheck = () => {
+      if (document.visibilityState !== 'hidden') void probe();
+    };
+    const unsubscribe = subscribeConnection(() => {
+      if (getConnection() === 'offline') void probe();
+    });
+    window.addEventListener('focus', recheck);
+    document.addEventListener('visibilitychange', recheck);
+
     void probe();
     return () => {
+      window.removeEventListener('focus', recheck);
+      document.removeEventListener('visibilitychange', recheck);
+      unsubscribe();
       stopped = true;
       controller.abort();
       clearTimeout(timer);

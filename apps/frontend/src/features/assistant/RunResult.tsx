@@ -7,7 +7,7 @@ import { ViolationsList } from '@/features/changesets/parts';
 import { fetchDiff } from '@/lib/api/endpoints';
 import { describeError } from '@/lib/api/errors';
 import { cn } from '@/lib/utils';
-import { describeOutcome, type Tone } from './messages';
+import { describeOutcome, ERROR_MESSAGES, type Tone } from './messages';
 import type { AgentRun } from './types';
 
 const TONE: Record<Tone, { cls: string; icon: typeof Info }> = {
@@ -53,6 +53,11 @@ export function RunResult({ run }: { run: AgentRun }) {
   const outcome = describeOutcome(run);
   if (!outcome) return null;
   const { cls, icon: Icon } = TONE[outcome.tone];
+  // Raw provider text is only a detail when a friendly, code-specific message already says what happened.
+  const rawDetail =
+    run.errorCode && run.errorCode in ERROR_MESSAGES && run.errorMessage?.trim()
+      ? run.errorMessage.trim()
+      : null;
   return (
     <div className="grid gap-3">
       <div
@@ -66,6 +71,12 @@ export function RunResult({ run }: { run: AgentRun }) {
         <div>
           <p className="font-semibold">{outcome.title}</p>
           <p>{outcome.message}</p>
+          {rawDetail && (
+            <details className="mt-1 text-xs">
+              <summary className="cursor-pointer">Details</summary>
+              <p className="text-muted-foreground mt-1 break-words">{rawDetail}</p>
+            </details>
+          )}
         </div>
       </div>
       {run.changeSetId !== null && <DraftSummary changeSetId={run.changeSetId} />}
