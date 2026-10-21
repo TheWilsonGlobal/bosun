@@ -26,6 +26,7 @@ import { AssistantSlot } from '@/features/assistant/AssistantSlot';
 import { usePending } from '@/features/tags/PendingContext';
 import { useTheme } from '@/lib/theme';
 import { cn } from '@/lib/utils';
+import { DeveloperBadge } from '@/components/DeveloperBadge';
 import { BackendBanner } from './BackendBanner';
 
 const NAV = [
@@ -77,6 +78,9 @@ export function AppShell() {
               </li>
             ))}
           </ul>
+          <div className="mt-auto border-t p-2.5">
+            <DeveloperBadge variant="sidebar" />
+          </div>
         </nav>
 
         <div className="flex min-w-0 flex-1 flex-col">
@@ -107,6 +111,7 @@ export function AppShell() {
               </span>
             )}
             <div className="ml-auto flex items-center gap-2">
+              <DeveloperBadge variant="compact" />
               <Button
                 variant="ghost"
                 size="icon"

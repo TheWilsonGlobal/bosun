@@ -2,6 +2,10 @@
   "name": "@bosun/frontend",
   "private": true,
   "version": "0.1.0",
+  "author": {
+    "name": "Wilson Pham",
+    "url": "https://github.com/TheWilsonGlobal"
+  },
   "type": "module",
   "scripts": {
     "dev": "vite",
