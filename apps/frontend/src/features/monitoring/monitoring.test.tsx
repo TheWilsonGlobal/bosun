@@ -1046,7 +1046,9 @@ describe('degraded link state', () => {
       batch: { timestamp: T0, values: [value(b.tag!, 100)] },
     });
     render(svgWrap(<ValueWidget store={store} binding={b} info={info} />));
-    expect(screen.getByTestId(`widget-${b.id}`.toLowerCase().replace(/[^a-z0-9-]/g, '-'))).toBeDefined();
+    expect(
+      screen.getByTestId(`widget-${b.id}`.toLowerCase().replace(/[^a-z0-9-]/g, '-')),
+    ).toBeDefined();
   });
 });
 

@@ -44,8 +44,22 @@ const answer = (over: Partial<AskResponse> = {}): AskResponse => ({
   droppedCitations: 0,
   unsupportedSentencesRemoved: 0,
   retrieved: [
-    { ...cite, score: 0.0321, cosine: 0.81, aboveThreshold: true, usedForAnswer: true, flagged: false },
-    { ...other, score: 0.0102, cosine: 0.52, aboveThreshold: false, usedForAnswer: false, flagged: false },
+    {
+      ...cite,
+      score: 0.0321,
+      cosine: 0.81,
+      aboveThreshold: true,
+      usedForAnswer: true,
+      flagged: false,
+    },
+    {
+      ...other,
+      score: 0.0102,
+      cosine: 0.52,
+      aboveThreshold: false,
+      usedForAnswer: false,
+      flagged: false,
+    },
   ],
   model: 'gemini-test',
   promptVersion: 'rag@1',
@@ -123,7 +137,9 @@ describe('pure helpers', () => {
     expect(denied.detail).toBe('Your project has been denied access.');
     expect(e(502, 'llm_auth_failed').detail).toBeUndefined();
     expect(parseRetryAfter('30')).toBe(30);
-    expect(parseRetryAfter('Wed, 21 Oct 2026 10:00:45 GMT', Date.parse('2026-10-21T10:00:00Z'))).toBe(45);
+    expect(
+      parseRetryAfter('Wed, 21 Oct 2026 10:00:45 GMT', Date.parse('2026-10-21T10:00:00Z')),
+    ).toBe(45);
     expect(parseRetryAfter('soon')).toBeNull();
     expect(parseRetryAfter(null)).toBeNull();
     expect(formatWait(1)).toBe('1 second');
