@@ -68,10 +68,12 @@ COPY data/rag-embedding-cache.json ./data/rag-embedding-cache.json
 RUN mkdir -p /app/data/db
 
 # Render injects environment variables; no .env file needed in the image.
-ENV ASPNETCORE_ENVIRONMENT=Production
-ENV ASPNETCORE_HTTP_PORTS=8080
-
 # Render routes external HTTPS → container :8080
+# ASPNETCORE_URLS (not ASPNETCORE_HTTP_PORTS) must be set so Program.cs skips its
+# loopback-only UseUrls("http://127.0.0.1:...") override and binds to all interfaces.
+ENV ASPNETCORE_URLS=http://+:8080
+ENV ASPNETCORE_ENVIRONMENT=Production
+
 EXPOSE 8080
 
 ENTRYPOINT ["dotnet", "Bosun.Api.dll"]
