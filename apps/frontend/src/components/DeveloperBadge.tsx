@@ -47,12 +47,8 @@ export const DeveloperBadge: React.FC<DeveloperBadgeProps> = ({ variant = 'compa
   // Sidebar variant
   return (
     <div className="rounded-lg bg-card/60 border border-border p-2.5 space-y-2 text-xs">
-      <div className="flex items-center justify-between text-[10px] font-mono">
+      <div className="flex items-center text-[10px] font-mono">
         <span className="text-primary font-semibold tracking-wider">ENGINEERED BY</span>
-        <span className="text-emerald-500 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20 inline-flex items-center gap-1">
-          <span className="w-1 h-1 rounded-full bg-emerald-500" />
-          Verified
-        </span>
       </div>
 
       <a
