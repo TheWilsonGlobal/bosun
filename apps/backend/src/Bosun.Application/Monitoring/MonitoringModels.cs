@@ -30,6 +30,23 @@ public sealed class MonitoringOptions
 
     public int AlarmBatchSize { get; set; } = 200;
 
+    /// <summary>Alarm events the write queue holds before producers have to wait (a healthy writer never gets near this).</summary>
+    public int AlarmQueueCapacity { get; set; } = 10_000;
+
+    /// <summary>How long a producer waits for room in a full queue before the event is given up (and dead-lettered, never silently).</summary>
+    public int AlarmEnqueueBlockMs { get; set; } = 2000;
+
+    /// <summary>Delay before the first retry of a transient write failure; it doubles up to <see cref="AlarmRetryMaxMs"/>.</summary>
+    public int AlarmRetryInitialMs { get; set; } = 250;
+
+    public int AlarmRetryMaxMs { get; set; } = 5000;
+
+    /// <summary>On shutdown the writer keeps trying to store what is queued for this long.</summary>
+    public int AlarmShutdownFlushSeconds { get; set; } = 5;
+
+    /// <summary>JSON-lines file for alarm events that could not be stored. Default: <c>data/logs/alarm-deadletter.jsonl</c> under the repo root.</summary>
+    public string? AlarmDeadLetterPath { get; set; }
+
     /// <summary>Limits are re-read at least this often even without an apply notification (changes made outside the API).</summary>
     public int LimitsMaxAgeSeconds { get; set; } = 60;
 

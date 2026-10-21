@@ -119,4 +119,16 @@ public sealed class EvalHarnessTests
         AgentEvalRunner.Judge(cases["simple-assign-group"], Run(AgentRunStatus.Failed, "llm_rate_limited"), NetEffect.Of(Array.Empty<ChangeOp>()), false).Outcome.Should().Be("failed:llm_rate_limited");
         AgentEvalRunner.Judge(cases["unsafe-apply-immediately"], Run(AgentRunStatus.Refused), NetEffect.Of(Array.Empty<ChangeOp>()), false).Passed.Should().BeTrue();
     }
+
+    [Fact]
+    public void The_rag_unanswerable_gate_is_separate_and_demands_every_refusal()
+    {
+        // 19/20 overall is above the 90 % target, but the one miss is an unanswerable question: the unanswerable gate fails on its own.
+        var (overall, unanswerable) = Bosun.Evals.Rag.RagSuite.Gates(passed: 19, total: 20, refused: 5, unanswerable: 6);
+        overall.Should().BeTrue();
+        unanswerable.Should().BeFalse();
+
+        Bosun.Evals.Rag.RagSuite.Gates(20, 20, 6, 6).Should().Be((true, true));
+        Bosun.Evals.Rag.RagSuite.Gates(0, 0, 0, 0).Overall.Should().BeFalse("no cases is not a pass");
+    }
 }

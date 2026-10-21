@@ -89,6 +89,12 @@ public static class RagSuite
 {
     public const double Target = 0.90;
 
+    /// <summary>Unanswerable questions are gated on their own: a confident answer to a question the documents cannot answer is the worst failure of a RAG assistant, so 100 % of them must be refused (the overall rate cannot hide one).</summary>
+    public const double UnanswerableTarget = 1.0;
+
+    public static (bool Overall, bool Unanswerable) Gates(int passed, int total, int refused, int unanswerable) =>
+        (total > 0 && (double)passed / total >= Target, unanswerable == 0 || (double)refused / unanswerable >= UnanswerableTarget);
+
     public static async Task<int> RunAsync(string[] args, Func<string, string?> arg)
     {
         var repoRoot = RepoRoot.Resolve();
@@ -221,6 +227,9 @@ public static class RagSuite
         }
 
         sb.AppendLine($"OVERALL: {passed}/{attempts.Count} = {100 * rate:F1}%  (target >= {100 * Target:F0}%){(errors > 0 ? $"  [{errors} case(s) ended in a provider error]" : "")}");
+        var (overallPass, unanswerablePass) = Gates(passed, attempts.Count, refusedRight, unanswerable.Count);
+        sb.AppendLine($"GATE overall >= {100 * Target:F0}%: {(overallPass ? "PASS" : "FAIL")}");
+        sb.AppendLine($"GATE unanswerable refused = {refusedRight}/{unanswerable.Count} (target {100 * UnanswerableTarget:F0}%): {(unanswerablePass ? "PASS" : "FAIL")}{(unanswerablePass ? "" : "  <- " + string.Join(", ", unanswerable.Where(a => !a.Passed).Select(a => a.Case.Id)))}");
         Console.Write(sb);
         Console.WriteLine();
         Console.Write(LlmUsageReport.Format(usageRows));
@@ -243,6 +252,11 @@ public static class RagSuite
             promptVersion,
             runsPerCase = 1,
             target = Target,
+            gates = new
+            {
+                overall = new { target = Target, pass = overallPass },
+                unanswerable = new { target = UnanswerableTarget, refused = refusedRight, of = unanswerable.Count, pass = unanswerablePass, failedCases = unanswerable.Where(a => !a.Passed).Select(a => a.Case.Id).ToArray() },
+            },
             index = new { index.Documents, index.Chunks, index.Embedded, index.FromCache, index.FromStore, index.EmbeddingRequests, index.PromptTokens },
             summary = new
             {
@@ -343,7 +357,7 @@ public static class RagSuite
             Console.WriteLine($"Saved eval_runs #{row.Id} with {row.Results.Count} eval_results to the configured database.");
         }
 
-        return 0;
+        return overallPass && unanswerablePass ? 0 : 1;
     }
 
     private static async Task<RagAttempt> RunCaseAsync(RagCase evalCase, RagAskService ask, KnowledgeSearchService search, bool retrievalOnly)

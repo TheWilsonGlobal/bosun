@@ -15,6 +15,25 @@ public sealed class AlarmWriterService(AlarmEventWriter writer) : BackgroundServ
     protected override Task ExecuteAsync(CancellationToken stoppingToken) => writer.RunAsync(stoppingToken);
 }
 
+/// <summary>SQLite codes that go away by themselves: BUSY (5), LOCKED (6), IOERR (10), FULL (13), CANTOPEN (14). Constraint and schema errors do not.</summary>
+public sealed class SqliteWriteFailureClassifier : IWriteFailureClassifier
+{
+    private readonly DefaultWriteFailureClassifier fallback = new();
+
+    public bool IsTransient(Exception exception)
+    {
+        for (var e = exception; e is not null; e = e.InnerException)
+        {
+            if (e is Microsoft.Data.Sqlite.SqliteException sqlite)
+            {
+                return sqlite.SqliteErrorCode is 5 or 6 or 10 or 13 or 14;
+            }
+        }
+
+        return fallback.IsTransient(exception);
+    }
+}
+
 public static class MonitoringRegistration
 {
     /// <summary>
@@ -24,7 +43,18 @@ public static class MonitoringRegistration
     public static IServiceCollection AddBosunMonitoring(this IServiceCollection services)
     {
         services.AddOptions<MonitoringOptions>().BindConfiguration(MonitoringOptions.Section);
-        services.AddSingleton(sp => sp.GetRequiredService<IOptions<MonitoringOptions>>().Value);
+        services.AddSingleton(sp =>
+        {
+            var options = sp.GetRequiredService<IOptions<MonitoringOptions>>().Value;
+            if (string.IsNullOrWhiteSpace(options.AlarmDeadLetterPath))
+            {
+                var root = sp.GetRequiredService<IConfiguration>()["Bosun:RepoRoot"] ?? RepoRoot.Resolve();
+                options.AlarmDeadLetterPath = Path.Combine(root, "data", "logs", "alarm-deadletter.jsonl");
+            }
+
+            return options;
+        });
+        services.TryAddSingleton<IWriteFailureClassifier, SqliteWriteFailureClassifier>();
         services.TryAddSingleton<IMonitoringNotifier, NullMonitoringNotifier>();
         services.AddSingleton<RegisterMap>(sp =>
         {

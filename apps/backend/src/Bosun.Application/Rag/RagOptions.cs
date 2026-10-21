@@ -16,6 +16,12 @@ public sealed class RagOptions
     /// </summary>
     public string? CachePath { get; set; }
 
+    /// <summary>Most document vectors kept in the cache file (the oldest go first). The seed set is a few dozen; this is a safety cap.</summary>
+    public int CacheMaxEntries { get; set; } = 2000;
+
+    /// <summary>Question vectors kept in memory (LRU). Questions are never written to disk.</summary>
+    public int QueryCacheEntries { get; set; } = 256;
+
     /// <summary>Chunks returned to the caller (plan: top-k = 6).</summary>
     public int TopK { get; set; } = 6;
 

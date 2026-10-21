@@ -118,14 +118,14 @@ public sealed class KnowledgeSearchService(
     private async Task<float[]> EmbedQueryAsync(string query, CancellationToken ct)
     {
         var key = EmbeddingCache.KeyOf(embeddings.Model, embeddings.Dimensions, nameof(EmbeddingTask.Query), EmbeddingCache.HashOf(query));
-        if (cache.TryGet(key) is { } cached && cached.Length == embeddings.Dimensions)
+        if (cache.TryGetQuery(key) is { } cached && cached.Length == embeddings.Dimensions)
         {
             return cached;
         }
 
         var result = await embeddings.EmbedAsync([query], EmbeddingTask.Query, QueryFeature, ct);
         var vector = VectorMath.L2Normalize(result.Vectors[0]);
-        cache.Put([(key, vector)]);
+        cache.PutQuery(key, vector);
         return vector;
     }
 }
