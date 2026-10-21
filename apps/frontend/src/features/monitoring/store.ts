@@ -23,6 +23,8 @@ export interface MonitoringState {
   alarms: Record<number, Alarm>;
   /** The most severe OPEN alarm per tag (the one a widget is coloured by). */
   alarmByTag: Record<string, Alarm>;
+  /** Latest limit_changed note per alarm id (old -> new numbers), shown under the limit. */
+  limitNotes: Record<number, string>;
   /** True once any snapshot / poll answered: distinguishes "no data yet" from "nothing is happening". */
   loaded: boolean;
 }
@@ -34,6 +36,7 @@ export const initialMonitoringState: MonitoringState = {
   navigation: null,
   alarms: {},
   alarmByTag: {},
+  limitNotes: {},
   loaded: false,
 };
 
@@ -91,7 +94,19 @@ function trim(alarms: Record<number, Alarm>): Record<number, Alarm> {
 
 function withAlarms(state: MonitoringState, alarms: Record<number, Alarm>): MonitoringState {
   const trimmed = trim(alarms);
-  return { ...state, alarms: trimmed, alarmByTag: deriveByTag(trimmed, state.alarmByTag) };
+  let limitNotes = state.limitNotes;
+  for (const id of Object.keys(limitNotes)) {
+    if (!trimmed[Number(id)]) {
+      if (limitNotes === state.limitNotes) limitNotes = { ...limitNotes };
+      delete limitNotes[Number(id)];
+    }
+  }
+  return {
+    ...state,
+    alarms: trimmed,
+    alarmByTag: deriveByTag(trimmed, state.alarmByTag),
+    limitNotes,
+  };
 }
 
 function mergeValues(
@@ -179,8 +194,15 @@ export function monitoringReducer(
         ...state,
         connections: { ...state.connections, [action.connection.name]: action.connection },
       };
-    case 'alarmEvent':
-      return upsertAlarms(state, [action.notification.alarm]);
+    case 'alarmEvent': {
+      const { notification } = action;
+      // The event carries the alarm AFTER the change, so the upsert alone puts the new limit in the row.
+      const next = upsertAlarms(state, [notification.alarm]);
+      if (notification.kind !== 'limit_changed') return next;
+      const a = notification.alarm;
+      const note = notification.note?.trim() || `limit now ${a.limitValue}, delay ${a.delayS} s`;
+      return { ...next, limitNotes: { ...next.limitNotes, [a.id]: note } };
+    }
     case 'alarmList':
       return upsertAlarms(state, action.alarms);
     case 'openAlarms': {

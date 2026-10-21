@@ -3,9 +3,16 @@
 export type Quality = 'good' | 'stale';
 export type AlarmLevel = 'LL' | 'L' | 'H' | 'HH';
 export type AlarmState = 'unacknowledged' | 'acknowledged' | 'returned_unacknowledged' | 'cleared';
-export type AlarmEventKind = 'raised' | 'acknowledged' | 'returned_to_normal' | 'cleared';
+export type AlarmEventKind =
+  | 'raised'
+  | 'acknowledged'
+  | 'returned_to_normal'
+  | 'cleared'
+  /** limitValue / delayS / hysteresis changed while the alarm was active; `note` has old -> new. */
+  | 'limit_changed';
 export type LinkName = 'modbus' | 'nmea';
-export type LinkState = 'connected' | 'connecting' | 'disconnected' | 'disabled';
+/** `degraded`: the link is up but a register range is refused; `lastError` says which. */
+export type LinkState = 'connected' | 'connecting' | 'degraded' | 'disconnected' | 'disabled';
 export type AlarmFilter = 'active' | 'all' | 'cleared';
 
 export interface LiveValue {
@@ -47,6 +54,8 @@ export interface AlarmNotification {
   alarm: Alarm;
   at: string;
   value: number | null;
+  /** Human text of the event; for limit_changed the old and new numbers. Optional: absent on older backends. */
+  note?: string | null;
 }
 
 export interface Connection {

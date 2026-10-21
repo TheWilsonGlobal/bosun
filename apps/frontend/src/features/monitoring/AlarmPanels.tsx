@@ -112,6 +112,7 @@ export function AlarmBanner({ store }: { store: MonitoringStore }) {
 const LINK_BADGE: Record<LinkState, { label: string; cls: string }> = {
   connected: { label: 'Connected', cls: 'border-success/60 text-success' },
   connecting: { label: 'Connecting', cls: 'border-warning text-warning-foreground' },
+  degraded: { label: 'Degraded', cls: 'border-warning text-warning-foreground' },
   disconnected: { label: 'Disconnected', cls: 'border-destructive/60 text-destructive' },
   disabled: { label: 'Disabled', cls: 'text-muted-foreground' },
 };
@@ -140,7 +141,11 @@ function LinkBadge({ name, connection }: { name: LinkName; connection?: Connecti
       </Badge>
       <span className="text-muted-foreground mt-0.5 text-xs">{detail}</span>
       {connection?.lastError && state !== 'connected' && (
-        <span className="text-destructive max-w-72 truncate text-xs" title={connection.lastError}>
+        <span
+          data-testid={`link-${name}-error`}
+          className="text-destructive max-w-72 truncate text-xs"
+          title={connection.lastError}
+        >
           Last error: {connection.lastError}
         </span>
       )}
@@ -185,6 +190,7 @@ export function AlarmList({ store }: { store: MonitoringStore }) {
   const [ackingId, setAckingId] = useState<number | null>(null);
   const [ackError, setAckError] = useState<ReturnType<typeof describeAckError> | null>(null);
   const alarms = useMonitoringSelector(store, (s) => s.alarms);
+  const limitNotes = useMonitoringSelector(store, (s) => s.limitNotes);
   const rows = useMemo(() => filterAlarms(alarms, filter), [alarms, filter]);
 
   // The store already holds the open alarms (snapshot/events). History needs one REST fetch per switch.
@@ -315,6 +321,15 @@ export function AlarmList({ store }: { store: MonitoringStore }) {
               <TableCell className="text-right tabular-nums">
                 {formatNumber(a.limitValue)} {a.unit ?? ''}
                 <span className="text-muted-foreground block text-xs">delay {a.delayS} s</span>
+                {limitNotes[a.id] && (
+                  <span
+                    data-testid={`limit-note-${a.id}`}
+                    className="text-warning-foreground block max-w-56 text-xs"
+                    title={limitNotes[a.id]}
+                  >
+                    Limit changed: {limitNotes[a.id]}
+                  </span>
+                )}
               </TableCell>
               <TableCell className="text-right tabular-nums">
                 {formatNumber(a.raisedValue)} / {formatNumber(a.peakValue)} {a.unit ?? ''}

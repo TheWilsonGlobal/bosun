@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AlertTriangle, BookOpen, Database, LogIn, RefreshCw, Search } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -83,7 +83,10 @@ export function KnowledgeLine({
             onClick={() => reindex.mutate()}
           >
             <RefreshCw
-              className={cn('size-3.5', reindex.isPending && 'animate-spin')}
+              className={cn(
+                'size-3.5',
+                reindex.isPending && 'animate-spin motion-reduce:animate-none',
+              )}
               aria-hidden
             />
             {reindex.isPending ? 'Reindexing...' : status.indexed ? 'Reindex' : 'Index documents'}
@@ -165,6 +168,16 @@ function Retrieved({ response }: { response: AskResponse }) {
             >
               {r.usedForAnswer ? 'used' : 'not used'}
             </Badge>
+            {r.flagged && (
+              <Badge
+                variant="outline"
+                data-testid="flagged-source"
+                title="This passage contains text that reads like an instruction to the model. It was treated as data only."
+                className="border-warning text-warning-foreground gap-1 font-normal"
+              >
+                <AlertTriangle className="size-3" aria-hidden /> flagged as instruction-like
+              </Badge>
+            )}
             {!r.aboveThreshold && (
               <span className="text-muted-foreground">below relevance threshold</span>
             )}
@@ -204,6 +217,15 @@ export function AskResult({ response }: { response: AskResponse }) {
           {response.droppedCitations === 1 ? 'was' : 'were'} removed.
         </p>
       )}
+      {(response.unsupportedSentencesRemoved ?? 0) > 0 && (
+        <p role="note" data-testid="unsupported-removed" className="text-muted-foreground text-xs">
+          {response.unsupportedSentencesRemoved} sentence
+          {response.unsupportedSentencesRemoved === 1 ? '' : 's'} of the model's answer cited a
+          source that was not retrieved and{' '}
+          {response.unsupportedSentencesRemoved === 1 ? 'was' : 'were'} removed. Check the answer
+          against the sources.
+        </p>
+      )}
       <Retrieved response={response} />
       <p className="text-muted-foreground text-xs" data-testid="ask-usage">
         {response.model}
@@ -225,6 +247,7 @@ export function AskPanel({ projectId }: { projectId: number | null }) {
   const { session, openLogin, loading: sessionLoading } = useAuth();
   const [text, setText] = useState('');
   const [response, setResponse] = useState<AskResponse | null>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const knowledge = useQuery({
     queryKey: knowledgeKey(projectId ?? 0),
@@ -249,7 +272,10 @@ export function AskPanel({ projectId }: { projectId: number | null }) {
   const error = ask.error ? describeAskError(ask.error) : null;
 
   const submit = () => {
-    if (canAsk) ask.mutate(question);
+    if (!canAsk) return;
+    ask.mutate(question);
+    // The box stays readOnly (not disabled) while asking, and focus returns to it when the button was used.
+    inputRef.current?.focus();
   };
 
   return (
@@ -291,7 +317,10 @@ export function AskPanel({ projectId }: { projectId: number | null }) {
           value={text}
           maxLength={MAX_QUESTION_LENGTH}
           rows={3}
-          disabled={!session || ask.isPending}
+          ref={inputRef}
+          disabled={!session}
+          readOnly={ask.isPending}
+          aria-busy={ask.isPending}
           placeholder="e.g. what does the alarm philosophy say about delays?"
           onChange={(e) => setText(e.target.value)}
           onKeyDown={(e) => {
@@ -340,16 +369,25 @@ export function AskPanel({ projectId }: { projectId: number | null }) {
           >
             <p className="font-semibold">{error.title}</p>
             <p>{error.message}</p>
+            {error.detail && (
+              <details className="mt-1 text-xs">
+                <summary className="cursor-pointer">Details</summary>
+                <p className="text-muted-foreground mt-1 break-words">{error.detail}</p>
+              </details>
+            )}
           </div>
         )}
       </form>
 
       {ask.isPending && (
         <p className="text-muted-foreground flex items-center gap-1.5 text-sm" role="status">
-          <BookOpen className="size-4 animate-pulse" aria-hidden /> Searching the documents...
+          <BookOpen className="size-4 animate-pulse motion-reduce:animate-none" aria-hidden />{' '}
+          Searching the documents...
         </p>
       )}
-      {response && <AskResult response={response} />}
+      <div aria-live="polite" data-testid="ask-live">
+        {response && <AskResult response={response} />}
+      </div>
     </div>
   );
 }

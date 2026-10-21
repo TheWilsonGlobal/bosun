@@ -6,6 +6,7 @@ import { AssistantPanel } from '../AssistantPanel';
 import { ERROR_CODES } from '../messages';
 import {
   describeAskError,
+  formatWait,
   describeRefusal,
   describeReindexError,
   EXAMPLE_QUESTION,
@@ -13,7 +14,7 @@ import {
   type AskResponse,
   type KnowledgeStatus,
 } from './askLogic';
-import { ApiError } from '@/lib/api/client';
+import { ApiError, parseRetryAfter } from '@/lib/api/client';
 
 afterEach(() => vi.restoreAllMocks());
 
@@ -41,9 +42,10 @@ const answer = (over: Partial<AskResponse> = {}): AskResponse => ({
   citations: [cite],
   refusalReason: null,
   droppedCitations: 0,
+  unsupportedSentencesRemoved: 0,
   retrieved: [
-    { ...cite, score: 0.0321, cosine: 0.81, aboveThreshold: true, usedForAnswer: true },
-    { ...other, score: 0.0102, cosine: 0.52, aboveThreshold: false, usedForAnswer: false },
+    { ...cite, score: 0.0321, cosine: 0.81, aboveThreshold: true, usedForAnswer: true, flagged: false },
+    { ...other, score: 0.0102, cosine: 0.52, aboveThreshold: false, usedForAnswer: false, flagged: false },
   ],
   model: 'gemini-test',
   promptVersion: 'rag@1',
@@ -113,6 +115,19 @@ describe('pure helpers', () => {
       expect(e(502, code).title).toBeTruthy();
       expect(e(502, code).title).not.toMatch(/^Request failed/);
     }
+    expect(e(429, 'rate_limited').title).toBe('Too many questions');
+    expect(e(429, 'rate_limited').message).not.toMatch(/Wait \d/);
+    const denied = describeAskError(
+      new ApiError(502, 'llm_auth_failed', 'Your project has been denied access.'),
+    );
+    expect(denied.detail).toBe('Your project has been denied access.');
+    expect(e(502, 'llm_auth_failed').detail).toBeUndefined();
+    expect(parseRetryAfter('30')).toBe(30);
+    expect(parseRetryAfter('Wed, 21 Oct 2026 10:00:45 GMT', Date.parse('2026-10-21T10:00:00Z'))).toBe(45);
+    expect(parseRetryAfter('soon')).toBeNull();
+    expect(parseRetryAfter(null)).toBeNull();
+    expect(formatWait(1)).toBe('1 second');
+    expect(formatWait(120)).toBe('2 minutes');
     expect(describeReindexError(new ApiError(409, 'reindex_in_progress', '')).title).toBe(
       'Reindex already running',
     );
@@ -195,6 +210,103 @@ describe('Ask mode', () => {
     );
   });
 
+  it('notes removed unsupported sentences only when there are some', async () => {
+    let n = 0;
+    mount(
+      {},
+      {
+        'POST /api/projects/1/ask': () =>
+          json(answer({ unsupportedSentencesRemoved: ++n === 1 ? 0 : 2 })),
+      },
+    );
+    const user = await openAsk();
+    await user.type(screen.getByLabelText('Ask the project documents'), 'why?');
+    await user.click(screen.getByRole('button', { name: 'Ask' }));
+    await screen.findByTestId('ask-answer');
+    expect(screen.queryByTestId('unsupported-removed')).toBeNull();
+    await user.click(screen.getByRole('button', { name: 'Ask' }));
+    expect(await screen.findByTestId('unsupported-removed')).toHaveTextContent(
+      '2 sentences of the model',
+    );
+  });
+
+  it('marks a flagged source in the Sources list and only that one', async () => {
+    const base = answer();
+    mount(
+      {},
+      {
+        'POST /api/projects/1/ask': () =>
+          json(
+            answer({
+              retrieved: [{ ...base.retrieved[0], flagged: true }, base.retrieved[1]],
+            }),
+          ),
+      },
+    );
+    const user = await openAsk();
+    await user.type(screen.getByLabelText('Ask the project documents'), 'why?');
+    await user.click(screen.getByRole('button', { name: 'Ask' }));
+    const details = await screen.findByTestId('sources-retrieved');
+    const marks = within(details).getAllByTestId('flagged-source');
+    expect(marks).toHaveLength(1);
+    expect(marks[0]).toHaveTextContent('flagged as instruction-like');
+  });
+
+  it('429 rate_limited shows the wait from Retry-After', async () => {
+    mount(
+      {},
+      {
+        'POST /api/projects/1/ask': () => {
+          const body = { status: 429, code: 'rate_limited', detail: 'Too many', title: 'Too many' };
+          return new Response(JSON.stringify(body), {
+            status: 429,
+            headers: { 'content-type': 'application/problem+json', 'retry-after': '17' },
+          });
+        },
+      },
+    );
+    const user = await openAsk();
+    await user.type(screen.getByLabelText('Ask the project documents'), 'q');
+    await user.click(screen.getByRole('button', { name: 'Ask' }));
+    const box = await screen.findByTestId('ask-error');
+    expect(box).toHaveTextContent('Too many questions');
+    expect(box).toHaveTextContent('Wait 17 seconds');
+  });
+
+  it('keeps focus on the textarea while asking (readOnly + aria-busy, not disabled)', async () => {
+    let release: (r: Response) => void = () => {};
+    mount(
+      {},
+      {
+        'POST /api/projects/1/ask': () =>
+          new Promise<Response>((resolve) => {
+            release = resolve;
+          }),
+      },
+    );
+    const user = await openAsk();
+    const box = screen.getByLabelText('Ask the project documents');
+    await user.type(box, 'q');
+    await user.click(screen.getByRole('button', { name: 'Ask' }));
+    await screen.findByText('Searching the documents...');
+    expect(box).not.toBeDisabled();
+    expect(box).toHaveAttribute('readonly');
+    expect(box).toHaveAttribute('aria-busy', 'true');
+    expect(box).toHaveFocus();
+    release(json(answer()));
+    await screen.findByTestId('ask-answer');
+    expect(box).not.toHaveAttribute('readonly');
+  });
+
+  it('the answer region is a polite live region and spinners honour reduced motion', async () => {
+    mount({}, { 'POST /api/projects/1/ask': () => json(answer()) });
+    const user = await openAsk();
+    expect(screen.getByTestId('ask-live')).toHaveAttribute('aria-live', 'polite');
+    await user.type(screen.getByLabelText('Ask the project documents'), 'q');
+    await user.click(screen.getByRole('button', { name: 'Ask' }));
+    expect(within(screen.getByTestId('ask-live')).getByTestId('ask-answer')).toBeInTheDocument();
+  });
+
   it.each([
     ['below_threshold', 'Not in the project documents'],
     ['model_declined', 'The assistant declined to answer'],
@@ -275,6 +387,23 @@ describe('Ask mode', () => {
     await waitFor(() =>
       expect(screen.getByTestId('ask-error')).toHaveTextContent('Model is rate limited'),
     );
+  });
+
+  it('shows the server detail under Details for a provider auth failure', async () => {
+    mount(
+      {},
+      {
+        'POST /api/projects/1/ask': () =>
+          problem(502, 'llm_auth_failed', 'Your project has been denied access.'),
+      },
+    );
+    const user = await openAsk();
+    await user.type(screen.getByLabelText('Ask the project documents'), 'q');
+    await user.click(screen.getByRole('button', { name: 'Ask' }));
+    const box = await screen.findByTestId('ask-error');
+    expect(box).toHaveTextContent('Model rejected the API key');
+    expect(within(box).getByText('Details')).toBeInTheDocument();
+    expect(box).toHaveTextContent('Your project has been denied access.');
   });
 
   it('limits the question to 500 characters', async () => {

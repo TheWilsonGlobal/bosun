@@ -42,6 +42,15 @@ function isJson(res: Response): boolean {
   return (res.headers.get('content-type') ?? '').includes('json');
 }
 
+/** Retry-After as whole seconds: either delta-seconds or an HTTP date. Anything else is null (never guessed). */
+export function parseRetryAfter(value: string | null, now: number = Date.now()): number | null {
+  const v = value?.trim();
+  if (!v) return null;
+  if (/^\d+$/.test(v)) return Number(v);
+  const at = Date.parse(v);
+  return Number.isNaN(at) ? null : Math.max(0, Math.ceil((at - now) / 1000));
+}
+
 async function toError(res: Response): Promise<ApiError> {
   // A proxy-generated 502/503/504 is not JSON; a real backend problem+json 503 is not "offline".
   if (OFFLINE_STATUSES.has(res.status) && !isJson(res)) {
@@ -60,6 +69,8 @@ async function toError(res: Response): Promise<ApiError> {
   delete rest.type;
   delete rest.status;
   delete rest.traceId;
+  const retryAfterS = parseRetryAfter(res.headers.get('retry-after'));
+  if (retryAfterS !== null) rest.retryAfterS = retryAfterS;
   const resolvedCode =
     typeof code === 'string' ? code : res.status === 401 ? 'unauthorized' : `http_${res.status}`;
   const resolvedDetail =

@@ -1,5 +1,6 @@
 import { memo } from 'react';
 import { cn } from '@/lib/utils';
+import { isLinkUp } from './messages';
 import { useMonitoringSelector, type MonitoringStore } from './store';
 import type { MimicBinding, MimicTagInfo } from './types';
 import {
@@ -66,7 +67,7 @@ function Marker({ appearance, x, y }: { appearance: Appearance; x: number; y: nu
 function useWidgetState(store: MonitoringStore, tag: string | undefined, link: 'modbus' | 'nmea') {
   const value = useMonitoringSelector(store, (s) => (tag ? s.values[tag] : undefined));
   const alarm = useMonitoringSelector(store, (s) => (tag ? s.alarmByTag[tag] : undefined));
-  const linkUp = useMonitoringSelector(store, (s) => s.connections[link]?.state === 'connected');
+  const linkUp = useMonitoringSelector(store, (s) => isLinkUp(s.connections[link]));
   return { value, alarm, linkUp, appearance: appearanceOf(value, alarm, linkUp) };
 }
 
@@ -267,7 +268,7 @@ function TankWidgetBase({ store, binding, info }: WidgetProps) {
 
 function NavigationWidgetBase({ store, binding }: WidgetProps) {
   const nav = useMonitoringSelector(store, (s) => s.navigation);
-  const linkUp = useMonitoringSelector(store, (s) => s.connections.nmea?.state === 'connected');
+  const linkUp = useMonitoringSelector(store, (s) => isLinkUp(s.connections.nmea));
   const t = navigationText(nav, linkUp);
   const appearance = appearanceOf(undefined, undefined, linkUp);
   const cell = (label: string, text: string, x: number) => (

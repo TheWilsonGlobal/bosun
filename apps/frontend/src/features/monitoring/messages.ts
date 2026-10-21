@@ -90,9 +90,13 @@ export type SimulatorState =
   /** Neither the Modbus nor the NMEA link is up: the simulator (or real source) is not running. */
   | 'down'
   /** One link is up, the other is not. */
-  | 'partial';
+  | 'partial'
+  /** Both links are up but one refuses a register range (state "degraded"). */
+  | 'degraded';
 
-const up = (c?: Connection) => c?.state === 'connected';
+// A degraded link is up (the TCP/serial link works) but incomplete; it is not a dead source.
+export const isLinkUp = (c?: Connection) => c?.state === 'connected' || c?.state === 'degraded';
+const up = isLinkUp;
 const trying = (c?: Connection) => c?.state === 'connecting';
 
 export function simulatorState(
@@ -102,7 +106,8 @@ export function simulatorState(
   const { modbus, nmea } = connections;
   if (!modbus && !nmea) return 'unknown';
   if (status && !status.enabled) return 'backend_disabled';
-  if (up(modbus) && up(nmea)) return 'ok';
+  if (up(modbus) && up(nmea))
+    return modbus?.state === 'degraded' || nmea?.state === 'degraded' ? 'degraded' : 'ok';
   if (up(modbus) || up(nmea)) return 'partial';
   // Neither is up. A first connection attempt is not yet "down".
   if (trying(modbus) && !modbus?.lastError && trying(nmea) && !nmea?.lastError) return 'unknown';
@@ -144,6 +149,18 @@ export function describeSimulatorState(
             message:
               'Process values still update. Position, speed and heading are not available until the NMEA source returns.',
           };
+    }
+    case 'degraded': {
+      const d = (['modbus', 'nmea'] as const).filter((n) => connections[n]?.state === 'degraded');
+      const detail = d
+        .map(
+          (n) => `${LINK_LABELS[n]}: ${connections[n]?.lastError ?? 'a register range is refused'}`,
+        )
+        .join('; ');
+      return {
+        title: 'Source link degraded',
+        message: `The link is up but not every value can be read, so some values stay grey. ${detail}`,
+      };
     }
     default:
       return null;

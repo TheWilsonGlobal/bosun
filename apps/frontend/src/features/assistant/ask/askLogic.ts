@@ -20,6 +20,8 @@ export interface AskRetrieved extends AskCitation {
   cosine: number | null;
   aboveThreshold: boolean;
   usedForAnswer: boolean;
+  /** The passage reads like an instruction to the model (possible prompt injection); it is data, never obeyed. */
+  flagged: boolean;
 }
 
 export interface AskUsage {
@@ -38,11 +40,18 @@ export interface AskResponse {
   citations: AskCitation[];
   refusalReason: RefusalReason | null;
   droppedCitations: number;
+  /** Sentences removed because they carried a citation marker that matched no retrieved passage. */
+  unsupportedSentencesRemoved: number;
   retrieved: AskRetrieved[];
   model: string | null;
   promptVersion: string | null;
   usage: AskUsage | null;
   latencyMs: number;
+}
+
+/** A chunk from the knowledge search endpoint; `flagged` marks instruction-like text. */
+export interface KnowledgeChunk extends AskCitation {
+  flagged: boolean;
 }
 
 export interface KnowledgeSource {
@@ -154,6 +163,8 @@ export interface AskErrorMessage {
   message: string;
   needsLogin: boolean;
   notIndexed: boolean;
+  /** The server's own text, shown under "Details" when a friendly message already explains the code. */
+  detail?: string;
 }
 
 /** Every error POST /ask can return, each with its own wording. */
@@ -186,10 +197,37 @@ export function describeAskError(error: unknown): AskErrorMessage {
         title: 'Project not found',
         message: error.detail || 'Select another project.',
       };
+    if (error.code === 'rate_limited' || error.status === 429) {
+      const wait = error.extensions.retryAfterS;
+      const seconds = typeof wait === 'number' ? wait : null;
+      if (error.code === 'rate_limited')
+        return {
+          ...base,
+          title: 'Too many questions',
+          message:
+            seconds === null
+              ? 'You asked too many questions in a short time (limit: 20 per minute). Wait a moment, then ask again.'
+              : `You asked too many questions in a short time (limit: 20 per minute). Wait ${formatWait(seconds)}, then ask again.`,
+        };
+    }
     const llm = ERROR_MESSAGES[error.code];
-    if (llm) return { ...base, title: llm.title, message: llm.message };
+    if (llm)
+      return {
+        ...base,
+        title: llm.title,
+        message: llm.message,
+        ...(error.detail.trim() ? { detail: error.detail.trim() } : {}),
+      };
   }
   return { ...base, ...describeError(error) };
+}
+
+/** "5 seconds", "1 second", "2 minutes" (rounded up). */
+export function formatWait(seconds: number): string {
+  const s = Math.max(1, Math.ceil(seconds));
+  if (s < 90) return `${s} second${s === 1 ? '' : 's'}`;
+  const m = Math.ceil(s / 60);
+  return `${m} minutes`;
 }
 
 export function describeReindexError(error: unknown): AskErrorMessage {

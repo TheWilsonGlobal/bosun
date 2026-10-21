@@ -113,9 +113,9 @@ const snapshot = (over: Partial<Snapshot> = {}): Snapshot => ({
   ...over,
 });
 
-const event = (kind: AlarmEventKind, a: Alarm) => ({
+const event = (kind: AlarmEventKind, a: Alarm, note?: string) => ({
   type: 'alarmEvent' as const,
-  notification: { kind, alarm: a, at: T0, value: null },
+  notification: { kind, alarm: a, at: T0, value: null, ...(note ? { note } : {}) },
 });
 
 const run = (actions: Parameters<typeof monitoringReducer>[1][], from = initialMonitoringState) =>
@@ -896,15 +896,15 @@ describe('useMonitoring transports', () => {
 
 // ------------------------------------------------------------------ the page
 
-describe('MonitoringPage', () => {
-  const pageRoutes = (st: MonitoringStatus, over: Parameters<typeof mockFetch>[0] = {}) => ({
-    'GET /api/auth/me': () => json(makeSession('alice', ['admin'])),
-    'GET /api/projects': () => json([project]),
-    'GET /api/projects/1/mimic': () => json(mimicFixture),
-    ...restRoutes({ 'GET /api/monitoring/status': () => json(st) }),
-    ...over,
-  });
+const pageRoutes = (st: MonitoringStatus, over: Parameters<typeof mockFetch>[0] = {}) => ({
+  'GET /api/auth/me': () => json(makeSession('alice', ['admin'])),
+  'GET /api/projects': () => json([project]),
+  'GET /api/projects/1/mimic': () => json(mimicFixture),
+  ...restRoutes({ 'GET /api/monitoring/status': () => json(st) }),
+  ...over,
+});
 
+describe('MonitoringPage', () => {
   it('renders the mimic, live values, connection badges and the alarm list from the hub', async () => {
     mockFetch(pageRoutes(status()));
     const hub = fakeHub(
@@ -985,5 +985,134 @@ describe('MonitoringPage', () => {
       <MonitoringPage createHub={createHub} pollMs={20} retryMs={60_000} />,
     );
     expect(await screen.findByText(/backend is not reachable/i)).toBeInTheDocument();
+  });
+});
+
+// ------------------------------------------------------------------ backend contract additions
+
+describe('degraded link state', () => {
+  const degraded = conn('modbus', 'degraded', {
+    lastError: 'register range 40100-40119 refused (illegal data address)',
+  });
+
+  it('is accepted from REST status, the hub Connection event and the Snapshot', () => {
+    const fromStatus = monitoringReducer(initialMonitoringState, {
+      type: 'status',
+      status: status({ modbus: degraded }),
+    });
+    expect(fromStatus.connections.modbus?.state).toBe('degraded');
+    const fromSnapshot = monitoringReducer(initialMonitoringState, {
+      type: 'snapshot',
+      snapshot: snapshot({ status: status({ modbus: degraded }) }),
+    });
+    expect(fromSnapshot.connections.modbus?.state).toBe('degraded');
+    const fromEvent = monitoringReducer(fromSnapshot, {
+      type: 'connection',
+      connection: conn('modbus', 'connected'),
+    });
+    expect(fromEvent.connections.modbus?.state).toBe('connected');
+    const back = monitoringReducer(fromEvent, { type: 'connection', connection: degraded });
+    expect(back.connections.modbus).toEqual(degraded);
+  });
+
+  it('gets its own badge and shows the lastError that says which range', () => {
+    const store = seeded([{ type: 'connection', connection: degraded }]);
+    render(<ConnectionBadges store={store} />);
+    const badge = screen.getByTestId('link-modbus');
+    expect(badge).toHaveAttribute('data-state', 'degraded');
+    expect(badge).toHaveTextContent('Degraded');
+    expect(badge).not.toHaveTextContent('Disconnected');
+    expect(screen.getByTestId('link-modbus-error')).toHaveTextContent('register range 40100-40119');
+  });
+
+  it('is a distinct simulator state with the error in the message, not "down" and not "ok"', () => {
+    const c = { modbus: degraded, nmea: conn('nmea', 'connected') };
+    expect(simulatorState(status(), c)).toBe('degraded');
+    const m = describeSimulatorState('degraded', c);
+    expect(m?.title).toBe('Source link degraded');
+    expect(m?.message).toContain('register range 40100-40119');
+    expect(simulatorState(status(), { ...c, nmea: conn('nmea', 'disconnected') })).toBe('partial');
+  });
+
+  it('keeps widgets live (values carry their own quality) on a degraded link', () => {
+    const store = seeded([
+      { type: 'connection', connection: degraded },
+      { type: 'values', batch: { timestamp: T0, values: [value('ME-EXH-TT01', 412.3)] } },
+    ]);
+    const b = mimicFixture.bindings[0];
+    const info = mimicFixture.tags[b.tag!];
+    store.dispatch({
+      type: 'values',
+      batch: { timestamp: T0, values: [value(b.tag!, 100)] },
+    });
+    render(svgWrap(<ValueWidget store={store} binding={b} info={info} />));
+    expect(screen.getByTestId(`widget-${b.id}`.toLowerCase().replace(/[^a-z0-9-]/g, '-'))).toBeDefined();
+  });
+});
+
+describe('limit_changed alarm event', () => {
+  const note = 'limit 95 -> 100, delay 10 -> 5 s, hysteresis 2 -> 2';
+
+  it('updates the alarm row to the new numbers and records the note', () => {
+    const s = run([
+      event('raised', alarm({ id: 1 })),
+      event('limit_changed', alarm({ id: 1, limitValue: 100, delayS: 5 }), note),
+    ]);
+    expect(s.alarms[1]).toMatchObject({ limitValue: 100, delayS: 5, state: 'unacknowledged' });
+    expect(s.alarmByTag['ME-EXH-TT01'].limitValue).toBe(100);
+    expect(s.limitNotes[1]).toBe(note);
+  });
+
+  it('keeps an acknowledged state and falls back to a derived note when none is sent', () => {
+    const s = run([
+      event('raised', alarm({ id: 1 })),
+      event('acknowledged', alarm({ id: 1, state: 'acknowledged' })),
+      event('limit_changed', alarm({ id: 1, state: 'acknowledged', limitValue: 99, delayS: 3 })),
+    ]);
+    expect(s.alarms[1].state).toBe('acknowledged');
+    expect(s.limitNotes[1]).toBe('limit now 99, delay 3 s');
+  });
+
+  it('other events do not create notes, and notes go with their alarm', () => {
+    const s = run([event('raised', alarm({ id: 1 })), event('acknowledged', alarm({ id: 1 }))]);
+    expect(s.limitNotes).toEqual({});
+    const withNote = run([
+      event('raised', alarm({ id: 1 })),
+      event('limit_changed', alarm({ id: 1, limitValue: 100 }), note),
+    ]);
+    const gone = monitoringReducer(withNote, { type: 'openAlarms', alarms: [] });
+    expect(gone.limitNotes[1]).toBeUndefined(); // the note is dropped together with its alarm
+  });
+
+  it('shows the new limit and the note in the alarm list', async () => {
+    const store = seeded([
+      { type: 'snapshot', snapshot: snapshot({ alarms: [alarm({ id: 1 })] }) },
+      event('limit_changed', alarm({ id: 1, limitValue: 100, delayS: 5 }), note),
+    ]);
+    mockFetch({
+      'GET /api/auth/me': () => problem(401, 'unauthorized', 'no'),
+      'GET /api/projects': () => json([project]),
+    });
+    renderAt('/', '/', <AlarmList store={store} />);
+    const row = await screen.findByTestId('alarm-row-1');
+    expect(row).toHaveTextContent('100');
+    expect(row).toHaveTextContent('delay 5 s');
+    expect(within(row).getByTestId('limit-note-1')).toHaveTextContent(`Limit changed: ${note}`);
+  });
+});
+
+describe('mimic 422 mimic_invalid', () => {
+  it('shows its own message with the server detail', async () => {
+    mockFetch(
+      pageRoutes(status(), {
+        'GET /api/projects/1/mimic': () =>
+          problem(422, 'mimic_invalid', 'binding tank-1 references an unknown shape'),
+      }),
+    );
+    const hub = fakeHub(snapshot());
+    renderAt('/monitoring', '/monitoring', <MonitoringPage createHub={hub.createHub} />);
+    expect(await screen.findByText('The mimic layout is invalid')).toBeInTheDocument();
+    expect(screen.getByText(/binding tank-1 references an unknown shape/)).toBeInTheDocument();
+    expect(screen.queryByText('No mimic layout')).toBeNull();
   });
 });
