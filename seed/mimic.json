@@ -324,6 +324,33 @@
       "label": "Fuel supply"
     },
     {
+      "id": "fo-to-engine",
+      "type": "line",
+      "x1": 680,
+      "y1": 430,
+      "x2": 740,
+      "y2": 430,
+      "role": "pipe"
+    },
+    {
+      "id": "fo-engine-inlet",
+      "type": "line",
+      "x1": 680,
+      "y1": 410,
+      "x2": 680,
+      "y2": 430,
+      "role": "pipe"
+    },
+    {
+      "id": "fo-outlet",
+      "type": "line",
+      "x1": 740,
+      "y1": 430,
+      "x2": 740,
+      "y2": 470,
+      "role": "pipe"
+    },
+    {
       "id": "lo-pipe",
       "type": "line",
       "x1": 205,
@@ -351,12 +378,12 @@
       "role": "pipe"
     },
     {
-      "id": "tank-feed",
+      "id": "tank-to-fo",
       "type": "line",
-      "x1": 1095,
+      "x1": 990,
       "y1": 430,
-      "x2": 1095,
-      "y2": 290,
+      "x2": 1135,
+      "y2": 430,
       "role": "pipe"
     },
     {
