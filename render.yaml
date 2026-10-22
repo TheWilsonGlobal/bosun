@@ -25,17 +25,21 @@ services:
       - key: DB_CONNECTION
         value: "Data Source=/app/data/db/bosun.db"
 
-      # ---- LLM + embeddings (supply real values in Render dashboard) ----
+      # ---- LLM + embeddings (defaults configured; real API keys supplied via dashboard) ----
+      - key: LLM_PROVIDER
+        value: gemini
+      - key: LLM_MODEL
+        value: gemini-3.5-flash-lite
+      - key: EMBEDDING_PROVIDER
+        value: gemini
+      - key: EMBEDDING_MODEL
+        value: gemini-embedding-2
+      - key: EMBEDDING_DIMS
+        value: "768"
       - key: GEMINI_LLM_API_KEY
         sync: false          # Render prompts for the value; never stored in git
       - key: GEMINI_EMBEDDING_API_KEY
         sync: false
-
-      # ---- Optional model overrides (defaults work without these) ----
-      # - key: LLM_MODEL
-      #   value: gemini-2.5-flash
-      # - key: EMBEDDING_MODEL
-      #   value: gemini-embedding-2
 
       # ---- Auth ----
       - key: ADMIN_USERNAME

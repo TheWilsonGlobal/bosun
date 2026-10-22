@@ -82,6 +82,11 @@ RUN mkdir -p /app/data/db /app/data/documents /app/data/logs
 ENV ASPNETCORE_URLS=http://+:8080
 ENV ASPNETCORE_ENVIRONMENT=Production
 ENV ALLOW_DEFAULT_CREDENTIALS=true
+ENV LLM_PROVIDER=gemini
+ENV LLM_MODEL=gemini-3.5-flash-lite
+ENV EMBEDDING_PROVIDER=gemini
+ENV EMBEDDING_MODEL=gemini-embedding-2
+ENV EMBEDDING_DIMS=768
 
 EXPOSE 8080
 

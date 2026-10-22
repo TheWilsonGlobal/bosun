@@ -125,12 +125,12 @@ public static class BosunEnvironment
             // LLM + embeddings (plan s10 overridden by TODO.md): provider/model names come from the env, never from code.
             // Keys are mapped but never printed or logged anywhere.
             ["Llm:Provider"] = Get("LLM_PROVIDER") ?? "gemini",
-            ["Llm:Model"] = Get("LLM_MODEL"),
-            ["Llm:ApiKey"] = Get("GEMINI_LLM_API_KEY"),
+            ["Llm:Model"] = Get("LLM_MODEL") ?? (file.Count == 0 ? "gemini-3.5-flash-lite" : null),
+            ["Llm:ApiKey"] = Get("GEMINI_LLM_API_KEY") ?? (file.Count == 0 ? (Get("GEMINI_EMBEDDING_API_KEY") ?? Get("GEMINI_EMBEDDING_APT_KEY")) : null),
             ["Embedding:Provider"] = Get("EMBEDDING_PROVIDER") ?? "gemini",
-            ["Embedding:Model"] = Get("EMBEDDING_MODEL"),
+            ["Embedding:Model"] = Get("EMBEDDING_MODEL") ?? (file.Count == 0 ? "gemini-embedding-2" : null),
             ["Embedding:Dimensions"] = Get("EMBEDDING_DIMS") ?? "768",
-            ["Embedding:ApiKey"] = Get("GEMINI_EMBEDDING_API_KEY") ?? Get("GEMINI_EMBEDDING_APT_KEY"),
+            ["Embedding:ApiKey"] = Get("GEMINI_EMBEDDING_API_KEY") ?? Get("GEMINI_EMBEDDING_APT_KEY") ?? (file.Count == 0 ? Get("GEMINI_LLM_API_KEY") : null),
 
             // Optional second user holding the "approver" role (SIL/ESD second approval). Development gets a documented default.
             ["Auth:ApproverUsername"] = Get("APPROVER_USERNAME"),
