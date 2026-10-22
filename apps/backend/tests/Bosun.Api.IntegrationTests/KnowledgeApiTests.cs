@@ -115,6 +115,12 @@ public class KnowledgeApiTests
         status.Documents.Should().Be(3);
         status.Sources.Select(s => s.Source).Should().Contain("alarm-philosophy");
 
+        var chunks = await (await client.GetAsync("/api/projects/1/knowledge/chunks")).ReadAsync<List<JsonElement>>();
+        chunks.Should().HaveCount(15);
+        chunks[0].GetProperty("source").GetString().Should().NotBeNullOrEmpty();
+        chunks[0].GetProperty("section").GetString().Should().NotBeNullOrEmpty();
+        chunks[0].GetProperty("text").GetString().Should().NotBeNullOrEmpty();
+
         var search = await (await client.GetAsync("/api/projects/1/knowledge/search?q=" + Uri.EscapeDataString("thermocouple lag exhaust gas temperature delay") + "&k=3")).ReadAsync<RetrievalResult>();
         search.Chunks.Should().HaveCount(3);
         search.Chunks[0].Section.Should().Be("Exhaust gas temperature delay");

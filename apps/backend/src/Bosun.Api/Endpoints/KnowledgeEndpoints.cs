@@ -1,6 +1,7 @@
 using Bosun.Agent;
 using Bosun.Application;
 using Bosun.Application.Rag;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bosun.Api;
 
@@ -24,6 +25,29 @@ public static class KnowledgeEndpoints
         reads.MapGet("/projects/{projectId:int}/knowledge", async (int projectId, KnowledgeIngestService ingest, CancellationToken ct) =>
                 TypedResults.Ok(await ingest.StatusAsync(projectId, ct)))
             .WithSummary("Index status: { indexed, documents, chunks, embeddedChunks, documentsOnDisk, embeddingModel, dimensions, lastIndexedAt, sources[{source, chunks, pages}] }. indexed=false means 'not indexed' (nothing to search yet).");
+
+        reads.MapGet("/projects/{projectId:int}/knowledge/chunks", async (int projectId, IBosunDbContext db, CancellationToken ct) =>
+        {
+            var chunks = await db.KnowledgeChunks.AsNoTracking()
+                .Where(c => c.ProjectId == projectId)
+                .OrderBy(c => c.Source).ThenBy(c => c.Ordinal)
+                .Select(c => new
+                {
+                    c.Id,
+                    c.Source,
+                    c.Section,
+                    c.Page,
+                    c.Ordinal,
+                    c.Text,
+                    c.IsExclusion,
+                    HasEmbedding = c.Embedding != null,
+                    c.EmbeddingModel,
+                    c.IndexedAt
+                })
+                .ToListAsync(ct);
+            return TypedResults.Ok(chunks);
+        })
+        .WithSummary("List all indexed knowledge chunks for a project with their text and metadata.");
 
         var writes = app.MapGroup("/api").WithTags("Knowledge").RequireAuthorization();
 

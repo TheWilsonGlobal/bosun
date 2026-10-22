@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { FileSearch, RefreshCw, Trash2 } from 'lucide-react';
+import { BookOpen, FileSearch, RefreshCw, Trash2 } from 'lucide-react';
 import { Status } from '@/components/Status';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { KnowledgeViewer } from '@/features/knowledge/KnowledgeViewer';
 import {
   Dialog,
   DialogContent,
@@ -33,6 +35,7 @@ export function DocumentsPage({ pollMs = 3000 }: { pollMs?: number }) {
   const navigate = useNavigate();
   const [uploadError, setUploadError] = useState<ErrorMessage | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<DocumentItem | null>(null);
+  const [activeTab, setActiveTab] = useState<'uploads' | 'knowledge'>('uploads');
   const projectId = project?.id;
 
   const list = useQuery({
@@ -98,43 +101,80 @@ export function DocumentsPage({ pollMs = 3000 }: { pollMs?: number }) {
 
   return (
     <div className="flex h-full flex-col gap-4 overflow-auto p-4">
-      <div className="flex items-center gap-2">
-        <FileSearch className="size-5" aria-hidden />
-        <h1 className="text-lg font-semibold">Documents</h1>
-        <span className="text-muted-foreground text-sm">
-          Customer requirement PDFs of {project.name}
-        </span>
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b pb-3">
+        <div className="flex items-center gap-2">
+          <FileSearch className="size-5 text-primary" aria-hidden />
+          <h1 className="text-lg font-semibold">Documents</h1>
+          <span className="text-muted-foreground text-sm">
+            {activeTab === 'uploads'
+              ? `Customer requirement PDFs of ${project.name}`
+              : `System reference standards & knowledge chunks of ${project.name}`}
+          </span>
+        </div>
+
+        <div className="flex items-center gap-1 bg-muted p-1 rounded-lg">
+          <Button
+            type="button"
+            size="sm"
+            variant={activeTab === 'uploads' ? 'default' : 'ghost'}
+            className="h-7 text-xs px-3"
+            onClick={() => setActiveTab('uploads')}
+          >
+            Customer Uploads (PDF)
+            {list.data && list.data.length > 0 && (
+              <Badge variant="secondary" className="ml-1.5 px-1.5 py-0 text-[10px]">
+                {list.data.length}
+              </Badge>
+            )}
+          </Button>
+          <Button
+            type="button"
+            size="sm"
+            variant={activeTab === 'knowledge' ? 'default' : 'ghost'}
+            className="h-7 text-xs px-3 gap-1.5"
+            onClick={() => setActiveTab('knowledge')}
+          >
+            <BookOpen className="size-3.5" />
+            Knowledge Base (3 Docs / 15 Chunks)
+          </Button>
+        </div>
       </div>
 
-      <UploadZone
-        busy={upload.isPending}
-        error={uploadError}
-        onFile={(file) => upload.mutate(file)}
-      />
-
-      <section aria-label="Uploaded documents" className="grid gap-2">
-        <h2 className="text-sm font-semibold">Uploaded documents</h2>
-        {list.isPending ? (
-          <p role="status" className="text-muted-foreground text-sm">
-            Loading documents...
-          </p>
-        ) : list.isError ? (
-          <p role="alert" className="text-destructive text-sm">
-            {describeError(list.error).message}
-          </p>
-        ) : list.data.length === 0 ? (
-          <p className="text-muted-foreground text-sm">
-            No documents yet. Upload a PDF above to extract tags from it.
-          </p>
-        ) : (
-          <DocumentTable
-            docs={list.data}
-            rerunning={rerun.isPending ? rerun.variables : null}
-            onRerun={(d) => rerun.mutate(d.id)}
-            onDelete={setConfirmDelete}
+      {activeTab === 'uploads' ? (
+        <>
+          <UploadZone
+            busy={upload.isPending}
+            error={uploadError}
+            onFile={(file) => upload.mutate(file)}
           />
-        )}
-      </section>
+
+          <section aria-label="Uploaded documents" className="grid gap-2">
+            <h2 className="text-sm font-semibold">Uploaded documents</h2>
+            {list.isPending ? (
+              <p role="status" className="text-muted-foreground text-sm">
+                Loading documents...
+              </p>
+            ) : list.isError ? (
+              <p role="alert" className="text-destructive text-sm">
+                {describeError(list.error).message}
+              </p>
+            ) : list.data.length === 0 ? (
+              <p className="text-muted-foreground text-sm">
+                No documents yet. Upload a PDF above to extract tags from it.
+              </p>
+            ) : (
+              <DocumentTable
+                docs={list.data}
+                rerunning={rerun.isPending ? rerun.variables : null}
+                onRerun={(d) => rerun.mutate(d.id)}
+                onDelete={setConfirmDelete}
+              />
+            )}
+          </section>
+        </>
+      ) : (
+        <KnowledgeViewer projectId={projectId!} />
+      )}
 
       <Dialog open={confirmDelete !== null} onOpenChange={(o) => !o && setConfirmDelete(null)}>
         <DialogContent>

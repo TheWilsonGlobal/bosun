@@ -72,6 +72,19 @@ export interface KnowledgeStatus {
   sources: KnowledgeSource[];
 }
 
+export interface KnowledgeChunkItem {
+  id: number;
+  source: string;
+  section: string;
+  page: number;
+  ordinal: number;
+  text: string;
+  isExclusion: boolean;
+  hasEmbedding: boolean;
+  embeddingModel: string | null;
+  indexedAt: string;
+}
+
 export interface ReindexResult {
   documents: number;
   chunks: number;

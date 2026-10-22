@@ -7,6 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useAuth } from '@/features/auth/session';
 import { describeError } from '@/lib/api/errors';
 import { cn } from '@/lib/utils';
+import { KnowledgeDialog } from '@/features/knowledge/KnowledgeDialog';
 import { askDocs, fetchKnowledge, reindexKnowledge } from './api';
 import {
   citationLabel,
@@ -61,12 +62,28 @@ export function KnowledgeLine({
       <div className="flex flex-wrap items-center gap-2">
         <Database className="text-muted-foreground size-3.5" aria-hidden />
         {status.indexed ? (
-          <span>
-            Indexed: {status.chunks} chunks from {status.documents} document
-            {status.documents === 1 ? '' : 's'}
-            {status.embeddingModel && `, ${status.embeddingModel}`}
-            {status.dimensions ? ` (${status.dimensions} dims)` : ''}
-          </span>
+          <div className="inline-flex flex-wrap items-center gap-1.5">
+            <span>
+              Indexed: {status.chunks} chunks from {status.documents} document
+              {status.documents === 1 ? '' : 's'}
+              {status.embeddingModel && `, ${status.embeddingModel}`}
+              {status.dimensions ? ` (${status.dimensions} dims)` : ''}
+            </span>
+            <KnowledgeDialog
+              projectId={projectId}
+              status={status}
+              trigger={
+                <Button
+                  type="button"
+                  variant="link"
+                  size="sm"
+                  className="h-auto p-0 text-xs text-primary font-medium underline underline-offset-2"
+                >
+                  View 15 chunks
+                </Button>
+              }
+            />
+          </div>
         ) : (
           <span className="font-medium">
             Not indexed
