@@ -130,7 +130,7 @@ public static class BosunEnvironment
             ["Embedding:Provider"] = Get("EMBEDDING_PROVIDER") ?? "gemini",
             ["Embedding:Model"] = Get("EMBEDDING_MODEL"),
             ["Embedding:Dimensions"] = Get("EMBEDDING_DIMS") ?? "768",
-            ["Embedding:ApiKey"] = Get("GEMINI_EMBEDDING_API_KEY"),
+            ["Embedding:ApiKey"] = Get("GEMINI_EMBEDDING_API_KEY") ?? Get("GEMINI_EMBEDDING_APT_KEY"),
 
             // Optional second user holding the "approver" role (SIL/ESD second approval). Development gets a documented default.
             ["Auth:ApproverUsername"] = Get("APPROVER_USERNAME"),

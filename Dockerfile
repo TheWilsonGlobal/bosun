@@ -73,6 +73,7 @@ RUN mkdir -p /app/data/db
 # loopback-only UseUrls("http://127.0.0.1:...") override and binds to all interfaces.
 ENV ASPNETCORE_URLS=http://+:8080
 ENV ASPNETCORE_ENVIRONMENT=Production
+ENV ALLOW_DEFAULT_CREDENTIALS=true
 
 EXPOSE 8080
 

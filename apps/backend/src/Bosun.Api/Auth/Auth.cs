@@ -31,15 +31,22 @@ public sealed class UserStore
     public UserStore(IConfiguration configuration, IHostEnvironment environment)
     {
         // An account without a password does not exist: an empty password is never accepted, in any environment.
-        var admin = configuration["Auth:AdminUsername"] ?? "admin";
-        var adminPassword = configuration["Auth:AdminPassword"];
+        // Read raw env vars directly alongside the config snapshot so container runtimes (e.g. Render) that
+        // inject env vars into the process environment are always honoured.
+        var admin = configuration["Auth:AdminUsername"]
+            ?? Environment.GetEnvironmentVariable("ADMIN_USERNAME")
+            ?? "admin";
+        var adminPassword = Environment.GetEnvironmentVariable("ADMIN_PASSWORD")
+            is { Length: > 0 } rawPwd ? rawPwd : configuration["Auth:AdminPassword"];
         if (!string.IsNullOrEmpty(adminPassword))
         {
             users.Add(new AuthUser(admin, adminPassword, ["admin"]));
         }
 
-        var approver = configuration["Auth:ApproverUsername"];
-        var approverPassword = configuration["Auth:ApproverPassword"];
+        var approver = configuration["Auth:ApproverUsername"]
+            ?? Environment.GetEnvironmentVariable("APPROVER_USERNAME");
+        var approverPassword = Environment.GetEnvironmentVariable("APPROVER_PASSWORD")
+            is { Length: > 0 } rawAppPwd ? rawAppPwd : configuration["Auth:ApproverPassword"];
         if (!string.IsNullOrEmpty(approver) && !string.IsNullOrEmpty(approverPassword))
         {
             users.Add(new AuthUser(approver, approverPassword, [UserContext.ApproverRole]));
@@ -175,8 +182,19 @@ public static class AuthSetup
             return;
         }
 
+        if (string.Equals(Environment.GetEnvironmentVariable("ALLOW_DEFAULT_CREDENTIALS"), "true", StringComparison.OrdinalIgnoreCase))
+        {
+            return;
+        }
+
+        // BosunEnvironment maps ADMIN_PASSWORD → Auth:AdminPassword at startup via a MemoryConfigurationSource
+        // snapshot. Read the raw env var directly as well so container runtimes (e.g. Render) that inject
+        // environment variables into the process environment are always honoured, regardless of snapshot timing.
         var password = configuration["Auth:AdminPassword"];
-        if (string.IsNullOrWhiteSpace(password) || password == BosunEnvironment.DefaultAdminPassword)
+        var rawEnvPassword = Environment.GetEnvironmentVariable("ADMIN_PASSWORD");
+        var effectivePassword = string.IsNullOrWhiteSpace(rawEnvPassword) ? password : rawEnvPassword;
+
+        if (string.IsNullOrWhiteSpace(effectivePassword) || effectivePassword == BosunEnvironment.DefaultAdminPassword)
         {
             throw new InvalidOperationException(
                 $"Refusing to start in the '{environment.EnvironmentName}' environment with the default or an empty ADMIN_PASSWORD. Set ADMIN_PASSWORD to a real secret.");
