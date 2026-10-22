@@ -38,11 +38,17 @@ COPY apps/backend ./apps/backend
 COPY apps/simulator ./apps/simulator
 
 RUN dotnet restore apps/backend/src/Bosun.Api/Bosun.Api.csproj
+RUN dotnet restore apps/simulator/Bosun.Simulator.csproj
 
 RUN dotnet publish apps/backend/src/Bosun.Api/Bosun.Api.csproj \
     --no-restore \
     -c Release \
     -o /app/publish
+
+RUN dotnet publish apps/simulator/Bosun.Simulator.csproj \
+    --no-restore \
+    -c Release \
+    -o /app/publish/simulator
 
 # ============================================================
 # Stage 3 – Runtime image
@@ -75,6 +81,10 @@ COPY data/rag-embedding-cache.json ./seed/rag-embedding-cache.json
 # Create the data and persistence directories
 RUN mkdir -p /app/data/db /app/data/documents /app/data/logs
 
+# Copy entrypoint script to launch simulator and API
+COPY docker-entrypoint.sh /app/docker-entrypoint.sh
+RUN chmod +x /app/docker-entrypoint.sh && sed -i 's/\r$//' /app/docker-entrypoint.sh
+
 # Render injects environment variables; no .env file needed in the image.
 # Render routes external HTTPS → container :8080
 # ASPNETCORE_URLS (not ASPNETCORE_HTTP_PORTS) must be set so Program.cs skips its
@@ -82,6 +92,7 @@ RUN mkdir -p /app/data/db /app/data/documents /app/data/logs
 ENV ASPNETCORE_URLS=http://+:8080
 ENV ASPNETCORE_ENVIRONMENT=Production
 ENV ALLOW_DEFAULT_CREDENTIALS=true
+ENV START_SIMULATOR=true
 ENV LLM_PROVIDER=gemini
 ENV LLM_MODEL=gemini-3.5-flash-lite
 ENV EMBEDDING_PROVIDER=gemini
@@ -90,4 +101,4 @@ ENV EMBEDDING_DIMS=768
 
 EXPOSE 8080
 
-ENTRYPOINT ["dotnet", "Bosun.Api.dll"]
+ENTRYPOINT ["/app/docker-entrypoint.sh"]

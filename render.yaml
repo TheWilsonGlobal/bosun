@@ -51,7 +51,9 @@ services:
       - key: BACKEND_PORT
         value: "8080"
 
-      # ---- Live monitoring sockets (Modbus + NMEA, disabled on free tier) ----
+      # ---- Live monitoring sockets (Modbus + NMEA) ----
+      - key: START_SIMULATOR
+        value: "true"
       - key: SIM_MODBUS_PORT
         value: "5483"
       - key: SIM_NMEA_PORT
