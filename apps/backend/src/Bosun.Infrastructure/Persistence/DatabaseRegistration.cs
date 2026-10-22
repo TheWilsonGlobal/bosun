@@ -56,7 +56,11 @@ public static class DatabaseRegistration
         {
             var root = configuration["Bosun:RepoRoot"] ?? RepoRoot.Resolve();
             rag.DocsPath = string.IsNullOrWhiteSpace(rag.DocsPath) ? Path.Combine(root, "seed", "docs") : Path.GetFullPath(rag.DocsPath, root);
-            rag.CachePath = rag.CachePath is null ? Path.Combine(root, "data", "rag-embedding-cache.json") : string.IsNullOrWhiteSpace(rag.CachePath) ? null : Path.GetFullPath(rag.CachePath, root);
+            rag.CachePath = rag.CachePath is null
+                ? (File.Exists(Path.Combine(root, "data", "rag-embedding-cache.json"))
+                    ? Path.Combine(root, "data", "rag-embedding-cache.json")
+                    : Path.Combine(root, "seed", "rag-embedding-cache.json"))
+                : string.IsNullOrWhiteSpace(rag.CachePath) ? null : Path.GetFullPath(rag.CachePath, root);
         });
         return services;
     }

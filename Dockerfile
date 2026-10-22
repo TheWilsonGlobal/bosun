@@ -60,12 +60,20 @@ COPY --from=js-build /repo/apps/frontend/dist ./wwwroot
 # Copy Vite-built admin SPA into wwwroot/admin (served at /admin/)
 COPY --from=js-build /repo/apps/admin/dist ./wwwroot/admin
 
+# Copy the seed assets (mimic layout, Markdown docs for RAG, demo vessel templates)
+COPY seed ./seed
+
+# Copy the simulator register mapping so the live monitoring system can parse tags
+COPY apps/simulator/mapping ./apps/simulator/mapping
+COPY apps/simulator/mapping ./mapping
+
 # Copy the pre-computed RAG embedding cache so the knowledge base
 # can be indexed on first boot without any Gemini API calls.
 COPY data/rag-embedding-cache.json ./data/rag-embedding-cache.json
+COPY data/rag-embedding-cache.json ./seed/rag-embedding-cache.json
 
-# Create the data/db directory; the Render disk mount replaces it at runtime.
-RUN mkdir -p /app/data/db
+# Create the data and persistence directories
+RUN mkdir -p /app/data/db /app/data/documents /app/data/logs
 
 # Render injects environment variables; no .env file needed in the image.
 # Render routes external HTTPS → container :8080

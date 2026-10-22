@@ -62,16 +62,16 @@ public static class MonitoringRegistration
             var root = sp.GetRequiredService<IConfiguration>()["Bosun:RepoRoot"] ?? RepoRoot.Resolve();
             var path = options.RegisterMapPath is { Length: > 0 } configured
                 ? Path.GetFullPath(configured, root)
-                : RegisterMap.FindDefaultFile(root, AppContext.BaseDirectory);
+                : RegisterMap.FindDefaultFile(root, AppContext.BaseDirectory)
+                  ?? (File.Exists(Path.Combine(root, "mapping", RegisterMap.FileName)) ? Path.Combine(root, "mapping", RegisterMap.FileName) : null)
+                  ?? (File.Exists(Path.Combine(AppContext.BaseDirectory, "mapping", RegisterMap.FileName)) ? Path.Combine(AppContext.BaseDirectory, "mapping", RegisterMap.FileName) : null);
             if (path is not null && File.Exists(path))
             {
                 return RegisterMap.Load(path);
             }
 
-            // Monitoring off: nothing will poll, so a missing file is not an error (a deployment without the simulator folder).
-            return options.Enabled
-                ? throw new FileNotFoundException("The register map apps/simulator/mapping/registers.json was not found (set Monitoring:RegisterMapPath).")
-                : RegisterMap.Parse("""{ "registers": [] }""");
+            // Monitoring off or register file missing: return empty registers rather than crashing the entire host
+            return RegisterMap.Parse("""{ "registers": [] }""");
         });
         services.AddSingleton<MonitoringState>();
         services.AddSingleton<IAlarmRepository, DbAlarmRepository>();
