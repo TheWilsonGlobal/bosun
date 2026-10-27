@@ -20,8 +20,28 @@ export default defineConfig(({ mode }) => {
       port,
       strictPort: true,
       proxy: {
-        '/api': { target: backend, changeOrigin: true },
-        '/hubs': { target: backend, changeOrigin: true, ws: true },
+        '/api': {
+          target: backend,
+          changeOrigin: true,
+          configure: (proxy) => {
+            proxy.on('error', (_err, _req, res) => {
+              if (res && 'writeHead' in res && !res.headersSent) {
+                res.writeHead(502, { 'content-type': 'text/plain' });
+                res.end('');
+              }
+            });
+          },
+        },
+        '/hubs': {
+          target: backend,
+          changeOrigin: true,
+          ws: true,
+          configure: (proxy) => {
+            proxy.on('error', () => {
+              // Suppress websocket noise during backend warmup
+            });
+          },
+        },
       },
     },
     preview: { host: '127.0.0.1', port, strictPort: true },

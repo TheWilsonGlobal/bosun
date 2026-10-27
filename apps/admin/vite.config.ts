@@ -17,7 +17,20 @@ export default defineConfig(({ mode }) => {
       host: '127.0.0.1',
       port,
       strictPort: true,
-      proxy: { '/api': { target: backend, changeOrigin: true } },
+      proxy: {
+        '/api': {
+          target: backend,
+          changeOrigin: true,
+          configure: (proxy) => {
+            proxy.on('error', (_err, _req, res) => {
+              if (res && 'writeHead' in res && !res.headersSent) {
+                res.writeHead(502, { 'content-type': 'text/plain' });
+                res.end('');
+              }
+            });
+          },
+        },
+      },
     },
     preview: { host: '127.0.0.1', port, strictPort: true },
     test: {
