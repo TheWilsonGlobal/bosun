@@ -482,6 +482,39 @@ describe('AssistantPanel', () => {
     expect(screen.getByLabelText('Describe a change')).toHaveValue(DEMO_INSTRUCTION);
   });
 
+  it('toggles collapse and expand on chat history items and displays run detail below', async () => {
+    mockFetch({
+      ...base(makeSession('alice', ['admin'])),
+      'GET /api/agent/runs/4': () =>
+        json(
+          run({
+            id: 4,
+            status: 'refused',
+            message: 'Old request',
+            resultKind: 'refusal',
+            resultMessage: 'No.',
+          }),
+        ),
+    });
+    renderAt('/', '/', <AssistantPanel />);
+    const historyItem = await screen.findByRole('button', { name: /old request/i });
+    expect(historyItem).toBeInTheDocument();
+    expect(screen.getByLabelText('Expand chat')).toBeInTheDocument();
+
+    // Click to expand
+    const user = userEvent.setup();
+    await user.click(historyItem);
+
+    // Detail region for Run 4 is displayed directly below
+    expect(await screen.findByRole('region', { name: 'Run 4' })).toBeInTheDocument();
+    expect(screen.getByLabelText('Collapse chat')).toBeInTheDocument();
+
+    // Click again to collapse
+    await user.click(historyItem);
+    await waitFor(() => expect(screen.queryByRole('region', { name: 'Run 4' })).toBeNull());
+    expect(screen.getByLabelText('Expand chat')).toBeInTheDocument();
+  });
+
   it('starts a run with the typed message', async () => {
     const hub = fakeHub(run());
     const m = mockFetch({

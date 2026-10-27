@@ -11,7 +11,6 @@ import { describeError } from '@/lib/api/errors';
 import { startRun } from './api';
 import { AskPanel } from './ask/AskPanel';
 import { RunHistory, runsKey } from './RunHistory';
-import { RunView } from './RunView';
 import { DEMO_INSTRUCTION, MAX_MESSAGE_LENGTH } from './types';
 import type { UseAgentRunOptions } from './useAgentRun';
 
@@ -198,21 +197,13 @@ export function AssistantPanel(props: UseAgentRunOptions = {}) {
               )}
             </form>
 
-            {selected && (
-              <RunView
-                key={`${selected.id}-${selected.live}`}
-                runId={selected.id}
-                live={selected.live}
-                onFinished={refreshHistory}
-                {...props}
-              />
-            )}
-
             {project ? (
               <RunHistory
                 projectId={project.id}
-                selectedId={selected?.id ?? null}
-                onSelect={(id, running) => setSelected({ id, live: running })}
+                selected={selected}
+                onSelect={setSelected}
+                onFinished={refreshHistory}
+                runViewOptions={props}
               />
             ) : (
               <p className="text-muted-foreground text-sm">
