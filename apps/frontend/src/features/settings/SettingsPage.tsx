@@ -192,17 +192,12 @@ export function SettingsPage() {
   };
 
   return (
-    <div className="flex h-full flex-col overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6">
+    <div className="flex h-full flex-col overflow-hidden bg-background">
       {/* Top Header & Diagnostics Banner */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b pb-4">
-        <div>
-          <div className="flex items-center gap-2">
-            <SettingsIcon className="text-primary size-6" />
-            <h1 className="text-xl font-bold tracking-tight">Settings & System Telemetry</h1>
-          </div>
-          <p className="text-muted-foreground mt-1 text-sm">
-            Live system diagnostics, LLM engine configuration, industrial protocols, and safety policies.
-          </p>
+      <header className="shrink-0 border-b bg-card/40 px-4 py-3 sm:px-6 lg:px-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-2">
+          <SettingsIcon className="text-primary size-5" />
+          <h1 className="text-lg sm:text-xl font-bold tracking-tight">Settings & System Telemetry</h1>
         </div>
 
         <div className="flex items-center gap-2 flex-wrap">
@@ -246,10 +241,11 @@ export function SettingsPage() {
             Collapse All
           </Button>
         </div>
-      </div>
+      </header>
 
-      {/* Grid of Settings Cards */}
-      <div className="grid gap-4 max-w-6xl">
+      {/* Grid of Settings Cards (Scrollable Body) */}
+      <div className="flex-1 min-h-0 overflow-y-auto p-4 sm:p-6 lg:p-8">
+        <div className="grid gap-4 max-w-6xl">
         {/* 1. LLM & AI Engine Card */}
         <SectionCard
           id="llm"
@@ -535,6 +531,7 @@ export function SettingsPage() {
         </SectionCard>
       </div>
     </div>
+  </div>
   );
 }
 

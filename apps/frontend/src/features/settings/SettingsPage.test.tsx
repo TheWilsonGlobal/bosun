@@ -31,7 +31,6 @@ describe('SettingsPage', () => {
     renderSettings();
 
     expect(screen.getByText('Settings & System Telemetry')).toBeInTheDocument();
-    expect(screen.getByText(/Live system diagnostics/i)).toBeInTheDocument();
 
     // Check main section titles
     expect(screen.getByText('LLM & AI Engine Configuration')).toBeInTheDocument();
