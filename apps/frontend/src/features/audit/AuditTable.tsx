@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Bot, ExternalLink, Eye, User } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -11,6 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { DataTable, type Column } from '@/components/DataTable';
 import type { AuditEntry } from '@/lib/api/types';
 
 const time = (iso: string) =>
@@ -42,124 +43,146 @@ export function summarizeDiff(e: AuditEntry): string {
 export function AuditTable({ entries, caption }: { entries: AuditEntry[]; caption?: string }) {
   const [selectedEntry, setSelectedEntry] = useState<AuditEntry | null>(null);
 
+  const columns = useMemo<Column<AuditEntry>[]>(
+    () => [
+      {
+        key: 'timestamp',
+        header: 'When',
+        className: 'whitespace-nowrap font-mono text-[11px] text-muted-foreground',
+        render: (e) => time(e.timestamp),
+      },
+      {
+        key: 'actor',
+        header: 'Actor',
+        className: 'whitespace-nowrap',
+        render: (e) => (
+          <div className="flex items-center gap-1.5">
+            <User className="size-3 text-muted-foreground shrink-0" aria-label="user" />
+            <span className="font-medium text-foreground">{e.actor}</span>
+            {e.proposedBy === 'agent' && (
+              <Badge
+                variant="secondary"
+                className="h-4.5 px-1.5 py-0 text-[10px] gap-1 shrink-0 font-normal"
+                data-testid="proposed-by-agent"
+                title={`Proposed by agent${e.model ? ` (${e.model})` : ''}`}
+              >
+                <Bot className="size-2.5 text-primary" aria-hidden />
+                <span>agent</span>
+                {/* Accessible test text so existing assertions match */}
+                <span className="sr-only">
+                  proposed by agent
+                  {e.model ? ` (${e.model}${e.promptVersion ? `, prompt ${e.promptVersion}` : ''})` : ''}
+                </span>
+                {e.agentRunId !== null && (
+                  <span className="sr-only">agent run #{e.agentRunId}</span>
+                )}
+              </Badge>
+            )}
+          </div>
+        ),
+      },
+      {
+        key: 'approvedBy',
+        header: 'Approved by',
+        className: 'whitespace-nowrap text-muted-foreground',
+        render: (e) => e.approvedBy ?? '-',
+      },
+      {
+        key: 'changeSetId',
+        header: 'Change set',
+        className: 'whitespace-nowrap tabular-nums',
+        render: (e) =>
+          e.changeSetId ? (
+            <span className="font-medium text-primary hover:underline">
+              #{e.changeSetId}
+            </span>
+          ) : (
+            '-'
+          ),
+      },
+      {
+        key: 'tagName',
+        header: 'Tag',
+        className: 'whitespace-nowrap font-mono text-[11px]',
+        render: (e) =>
+          e.tagName ? (
+            <span className="bg-muted px-1.5 py-0.5 rounded text-foreground font-medium">
+              {e.tagName}
+            </span>
+          ) : (
+            '-'
+          ),
+      },
+      {
+        key: 'opType',
+        header: 'Operation',
+        className: 'whitespace-nowrap',
+        render: (e) => (
+          <Badge variant="outline" className="text-[10px] py-0 h-4.5 font-normal">
+            {e.opType}
+          </Badge>
+        ),
+      },
+      {
+        key: 'change',
+        header: 'Change',
+        className: 'whitespace-nowrap',
+        render: (e) => (
+          <div
+            className="max-w-[240px] xl:max-w-[340px] truncate text-foreground font-mono text-[11px]"
+            title={summarizeDiff(e)}
+          >
+            {summarizeDiff(e)}
+          </div>
+        ),
+      },
+      {
+        key: 'model',
+        header: 'Model',
+        className: 'whitespace-nowrap text-muted-foreground',
+        render: (e) => (
+          <span className="truncate max-w-[120px] inline-block align-middle" title={e.model ?? '-'}>
+            {e.model ?? '-'}
+          </span>
+        ),
+      },
+      {
+        key: 'actions',
+        header: '',
+        width: 40,
+        align: 'right',
+        render: (e) => (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="size-6 text-muted-foreground group-hover:text-primary hover:bg-background"
+            aria-label="View entry details"
+            onClick={(ev) => {
+              ev.stopPropagation();
+              setSelectedEntry(e);
+            }}
+          >
+            <Eye className="size-3" />
+          </Button>
+        ),
+      },
+    ],
+    [],
+  );
+
   return (
     <>
-      <div className="overflow-x-auto rounded-md border bg-card">
-        <table className="w-full text-sm" aria-label={caption ?? 'Audit entries'}>
-          <thead className="bg-muted text-left text-xs text-muted-foreground border-b">
-            <tr>
-              <th scope="col" className="px-3 py-2 font-semibold whitespace-nowrap">When</th>
-              <th scope="col" className="px-3 py-2 font-semibold whitespace-nowrap">Actor</th>
-              <th scope="col" className="px-3 py-2 font-semibold whitespace-nowrap">Approved by</th>
-              <th scope="col" className="px-3 py-2 font-semibold whitespace-nowrap">Change set</th>
-              <th scope="col" className="px-3 py-2 font-semibold whitespace-nowrap">Tag</th>
-              <th scope="col" className="px-3 py-2 font-semibold whitespace-nowrap">Operation</th>
-              <th scope="col" className="px-3 py-2 font-semibold whitespace-nowrap">Change</th>
-              <th scope="col" className="px-3 py-2 font-semibold whitespace-nowrap">Model</th>
-              <th scope="col" className="px-3 py-2 font-semibold w-10 text-right"></th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-border">
-            {entries.map((e) => (
-              <tr
-                key={e.id}
-                tabIndex={0}
-                role="button"
-                aria-label={`Audit entry ${e.id}`}
-                onClick={() => setSelectedEntry(e)}
-                onKeyDown={(ev) => {
-                  if (ev.key === 'Enter' || ev.key === ' ') {
-                    ev.preventDefault();
-                    setSelectedEntry(e);
-                  }
-                }}
-                className="hover:bg-accent/40 cursor-pointer transition-colors group select-none text-xs focus-visible:outline-none focus-visible:bg-accent/60"
-              >
-                <td className="px-3 py-2 whitespace-nowrap font-mono text-[11px] text-muted-foreground">
-                  {time(e.timestamp)}
-                </td>
-                <td className="px-3 py-2 whitespace-nowrap">
-                  <div className="flex items-center gap-1.5">
-                    <User className="size-3 text-muted-foreground shrink-0" aria-label="user" />
-                    <span className="font-medium text-foreground">{e.actor}</span>
-                    {e.proposedBy === 'agent' && (
-                      <Badge
-                        variant="secondary"
-                        className="h-4.5 px-1.5 py-0 text-[10px] gap-1 shrink-0 font-normal"
-                        data-testid="proposed-by-agent"
-                        title={`Proposed by agent${e.model ? ` (${e.model})` : ''}`}
-                      >
-                        <Bot className="size-2.5 text-primary" aria-hidden />
-                        <span>agent</span>
-                        {/* Accessible test text so existing assertions match */}
-                        <span className="sr-only">
-                          proposed by agent{e.model ? ` (${e.model}${e.promptVersion ? `, prompt ${e.promptVersion}` : ''})` : ''}
-                        </span>
-                        {e.agentRunId !== null && (
-                          <span className="sr-only">agent run #{e.agentRunId}</span>
-                        )}
-                      </Badge>
-                    )}
-                  </div>
-                </td>
-                <td className="px-3 py-2 whitespace-nowrap text-muted-foreground">
-                  {e.approvedBy ?? '-'}
-                </td>
-                <td className="px-3 py-2 whitespace-nowrap tabular-nums">
-                  {e.changeSetId ? (
-                    <span className="font-medium text-primary hover:underline">
-                      #{e.changeSetId}
-                    </span>
-                  ) : (
-                    '-'
-                  )}
-                </td>
-                <td className="px-3 py-2 whitespace-nowrap font-mono text-[11px]">
-                  {e.tagName ? (
-                    <span className="bg-muted px-1.5 py-0.5 rounded text-foreground font-medium">
-                      {e.tagName}
-                    </span>
-                  ) : (
-                    '-'
-                  )}
-                </td>
-                <td className="px-3 py-2 whitespace-nowrap">
-                  <Badge variant="outline" className="text-[10px] py-0 h-4.5 font-normal">
-                    {e.opType}
-                  </Badge>
-                </td>
-                <td className="px-3 py-2 whitespace-nowrap">
-                  <div
-                    className="max-w-[240px] xl:max-w-[340px] truncate text-foreground font-mono text-[11px]"
-                    title={summarizeDiff(e)}
-                  >
-                    {summarizeDiff(e)}
-                  </div>
-                </td>
-                <td className="px-3 py-2 whitespace-nowrap text-muted-foreground">
-                  <span className="truncate max-w-[120px] inline-block align-middle" title={e.model ?? '-'}>
-                    {e.model ?? '-'}
-                  </span>
-                </td>
-                <td className="px-3 py-2 whitespace-nowrap text-right">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="size-6 text-muted-foreground group-hover:text-primary hover:bg-background"
-                    aria-label="View entry details"
-                    onClick={(ev) => {
-                      ev.stopPropagation();
-                      setSelectedEntry(e);
-                    }}
-                  >
-                    <Eye className="size-3" />
-                  </Button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <DataTable
+        data={entries}
+        columns={columns}
+        caption={caption ?? 'Audit entries'}
+        rowAriaLabel={(e) => `Audit entry ${e.id}`}
+        striped
+        clientPagination={entries.length > 10}
+        initialPageSize={25}
+        onRowClick={(e) => setSelectedEntry(e)}
+        rowClassName="hover:bg-accent/40 cursor-pointer transition-colors group select-none text-xs focus-visible:outline-none focus-visible:bg-accent/60"
+      />
 
       {/* Detailed Record Popup Dialog */}
       <Dialog open={!!selectedEntry} onOpenChange={(open) => !open && setSelectedEntry(null)}>
@@ -289,3 +312,4 @@ export function AuditTable({ entries, caption }: { entries: AuditEntry[]; captio
     </>
   );
 }
+export default AuditTable;

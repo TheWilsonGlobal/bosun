@@ -310,6 +310,7 @@ export function TagGrid(props: GridProps) {
                 data-violation={v ? (hasError ? 'error' : 'warning') : undefined}
                 className={cn(
                   'hover:bg-accent/40',
+                  vi.index % 2 === 1 ? 'bg-muted/20' : 'bg-card',
                   v && (hasError ? 'bg-destructive/10' : 'bg-warning/15'),
                 )}
                 style={{ height: ROW_HEIGHT }}
