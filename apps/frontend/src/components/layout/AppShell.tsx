@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import {
   Activity,
   Anchor,
+  Bot,
   FileSearch,
   GitPullRequest,
   History,
@@ -37,12 +38,15 @@ const NAV = [
   { to: '/monitoring', label: 'Live', icon: Activity },
   { to: '/tags', label: 'Tags', icon: Table2 },
   { to: '/documents', label: 'Documents', icon: FileSearch },
+  { to: '/assistant', label: 'Assistant', icon: Bot },
   { to: '/change-sets', label: 'Change sets', icon: GitPullRequest },
   { to: '/audit', label: 'Audit log', icon: History },
   { to: '/settings', label: 'Settings', icon: Settings },
 ];
 
 export function AppShell() {
+  const location = useLocation();
+  const isAssistantPage = location.pathname.startsWith('/assistant');
   const { session, openLogin, logout, loading } = useAuth();
   const { projects, project, select } = useProject();
   const { list } = usePending();
@@ -254,7 +258,7 @@ export function AppShell() {
             <main className="min-w-0 flex-1 overflow-hidden">
               <Outlet />
             </main>
-            <AssistantSlot />
+            {!isAssistantPage && <AssistantSlot />}
           </div>
         </div>
       </div>

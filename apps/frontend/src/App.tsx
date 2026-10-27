@@ -28,6 +28,9 @@ const ExtractionPage = lazy(() =>
 const MonitoringPage = lazy(() =>
   import('@/features/monitoring/MonitoringPage').then((m) => ({ default: m.MonitoringPage })),
 );
+const AssistantPage = lazy(() =>
+  import('@/features/assistant/AssistantPage').then((m) => ({ default: m.AssistantPage })),
+);
 const SettingsPage = lazy(() =>
   import('@/features/settings/SettingsPage').then((m) => ({ default: m.SettingsPage })),
 );
@@ -45,6 +48,7 @@ export function App() {
           <Route path="/extractions/:id" element={<ExtractionPage />} />
           <Route path="/monitoring" element={<MonitoringPage />} />
           <Route path="/audit" element={<AuditPage />} />
+          <Route path="/assistant" element={<AssistantPage />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route
             path="*"

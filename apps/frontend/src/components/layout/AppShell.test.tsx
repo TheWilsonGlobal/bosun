@@ -30,6 +30,7 @@ describe('AppShell sidebar collapse/expand', () => {
     expect(nav).toHaveClass('w-52');
     expect(screen.getByText('Bosun')).toBeInTheDocument();
     expect(screen.getByText('Live')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /assistant/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Collapse sidebar' })).toBeInTheDocument();
   });
 
@@ -58,5 +59,17 @@ describe('AppShell sidebar collapse/expand', () => {
 
     const nav = screen.getByRole('navigation', { name: 'Main' });
     expect(nav).toHaveClass('w-14');
+  });
+
+  it('hides the right-side Assistant drawer when navigated to /assistant so assistant is full screen', () => {
+    render(
+      <AppProviders client={createQueryClient()}>
+        <MemoryRouter initialEntries={['/assistant']}>
+          <AppShell />
+        </MemoryRouter>
+      </AppProviders>,
+    );
+
+    expect(screen.queryByRole('complementary', { name: 'Assistant' })).not.toBeInTheDocument();
   });
 });
