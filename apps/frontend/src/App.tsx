@@ -28,6 +28,9 @@ const ExtractionPage = lazy(() =>
 const MonitoringPage = lazy(() =>
   import('@/features/monitoring/MonitoringPage').then((m) => ({ default: m.MonitoringPage })),
 );
+const SettingsPage = lazy(() =>
+  import('@/features/settings/SettingsPage').then((m) => ({ default: m.SettingsPage })),
+);
 
 export function App() {
   return (
@@ -42,6 +45,7 @@ export function App() {
           <Route path="/extractions/:id" element={<ExtractionPage />} />
           <Route path="/monitoring" element={<MonitoringPage />} />
           <Route path="/audit" element={<AuditPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
           <Route
             path="*"
             element={<Status title="Page not found">There is nothing at this address.</Status>}

@@ -11,6 +11,7 @@ import {
   Moon,
   PanelLeftClose,
   PanelLeftOpen,
+  Settings,
   Sun,
   Table2,
   User,
@@ -38,6 +39,7 @@ const NAV = [
   { to: '/documents', label: 'Documents', icon: FileSearch },
   { to: '/change-sets', label: 'Change sets', icon: GitPullRequest },
   { to: '/audit', label: 'Audit log', icon: History },
+  { to: '/settings', label: 'Settings', icon: Settings },
 ];
 
 export function AppShell() {
