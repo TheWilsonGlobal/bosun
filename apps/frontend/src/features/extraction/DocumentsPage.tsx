@@ -105,11 +105,6 @@ export function DocumentsPage({ pollMs = 3000 }: { pollMs?: number }) {
         <div className="flex items-center gap-2">
           <FileSearch className="size-5 text-primary" aria-hidden />
           <h1 className="text-lg font-semibold">Documents</h1>
-          <span className="text-muted-foreground text-sm">
-            {activeTab === 'uploads'
-              ? `Customer requirement PDFs of ${project.name}`
-              : `System reference standards & knowledge chunks of ${project.name}`}
-          </span>
         </div>
 
         <div className="flex items-center gap-1 bg-muted p-1 rounded-lg">
