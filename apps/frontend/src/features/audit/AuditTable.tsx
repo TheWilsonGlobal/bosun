@@ -178,7 +178,7 @@ export function AuditTable({ entries, caption }: { entries: AuditEntry[]; captio
         caption={caption ?? 'Audit entries'}
         rowAriaLabel={(e) => `Audit entry ${e.id}`}
         striped
-        clientPagination={entries.length > 10}
+        clientPagination
         initialPageSize={25}
         onRowClick={(e) => setSelectedEntry(e)}
         rowClassName="hover:bg-accent/40 cursor-pointer transition-colors group select-none text-xs focus-visible:outline-none focus-visible:bg-accent/60"

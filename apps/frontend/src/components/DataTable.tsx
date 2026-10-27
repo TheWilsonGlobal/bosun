@@ -110,19 +110,10 @@ export function DataTable<T>({
 
   return (
     <div className={cn('flex flex-col gap-2.5', className)}>
-      {/* Top Header info (if item range or custom header right is desired) */}
-      {(total > 0 || headerRight) && (
-        <div className="flex items-center justify-between text-xs text-muted-foreground px-1">
-          <div>
-            {total > 0 && pagination && (
-              <span>
-                Showing <strong className="text-foreground font-mono">{fromItem}</strong>–
-                <strong className="text-foreground font-mono">{toItem}</strong> of{' '}
-                <strong className="text-foreground font-mono">{total.toLocaleString()}</strong> {itemLabel}
-              </span>
-            )}
-          </div>
-          {headerRight && <div>{headerRight}</div>}
+      {/* Top Header right action (if custom header right is desired) */}
+      {headerRight && (
+        <div className="flex items-center justify-end text-xs text-muted-foreground px-1">
+          {headerRight}
         </div>
       )}
 
@@ -210,84 +201,96 @@ export function DataTable<T>({
         </table>
       </div>
 
-      {/* Pagination Footer */}
-      {pagination && (
+      {/* Footer: Item count & Pagination */}
+      {(pagination || total > 0) && (
         <nav
           aria-label="Pagination"
-          className="flex flex-wrap items-center justify-between gap-2 pt-1 text-xs text-muted-foreground"
+          className="flex flex-wrap items-center justify-between gap-3 pt-1 text-xs text-muted-foreground px-1"
         >
-          {/* Rows per page selector */}
-          <div className="flex items-center gap-1.5">
-            <span>Rows per page</span>
-            <select
-              aria-label="Rows per page"
-              className="border-input bg-background h-8 rounded-md border px-2 text-foreground font-medium"
-              value={pageSize}
-              onChange={(e) => {
-                const newSize = Number(e.target.value);
-                if (pagination.onPageSizeChange) {
-                  pagination.onPageSizeChange(newSize);
-                } else {
-                  pagination.onPageChange(1);
-                }
-              }}
-            >
-              {(pagination.pageSizeOptions ?? [10, 25, 50, 100]).map((opt) => (
-                <option key={opt} value={opt}>
-                  {opt}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Navigation Controls */}
-          <div className="flex items-center gap-1">
-            <Button
-              variant="outline"
-              size="icon"
-              className="size-8"
-              aria-label="First page"
-              disabled={page <= 1}
-              onClick={() => pagination.onPageChange(1)}
-            >
-              <ChevronsLeft className="size-4" />
-            </Button>
-            <Button
-              variant="outline"
-              size="icon"
-              className="size-8"
-              aria-label="Previous page"
-              disabled={page <= 1}
-              onClick={() => pagination.onPageChange(page - 1)}
-            >
-              <ChevronLeft className="size-4" />
-            </Button>
-
-            <span className="px-2.5 tabular-nums text-foreground font-medium">
-              Page {page} of {totalPages}
+          {/* Left: Showing range and Rows per page */}
+          <div className="flex items-center gap-4 flex-wrap">
+            <span className="text-muted-foreground">
+              Showing <strong className="text-foreground font-mono">{fromItem}</strong>–
+              <strong className="text-foreground font-mono">{toItem}</strong> of{' '}
+              <strong className="text-foreground font-mono">{total.toLocaleString()}</strong> {itemLabel}
             </span>
 
-            <Button
-              variant="outline"
-              size="icon"
-              className="size-8"
-              aria-label="Next page"
-              disabled={page >= totalPages}
-              onClick={() => pagination.onPageChange(page + 1)}
-            >
-              <ChevronRight className="size-4" />
-            </Button>
-            <Button
-              variant="outline"
-              size="icon"
-              className="size-8"
-              aria-label="Last page"
-              disabled={page >= totalPages}
-              onClick={() => pagination.onPageChange(totalPages)}
-            >
-              <ChevronsRight className="size-4" />
-            </Button>
+            {pagination && (
+              <div className="flex items-center gap-1.5">
+                <span>Rows per page</span>
+                <select
+                  aria-label="Rows per page"
+                  className="border-input bg-background h-8 rounded-md border px-2 text-foreground font-medium"
+                  value={pageSize}
+                  onChange={(e) => {
+                    const newSize = Number(e.target.value);
+                    if (pagination.onPageSizeChange) {
+                      pagination.onPageSizeChange(newSize);
+                    } else {
+                      pagination.onPageChange(1);
+                    }
+                  }}
+                >
+                  {(pagination.pageSizeOptions ?? [10, 25, 50, 100]).map((opt) => (
+                    <option key={opt} value={opt}>
+                      {opt}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
           </div>
+
+          {/* Right: Navigation Controls */}
+          {pagination && (
+            <div className="flex items-center gap-1">
+              <Button
+                variant="outline"
+                size="icon"
+                className="size-8"
+                aria-label="First page"
+                disabled={page <= 1}
+                onClick={() => pagination.onPageChange(1)}
+              >
+                <ChevronsLeft className="size-4" />
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                className="size-8"
+                aria-label="Previous page"
+                disabled={page <= 1}
+                onClick={() => pagination.onPageChange(page - 1)}
+              >
+                <ChevronLeft className="size-4" />
+              </Button>
+
+              <span className="px-2.5 tabular-nums text-foreground font-medium">
+                Page {page} of {totalPages}
+              </span>
+
+              <Button
+                variant="outline"
+                size="icon"
+                className="size-8"
+                aria-label="Next page"
+                disabled={page >= totalPages}
+                onClick={() => pagination.onPageChange(page + 1)}
+              >
+                <ChevronRight className="size-4" />
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                className="size-8"
+                aria-label="Last page"
+                disabled={page >= totalPages}
+                onClick={() => pagination.onPageChange(totalPages)}
+              >
+                <ChevronsRight className="size-4" />
+              </Button>
+            </div>
+          )}
         </nav>
       )}
     </div>
