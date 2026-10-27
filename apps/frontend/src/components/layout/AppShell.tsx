@@ -93,7 +93,7 @@ export function AppShell() {
   };
 
   return (
-    <div className="flex h-dvh flex-col">
+    <div className="flex h-screen h-dvh flex-col overflow-hidden">
       <BackendBanner />
       <div className="flex min-h-0 flex-1">
         <nav

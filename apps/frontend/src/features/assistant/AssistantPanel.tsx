@@ -62,7 +62,7 @@ export function AssistantPanel(props: UseAgentRunOptions = {}) {
   const startErrorMessage = startError ? describeError(startError) : null;
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col">
+    <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
       <div className="flex h-12 shrink-0 items-center gap-2 border-b px-4 font-semibold">
         <Bot className="text-primary size-5" aria-hidden />
         Assistant
