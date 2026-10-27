@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import type { AuditEntry } from '@/lib/api/types';
 import { AuditTable } from './AuditTable';
 
@@ -40,5 +41,40 @@ describe('AuditTable proposer', () => {
     render(<AuditTable entries={[entry({})]} />);
     expect(screen.queryByTestId('proposed-by-agent')).toBeNull();
     expect(screen.queryByText(/agent run/)).toBeNull();
+  });
+
+  it('opens detail modal on row click showing full audit details and closes on close button', async () => {
+    render(
+      <MemoryRouter>
+        <AuditTable
+          entries={[
+            entry({
+              id: 99,
+              proposedBy: 'agent',
+              model: 'gemini-3.5-flash-lite',
+              promptVersion: 'planner@1.0',
+              agentRunId: 10,
+              diff: { field: 'unit', old: 'degC', new: 'degF' },
+            }),
+          ]}
+        />
+      </MemoryRouter>,
+    );
+
+    // Initial state: modal dialog is not open
+    expect(screen.queryByRole('dialog')).toBeNull();
+
+    // Click the row
+    fireEvent.click(screen.getByRole('button', { name: /audit entry 99/i }));
+
+    // Modal dialog is now visible
+    expect(await screen.findByRole('dialog')).toBeInTheDocument();
+    expect(screen.getByText('Audit Entry #99')).toBeInTheDocument();
+    expect(screen.getByText(/Stored Diff Payload/i)).toBeInTheDocument();
+    expect(screen.getByText('planner@1.0')).toBeInTheDocument();
+
+    // Click close
+    fireEvent.click(screen.getAllByRole('button', { name: /close/i })[0]);
+    expect(screen.queryByRole('dialog')).toBeNull();
   });
 });
