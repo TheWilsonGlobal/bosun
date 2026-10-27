@@ -3,11 +3,13 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { AppProviders, createQueryClient } from '@/providers';
 import { mockFetch, project, makeSession, json } from '@/test/utils';
+import { registerAssistantPanel } from '@/features/assistant/AssistantSlot';
 import { AppShell } from './AppShell';
 
 describe('AppShell sidebar collapse/expand', () => {
   beforeEach(() => {
     localStorage.clear();
+    registerAssistantPanel(() => <div>Assistant content</div>);
     mockFetch({
       'GET /api/session': () => json(makeSession('admin', ['admin'])),
       'GET /api/projects': () => json({ items: [project], total: 1 }),
@@ -71,5 +73,36 @@ describe('AppShell sidebar collapse/expand', () => {
     );
 
     expect(screen.queryByRole('complementary', { name: 'Assistant' })).not.toBeInTheDocument();
+  });
+
+  it('toggles assistant side panel visibility with the header button and persists in localStorage', () => {
+    renderShell();
+
+    // Assistant panel is visible by default
+    expect(screen.getByRole('complementary', { name: 'Assistant' })).toBeInTheDocument();
+    const toggleBtn = screen.getByRole('button', { name: 'Hide Assistant panel' });
+    expect(toggleBtn).toBeInTheDocument();
+
+    // Click to hide
+    fireEvent.click(toggleBtn);
+    expect(screen.queryByRole('complementary', { name: 'Assistant' })).not.toBeInTheDocument();
+    expect(localStorage.getItem('bosun.assistant.visible')).toBe('false');
+
+    // Button label updates to Show Assistant panel
+    const showBtn = screen.getByRole('button', { name: 'Show Assistant panel' });
+    expect(showBtn).toBeInTheDocument();
+
+    // Click to show again
+    fireEvent.click(showBtn);
+    expect(screen.getByRole('complementary', { name: 'Assistant' })).toBeInTheDocument();
+    expect(localStorage.getItem('bosun.assistant.visible')).toBe('true');
+  });
+
+  it('respects persisted assistant hidden state from localStorage on initial render', () => {
+    localStorage.setItem('bosun.assistant.visible', 'false');
+    renderShell();
+
+    expect(screen.queryByRole('complementary', { name: 'Assistant' })).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Show Assistant panel' })).toBeInTheDocument();
   });
 });

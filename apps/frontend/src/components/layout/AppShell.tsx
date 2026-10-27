@@ -60,11 +60,31 @@ export function AppShell() {
     }
   });
 
+  const [showAssistant, setShowAssistant] = useState(() => {
+    try {
+      return localStorage.getItem('bosun.assistant.visible') !== 'false';
+    } catch {
+      return true;
+    }
+  });
+
   const toggleSidebar = () => {
     setCollapsed((prev) => {
       const next = !prev;
       try {
         localStorage.setItem('bosun.sidebar.collapsed', String(next));
+      } catch {
+        // ignore storage error
+      }
+      return next;
+    });
+  };
+
+  const toggleAssistant = () => {
+    setShowAssistant((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem('bosun.assistant.visible', String(next));
       } catch {
         // ignore storage error
       }
@@ -234,6 +254,21 @@ export function AppShell() {
               >
                 {theme === 'dark' ? <Sun /> : <Moon />}
               </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label={showAssistant ? 'Hide Assistant panel' : 'Show Assistant panel'}
+                title={showAssistant ? 'Hide Assistant panel' : 'Show Assistant panel'}
+                className={cn(
+                  showAssistant && !isAssistantPage
+                    ? 'text-primary bg-accent/60'
+                    : 'text-muted-foreground hover:text-foreground',
+                )}
+                disabled={isAssistantPage}
+                onClick={toggleAssistant}
+              >
+                <Bot className="size-4" />
+              </Button>
               {session ? (
                 <>
                   <span className="flex items-center gap-1.5 text-sm" data-testid="current-user">
@@ -258,7 +293,7 @@ export function AppShell() {
             <main className="min-w-0 flex-1 overflow-hidden">
               <Outlet />
             </main>
-            {!isAssistantPage && <AssistantSlot />}
+            {!isAssistantPage && showAssistant && <AssistantSlot />}
           </div>
         </div>
       </div>
