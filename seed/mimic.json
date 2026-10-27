@@ -314,23 +314,14 @@
       "label": "TANKS"
     },
     {
-      "id": "fo-pipe",
-      "type": "line",
-      "x1": 740,
-      "y1": 430,
-      "x2": 990,
-      "y2": 430,
-      "role": "pipe",
-      "label": "Fuel supply"
-    },
-    {
       "id": "fo-to-engine",
       "type": "line",
       "x1": 680,
       "y1": 430,
       "x2": 740,
       "y2": 430,
-      "role": "pipe"
+      "role": "pipe",
+      "label": "Fuel supply"
     },
     {
       "id": "fo-engine-inlet",
@@ -384,7 +375,8 @@
       "y1": 430,
       "x2": 1135,
       "y2": 430,
-      "role": "pipe"
+      "role": "pipe",
+      "label": "From tanks"
     },
     {
       "id": "nav-panel",
