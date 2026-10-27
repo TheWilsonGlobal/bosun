@@ -24,11 +24,12 @@ describe('AssistantPage', () => {
     });
   });
 
-  it('renders the assistant page with full banner and change mode by default', async () => {
+  it('renders the assistant page with change mode by default', async () => {
     renderAt('/assistant', '/assistant', <AssistantPage />);
 
-    expect(screen.getByText('Bosun AI Engineering Assistant')).toBeInTheDocument();
-    expect(screen.getByText(/Autonomous change set generator/i)).toBeInTheDocument();
+    // Assistant panel header
+    expect(screen.getByText('Assistant')).toBeInTheDocument();
+    expect(screen.getByText('drafts only')).toBeInTheDocument();
 
     // Check tabs
     expect(screen.getByRole('tab', { name: 'Change' })).toBeInTheDocument();
