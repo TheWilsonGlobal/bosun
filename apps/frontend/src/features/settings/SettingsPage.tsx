@@ -245,7 +245,7 @@ export function SettingsPage() {
 
       {/* Grid of Settings Cards (Scrollable Body) */}
       <div className="flex-1 min-h-0 overflow-y-auto p-4 sm:p-6 lg:p-8">
-        <div className="grid gap-4 max-w-6xl">
+        <div className="grid gap-4 w-full">
         {/* 1. LLM & AI Engine Card */}
         <SectionCard
           id="llm"
