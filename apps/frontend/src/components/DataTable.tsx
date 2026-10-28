@@ -109,18 +109,18 @@ export function DataTable<T>({
   const getKey = keyExtractor ?? defaultKeyExtractor;
 
   return (
-    <div className={cn('flex flex-col gap-2.5', className)}>
+    <div className={cn('flex flex-1 min-h-0 flex-col gap-2', className)}>
       {/* Top Header right action (if custom header right is desired) */}
       {headerRight && (
-        <div className="flex items-center justify-end text-xs text-muted-foreground px-1">
+        <div className="flex shrink-0 items-center justify-end text-xs text-muted-foreground px-1">
           {headerRight}
         </div>
       )}
 
       {/* Main Table Container */}
-      <div className="overflow-x-auto rounded-md border bg-card shadow-2xs">
+      <div className="flex-1 min-h-0 overflow-auto rounded-md border bg-card shadow-2xs">
         <table className={cn('w-full text-sm', tableClassName)} aria-label={caption}>
-          <thead className="bg-muted/70 text-left text-xs font-semibold text-muted-foreground border-b sticky top-0 z-10 select-none">
+          <thead className="bg-muted text-left text-xs font-semibold text-muted-foreground border-b sticky top-0 z-10 select-none shadow-2xs">
             <tr>
               {columns.map((col) => (
                 <th
@@ -205,7 +205,7 @@ export function DataTable<T>({
       {(pagination || total > 0) && (
         <nav
           aria-label="Pagination"
-          className="flex flex-wrap items-center justify-between gap-3 pt-1 text-xs text-muted-foreground px-1"
+          className="flex shrink-0 flex-wrap items-center justify-between gap-3 pt-1 text-xs text-muted-foreground px-1"
         >
           {/* Left: Showing range and Rows per page */}
           <div className="flex items-center gap-4 flex-wrap">

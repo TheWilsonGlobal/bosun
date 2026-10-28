@@ -33,8 +33,8 @@ export function AuditPage() {
   if (!project) return <Status>Select a project.</Status>;
 
   return (
-    <div className="flex h-full flex-col gap-3 overflow-auto p-4">
-      <div className="flex flex-wrap items-center gap-3">
+    <div className="flex h-full flex-col gap-3 overflow-hidden p-4">
+      <div className="flex shrink-0 flex-wrap items-center gap-3">
         <h1 className="text-lg font-semibold">Audit log</h1>
         <Input
           className="ml-auto h-8 w-60"
@@ -81,7 +81,7 @@ export function AuditPage() {
       ) : q.data.length === 0 ? (
         <Status>No audit entries match. Entries are written when a change set is applied.</Status>
       ) : (
-        <AuditTable entries={q.data} />
+        <AuditTable className="flex-1 min-h-0" entries={q.data} />
       )}
     </div>
   );

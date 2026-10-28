@@ -106,8 +106,8 @@ export function ChangeSetsPage() {
   if (!project) return <Status>Select a project.</Status>;
 
   return (
-    <div className="flex h-full flex-col gap-3 overflow-auto p-4">
-      <div className="flex items-center gap-3">
+    <div className="flex h-full flex-col gap-3 overflow-hidden p-4">
+      <div className="flex shrink-0 items-center gap-3">
         <h1 className="text-lg font-semibold">Change sets</h1>
         <label htmlFor="cs-status" className="text-muted-foreground ml-auto text-sm">
           Status
@@ -141,6 +141,7 @@ export function ChangeSetsPage() {
         </Status>
       ) : (
         <DataTable
+          className="flex-1 min-h-0"
           data={q.data.items}
           columns={columns}
           caption="Change sets"

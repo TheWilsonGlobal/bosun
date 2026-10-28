@@ -40,7 +40,15 @@ export function summarizeDiff(e: AuditEntry): string {
   }
 }
 
-export function AuditTable({ entries, caption }: { entries: AuditEntry[]; caption?: string }) {
+export function AuditTable({
+  entries,
+  caption,
+  className,
+}: {
+  entries: AuditEntry[];
+  caption?: string;
+  className?: string;
+}) {
   const [selectedEntry, setSelectedEntry] = useState<AuditEntry | null>(null);
 
   const columns = useMemo<Column<AuditEntry>[]>(
@@ -173,6 +181,7 @@ export function AuditTable({ entries, caption }: { entries: AuditEntry[]; captio
   return (
     <>
       <DataTable
+        className={className}
         data={entries}
         columns={columns}
         caption={caption ?? 'Audit entries'}
