@@ -10,8 +10,10 @@ import type {
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Search, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { ApiError } from '@/lib/api/client';
 import { fetchTagFacets, fetchTags } from '@/lib/api/endpoints';
 import { describeError } from '@/lib/api/errors';
+import { useAuth } from '@/features/auth/session';
 import {
   PAGE_SIZES,
   fromColumnFilters,
@@ -69,6 +71,7 @@ function TriSelect({
 }
 
 export function TagsPage() {
+  const { openLogin } = useAuth();
   const { project, loading: projectLoading, error: projectError } = useProject();
   const { highlight, clearHighlight } = usePending();
   const [params, setParams] = useSearchParams();
@@ -110,9 +113,20 @@ export function TagsPage() {
 
   if (projectLoading) return <Status>Loading projects...</Status>;
   if (projectError) {
+    const isUnauthorized = projectError instanceof ApiError && projectError.code === 'unauthorized';
     const m = describeError(projectError);
     return (
-      <Status tone="error" title={m.title}>
+      <Status
+        tone="error"
+        title={m.title}
+        action={
+          isUnauthorized ? (
+            <Button size="sm" onClick={openLogin}>
+              Sign in
+            </Button>
+          ) : undefined
+        }
+      >
         {m.message}
       </Status>
     );

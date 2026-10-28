@@ -74,8 +74,10 @@ builder.Services.AddSingleton<SnapshotThrottle>();
 builder.Services.AddHostedService<ValuesBroadcaster>();
 builder.Services.Configure<ForwardedHeadersOptions>(o =>
 {
-    // Behind nginx/another TLS terminator: trust X-Forwarded-For/-Proto from loopback proxies only (the framework default).
+    // Behind nginx/another TLS terminator (e.g. Render edge): trust X-Forwarded-For/-Proto.
     o.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    o.KnownIPNetworks.Clear();
+    o.KnownProxies.Clear();
 });
 
 var app = builder.Build();

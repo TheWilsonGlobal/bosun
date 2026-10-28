@@ -6,6 +6,7 @@ using Bosun.Application;
 using Bosun.Infrastructure.Configuration;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.RateLimiting;
 
@@ -97,14 +98,28 @@ public static class AuthSetup
     public static IServiceCollection AddBosunAuth(this IServiceCollection services)
     {
         services.AddSingleton<UserStore>();
+
+        var keysDir = Environment.GetEnvironmentVariable("DATA_PROTECTION_KEYS_DIR");
+        if (string.IsNullOrEmpty(keysDir) && Directory.Exists("/app/data"))
+        {
+            keysDir = "/app/data/keys";
+        }
+        if (!string.IsNullOrEmpty(keysDir))
+        {
+            Directory.CreateDirectory(keysDir);
+            services.AddDataProtection()
+                .SetApplicationName("Bosun")
+                .PersistKeysToFileSystem(new DirectoryInfo(keysDir));
+        }
+
         services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(options =>
             {
                 options.Cookie.Name = CookieName;
                 options.Cookie.HttpOnly = true;
 
-                // The SPAs reach the API through the Vite/nginx same-origin proxy, so Strict costs nothing and blocks CSRF.
-                options.Cookie.SameSite = SameSiteMode.Strict;
+                // Lax sends session cookies on same-site fetches and safe top-level navigations.
+                options.Cookie.SameSite = SameSiteMode.Lax;
                 options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest; // tightened to Always outside Development below
                 options.ExpireTimeSpan = TimeSpan.FromHours(8);
                 options.SlidingExpiration = true;

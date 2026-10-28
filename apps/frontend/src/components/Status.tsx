@@ -4,10 +4,12 @@ export function Status({
   children,
   title,
   tone,
+  action,
 }: {
   children: React.ReactNode;
   title?: string;
   tone?: 'error';
+  action?: React.ReactNode;
 }) {
   return (
     <div
@@ -18,7 +20,8 @@ export function Status({
       )}
     >
       {title && <p className="text-base font-semibold">{title}</p>}
-      <p>{children}</p>
+      <div>{children}</div>
+      {action && <div className="mt-2">{action}</div>}
     </div>
   );
 }

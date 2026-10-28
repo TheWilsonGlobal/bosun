@@ -16,7 +16,7 @@ interface AuthContextValue {
   login: (username: string, password: string) => Promise<Session>;
 }
 
-const AuthContext = createContext<AuthContextValue | null>(null);
+export const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const qc = useQueryClient();
@@ -31,6 +31,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     mutationFn: (v: { username: string; password: string }) => apiLogin(v.username, v.password),
     onSuccess: (session) => {
       qc.setQueryData(['session'], session);
+      void qc.invalidateQueries();
       setOpen(false);
       toast.success(`Signed in as ${session.username}`);
     },
@@ -39,6 +40,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     mutationFn: apiLogout,
     onSuccess: () => {
       qc.setQueryData(['session'], null);
+      void qc.invalidateQueries();
       toast.message('Signed out');
     },
     onError: (e) => {
