@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Diagnostics.Metrics;
 using Bosun.Application;
 using Bosun.Application.Llm;
 using Bosun.Domain.Entities;
@@ -53,6 +54,13 @@ public sealed class LlmCallRecorder(IServiceScopeFactory scopes, ILogger<LlmCall
 /// <summary>Logs (Serilog JSON) and persists every text/vision/tool call, successful or not, with an estimated cost.</summary>
 public sealed class RecordingLlmClient(ILlmClient inner, ILlmCallLog log, LlmPricing pricing, TimeProvider clock, ILogger<RecordingLlmClient> logger) : ILlmClient
 {
+    /// <summary>Exported to Prometheus by the API (System.Diagnostics.Metrics, so this project needs no Prometheus package). Labels stay low-cardinality: provider, model, status.</summary>
+    public static readonly Meter Meter = new("Bosun.Llm");
+
+    private static readonly Counter<long> Requests = Meter.CreateCounter<long>("bosun_llm_requests", description: "LLM calls that left the process");
+    private static readonly Counter<long> Tokens = Meter.CreateCounter<long>("bosun_llm_tokens", description: "LLM tokens by direction (in, out, thought)");
+    private static readonly Histogram<double> Duration = Meter.CreateHistogram<double>("bosun_llm_request_duration_seconds", "s", "LLM call latency including retries");
+
     public string Provider => inner.Provider;
 
     public string DefaultModel => inner.DefaultModel;
@@ -85,6 +93,14 @@ public sealed class RecordingLlmClient(ILlmClient inner, ILlmCallLog log, LlmPri
     private async Task Record(LlmRequest request, string model, LlmUsage usage, TimeSpan latency, int attempts, string? finish, string? errorCode, double cost)
     {
         var ok = errorCode is null;
+        var status = new KeyValuePair<string, object?>("status", ok ? "ok" : "error");
+        var provider = new KeyValuePair<string, object?>("provider", inner.Provider);
+        var modelTag = new KeyValuePair<string, object?>("model", model);
+        Requests.Add(1, provider, modelTag, status);
+        Duration.Record(latency.TotalSeconds, provider, modelTag, status);
+        Tokens.Add(usage.PromptTokens, provider, modelTag, new KeyValuePair<string, object?>("direction", "in"));
+        Tokens.Add(usage.CandidateTokens, provider, modelTag, new KeyValuePair<string, object?>("direction", "out"));
+        Tokens.Add(usage.ThoughtTokens, provider, modelTag, new KeyValuePair<string, object?>("direction", "thought"));
         logger.LogInformation(
             "llm_call feature={feature} model={model} prompt_version={prompt_version} tokens_in={tokens_in} tokens_out={tokens_out} tokens_thought={tokens_thought} latency_ms={latency_ms} attempts={attempts} finish_reason={finish_reason} status={status} error_code={error_code} cost_usd={cost_usd}",
             request.Feature,

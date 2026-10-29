@@ -68,6 +68,7 @@ builder.Services.AddHostedService<AgentLifecycle>();
 // Live monitoring (plan s6.5): Modbus poller + NMEA listener + alarm engine, pushed to clients through /hubs/monitoring.
 // Monitoring:Enabled=false (integration tests) opens no socket.
 builder.Services.AddBosunMonitoring();
+builder.Services.AddBosunMetrics();
 builder.Services.AddSingleton<IMonitoringNotifier, SignalRMonitoringNotifier>();
 builder.Services.AddScoped<MimicService>();
 builder.Services.AddSingleton<SnapshotThrottle>();
@@ -94,6 +95,7 @@ if (args.Contains("--print-config"))
 // Fail fast: unsupported DB_PROVIDER, or the default admin password outside Development.
 _ = DatabaseSettings.From(app.Configuration);
 AuthSetup.EnsureSafeCredentials(app.Configuration, app.Environment);
+Observability.EnsureSafeMetricsToken(app.Configuration);
 
 // Maintenance commands: `dotnet run --project apps/backend/src/Bosun.Api -- --reset-db | --seed | --migrate`
 if (args.Contains("--migrate"))
@@ -235,6 +237,7 @@ else
 app.UseForwardedHeaders();
 app.UseExceptionHandler();
 app.UseStatusCodePages();
+app.UseBosunHttpMetrics();
 app.UseAuthentication();
 app.UseRateLimiter(); // after authentication: the ask limit is per signed-in user
 app.UseAuthorization();
@@ -248,6 +251,7 @@ if (Directory.Exists(webRoot) && File.Exists(Path.Combine(webRoot, "index.html")
     app.UseStaticFiles();
 }
 
+app.MapObservability();
 app.MapBosunApi(readsRequireLogin: !app.Environment.IsDevelopment());
 app.MapAi(requireLogin: !app.Environment.IsDevelopment());
 app.MapAgent(readsRequireLogin: !app.Environment.IsDevelopment());

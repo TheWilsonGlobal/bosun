@@ -136,6 +136,9 @@ public static class BosunEnvironment
             ["Auth:ApproverUsername"] = Get("APPROVER_USERNAME"),
             ["Auth:ApproverPassword"] = Get("APPROVER_PASSWORD"),
 
+            // Prometheus scrape token (32+ chars). Unset = GET /metrics answers 404.
+            ["Metrics:Token"] = Get("METRICS_TOKEN"),
+
             // Live monitoring: where the simulator (or a real PLC / NMEA talker) listens. Loopback by default.
             ["Monitoring:Modbus:Port"] = Get("SIM_MODBUS_PORT") ?? "5483",
             ["Monitoring:Nmea:Port"] = Get("SIM_NMEA_PORT") ?? "5484",

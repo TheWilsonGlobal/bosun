@@ -12,6 +12,9 @@ services:
     plan: free
     region: singapore
 
+    # Liveness + database: 200 when SQLite answers, 503 otherwise (Modbus/NMEA being down does not fail it).
+    healthCheckPath: /health
+
     # Render persistent disk: SQLite lives here across deploys.
     disk:
       name: bosun-data
@@ -39,6 +42,11 @@ services:
       - key: GEMINI_LLM_API_KEY
         sync: false          # Render prompts for the value; never stored in git
       - key: GEMINI_EMBEDDING_API_KEY
+        sync: false
+
+      # ---- Monitoring ----
+      # Prometheus scrape token, 32+ chars. Unset = GET /metrics answers 404.
+      - key: METRICS_TOKEN
         sync: false
 
       # ---- Auth ----
