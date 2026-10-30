@@ -1,0 +1,13 @@
+{
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.expand": false,
+  "explorer.fileNesting.patterns": {
+    "package.json": "pnpm-lock.yaml, pnpm-workspace.yaml, eslint.config.*, .prettier*, .editorconfig",
+    "Bosun.sln": "Directory.Build.props, Directory.Packages.props, global.json, dotnet-tools.json",
+    "*.sln": "Directory.Build.props, Directory.Packages.props, global.json, dotnet-tools.json",
+    "Dockerfile": "docker-entrypoint.sh, render.yaml, .dockerignore, docker-compose*.yml",
+    ".env": ".env.example, .env.*",
+    "README.md": "TODO.md, CHANGELOG.md, CONTRIBUTING.md, LICENSE*",
+    ".gitignore": ".gitattributes, .gitmodules"
+  }
+}
