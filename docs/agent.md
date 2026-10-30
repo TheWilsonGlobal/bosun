@@ -130,6 +130,9 @@ All engineering tools are registered in [`Bosun.Application/Tools/AgentTools.cs`
 | **Check** | `show_draft_summary` | Lists all operations currently staged in the active draft. | Read-only view of draft session. |
 | **Control** | `finish_task` | Concludes the ACT stage with outcome (`draft_ready`, `clarify`, `refuse`). | Built-in loop control; not exposed via MCP. |
 
+> **Interactive Tool Registry & Telemetry UI:**  
+> The complete 11-tool catalogue is visualized interactively in the frontend on the **Settings & System Telemetry** page (`/settings`). Operators can filter tools by category (`All (11)`, `Read (5)`, `Write (4)`, `Verify (2)`), inspect JSON schema parameter requirements, and switch to the **Recent Invocations** telemetry view to inspect live tool call sequences, durations (ms), raw argument payloads, and return data from past agent runs.
+
 ---
 
 ## 4. Write Gate & Safety Policies
@@ -233,7 +236,7 @@ The agent streams reasoning progress in real-time over the `/hubs/agent` SignalR
 }
 ```
 
-The frontend [`AssistantPanel.tsx`](../apps/frontend/src/features/assistant/AssistantPanel.tsx) subscribes to these events via `@microsoft/signalr`, dynamically rendering collapsible reasoning cards, live token counters, and operation diffs as they occur.
+The frontend [`AssistantPanel.tsx`](../apps/frontend/src/features/assistant/AssistantPanel.tsx) and [`RunHistory.tsx`](../apps/frontend/src/features/assistant/RunHistory.tsx) subscribe to these events via `@microsoft/signalr`, dynamically rendering collapsible reasoning cards, live token counters, and operation diffs as they occur. In addition, historical runs in the chat history support an inline collapse/expand toggle to review previous ReAct steps and tool payloads without leaving the active conversation view.
 
 ---
 

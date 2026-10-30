@@ -149,11 +149,17 @@ flowchart TD
 - Built with **React 19**, **TypeScript**, and **Vite** with Tailwind CSS styling.
 - Specialized views:
   - **Interactive Mimic Diagram**: Real-time animated fuel oil and cooling system schematics with live value tooltips and alarm pulsing.
-  - **Tag Engineering Grid**: High-density virtualized table with search, system filtering, inline edits, and zebra striping.
+  - **Tag Engineering Grid (`DataTable`)**: High-density virtualized table with search, system filtering, inline edits, zebra striping, sticky headers, pinned pagination footer, and body-contained vertical scrolling.
   - **Change Sets & Diff Inspector**: Visual before/after diff viewer with rule validation reports and approval workflows.
-  - **AI Assistant Panel & Full Page**: Dual-mode interface (collapsible right sidebar or dedicated full screen) featuring streaming collapsible reasoning traces.
+  - **AI Assistant Panel & Full Page**: Dual-mode interface (collapsible right sidebar or dedicated full screen) featuring streaming collapsible reasoning traces, plus inline accordion expand/collapse on historical chat runs.
+  - **AI Agent Tool Registry & Execution Telemetry (`/settings`)**: Comprehensive live telemetry section displaying the 11 registered agent tools (categorized with parameter signatures, descriptions, and safety guarantees) and execution telemetry inspecting past runs, sequential tool calls, execution duration, and full argument/return payload diffs.
   - **Live Audit Log**: Clean single-line transaction records with deep-dive detail modals and JSON diff inspections.
   - **Settings & Telemetry HUD**: System telemetry, connection diagnostic badges, LLM configuration, and protocol addresses.
+
+### 12. Production Cloud Deployment (`render.yaml` & `Dockerfile`)
+- **Container Architecture**: Multi-stage Docker build utilizing Node 24 for frontend SPA bundling and .NET 10 SDK for binary publishing, running on lightweight `aspnet:10.0` Alpine image.
+- **Render Cloud Hosting**: Deployed on Render with a 1 GB persistent disk mounted at `/app/data/` for SQLite persistence across deploys.
+- **Custom Domain & SSL**: Production ingress routed through Cloudflare to `https://bosun.wnshare.one` with origin mirror at `https://bosun-mbzr.onrender.com`.
 
 ---
 
@@ -181,9 +187,9 @@ flowchart TD
 |                              Modern React 19 + TypeScript Application                             |
 +===================================================================================================+
   ├── Mimic/           Interactive SVG Engine Room Telemetry (Pumps, Purifiers, Tanks, Engine)
-  ├── Tags/            Virtualized High-Density Engineering Table with Zebra Striping & Pagination
+  ├── Tags/            Virtualized High-Density Engineering Table with Sticky Header & Pagination
   ├── ChangeSets/      Maker-Checker Review Workflow, Structured Diff Inspector, Rule Violations
-  ├── Assistant/       Collapsible Drawer & Full-Screen ReAct Reasoning Scratchpad, SSE Streaming
+  ├── Assistant/       Collapsible Drawer & Full-Screen ReAct Reasoning Scratchpad, Inline Run History
   ├── Audit/           Tamper-Evident Transaction Log with Instant Popups and JSON Diffs
-  └── Settings/        Telemetry HUD, Protocol Addresses, Active Model Config, Memory Stats
+  └── Settings/        Telemetry HUD, 11-Tool Agent Registry, Execution Telemetry, Protocol Addresses
 ```
