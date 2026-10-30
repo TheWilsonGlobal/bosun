@@ -55,8 +55,16 @@ flowchart TD
 ## Core System Modules
 
 ### 1. API Perimeter & Authentication (`apps/backend/src/Bosun.Api/`)
-- **ASP.NET Core (.NET 10)**: High-performance async runtime listening on loopback (`127.0.0.1:5480`).
+- **ASP.NET Core (.NET 10)**: High-performance async runtime listening on loopback (`127.0.0.1:5480`) and container port `8080`.
 - **Authentication & RBAC (`Bosun.Api/Auth/`)**: Cookie-based and session-token authentication with role-based access control (`operator`, `reviewer`, `admin`).
+- **Data Protection & Proxy Forwarding**:
+  - `IDataProtectionProvider` keys persisted under `/app/data/keys` so user login sessions survive container reboots.
+  - `ForwardedHeadersOptions` configures proxy trust for Cloudflare and Render edge routers (`KnownIPNetworks.Clear()`), honoring `X-Forwarded-Proto` and `X-Forwarded-For`.
+  - Secure `SameSite=Lax` cookie configuration ensuring persistent authentication.
+- **Observability & Diagnostics**:
+  - `/metrics`: Prometheus metrics scraping endpoint powered by `prometheus-net.AspNetCore` (requires Bearer `METRICS_TOKEN`), exposing HTTP metrics, connection gauges (`bosun_link_connected`), active tags (`bosun_live_tags`), and LLM tokens.
+  - `/ready` and `/api/ready`: DB-backed readiness probe checking SQLite database connectivity and knowledge-base vector index state.
+  - `/health`: Liveness probe for host monitoring and cloud platform health checks.
 - **Real-Time WebSockets & SignalR**:
   - `/hubs/agent`: Real-time streaming of autonomous agent steps (`plan`, `tool_call`, `tool_result`, `verify`, `final`, `error`), tokens, and lifecycle status.
   - `/hubs/monitoring`: 1 Hz industrial telemetry broadcast carrying simulated live register values, connection state, and alarm transitions.

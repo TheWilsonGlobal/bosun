@@ -129,22 +129,34 @@ scripts/                      dev, dotnet and demo helpers
 
 ## Documentation
 
-- [docs/running-from-the-repo.md](docs/running-from-the-repo.md): where settings come from, key errors
-- [docs/monitoring.md](docs/monitoring.md): the alarm model (states, delay, hysteresis, limit changes)
+- [docs/architecture.md](docs/architecture.md): high-level request pipeline, core system modules, SCADA topology, and production deployment
+- [docs/agent.md](docs/agent.md): ReAct reasoning loop, state graph, tool registry, write gate, prompt injection defense, and SignalR streaming
+- [docs/monitoring.md](docs/monitoring.md): the alarm model (states, delay, hysteresis, limit changes) and Prometheus metrics telemetry
+- [docs/running-from-the-repo.md](docs/running-from-the-repo.md): environment variables, key configurations, and error diagnostics
 
 ## Status and known limits
 
-Built and tested: the configurator, change sets and audit, LLM foundation, the agent, PDF extraction, document Q&A and live monitoring.
+**Built, verified & live in production:**
+- High-density virtualized `DataTable` with zebra striping, sticky header, and pinned footer.
+- Maker-Checker change sets and tamper-evident audit ledger with modal JSON diff inspection.
+- Autonomous ReAct Agent with self-healing rule repairs, 11-tool registry, inline run history expansion, and telemetry inspection in Settings.
+- PDF I/O table extraction with confidence scoring and injection detection.
+- Document Q&A (Ask) with hybrid dense vector + BM25 keyword search and strict ungrounded refusal.
+- Industrial Modbus TCP and NMEA 0183 protocol simulation and real-time SignalR telemetry broadcasting.
+- Observability: Prometheus `/metrics` exporter, DB-backed `/ready` readiness probe, `/health` endpoint.
+- Production Cloud Deployment: Multi-stage Docker image, Render Blueprint with persistent SQLite disk, Cloudflare custom domain.
 
-Not built: the admin console (a placeholder page), an MCP server, PostgreSQL and pgvector, Docker and Linux deployment files, CI, and the architecture decision records.
+**Out of scope / deferred:**
+- Standalone multi-tenant Admin Console (placeholder SPA built).
+- MCP (Model Context Protocol) remote server.
+- PostgreSQL 17 + pgvector migration (database abstraction is provider-neutral and ready).
 
 Things to know:
 
 - Eval results are recorded in `evals/results/`. LLM scores depend on the model and the key's quota, so re-run them rather than trusting old numbers.
 - Extraction confidence is weakly calibrated on scanned pages: some wrong rows are auto-accepted.
-- Cost figures use a placeholder price table and are estimates.
-- Any signed-in user can call Ask, reindex and acknowledge alarms, and the Development environment allows anonymous reads. Fine for a demo, not for production.
-- The frontend bundle is about 740 kB with no code splitting.
+- Cost figures use list prices from `apps/backend/src/Bosun.Api/llm-pricing.json` and are estimates.
+- The frontend bundle is about 600 kB minified (184 kB gzip).
 
 ---
 
