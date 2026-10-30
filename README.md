@@ -9,16 +9,16 @@ Bosun is a portfolio showcase project built to demonstrate a modern industrial .
 
 ## What it does
 
-| Area              | What you get                                                                                                                                                                                                          |
-| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Configurator      | Virtualized `DataTable` over ~5,000 tags with sticky header, pinned footer showing range indicators, inside-body scrolling, and inline edits. Every edit becomes a **change set** reviewed as a diff before application. |
-| Assistant (agent) | Describe a change in natural language. A plan-act-verify-repair loop calls tools against the configurator API and builds a **draft** change set. Cannot directly apply anything: a human approves. Chat history features inline run expansion and step inspection. |
-| Tool Registry & Telemetry | Live diagnostic view in Settings (`/settings`) detailing the **11 registered agent tools** (Read, Write/Propose, Verify) with parameter signatures, safety constraints, and sequential run step/payload inspection. |
-| PDF import        | Extracts tags from variable-layout customer I/O lists (text and scanned pages) into structured rows, checks them against business rules, scores confidence per field, and flags anomalies for review.                 |
-| Ask (RAG)         | Answers questions about vessel documents with citations using hybrid dense vector + FTS5 BM25 search. Strictly refuses when answers are unsupported by documentation.                                                |
-| Live monitoring   | A simulator speaks **Modbus TCP** and **NMEA 0183**; backend polls it, evaluates alarm limits with sample-driven delay and hysteresis, and broadcasts values and alarms over **SignalR** to an interactive mimic screen and alarm list. |
-| Observability     | **Prometheus metrics (`/metrics`)** with Bearer token authentication, tracking HTTP rates/latencies, live connection gauges (`bosun_link_connected`), active tags (`bosun_live_tags`), and LLM usage. Dedicated DB-backed **Readiness Probe (`/ready`)**. |
-| Audit             | Immutable audit ledger where each applied change records who approved it, which model proposed it, with which prompt version, and a compact 1-line view with click-to-open detail modal diffs.                     |
+| Area                      | What you get                                                                                                                                                                                                                                                       |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Configurator              | Virtualized `DataTable` over ~5,000 tags with sticky header, pinned footer showing range indicators, inside-body scrolling, and inline edits. Every edit becomes a **change set** reviewed as a diff before application.                                           |
+| Assistant (agent)         | Describe a change in natural language. A plan-act-verify-repair loop calls tools against the configurator API and builds a **draft** change set. Cannot directly apply anything: a human approves. Chat history features inline run expansion and step inspection. |
+| Tool Registry & Telemetry | Live diagnostic view in Settings (`/settings`) detailing the **11 registered agent tools** (Read, Write/Propose, Verify) with parameter signatures, safety constraints, and sequential run step/payload inspection.                                                |
+| PDF import                | Extracts tags from variable-layout customer I/O lists (text and scanned pages) into structured rows, checks them against business rules, scores confidence per field, and flags anomalies for review.                                                              |
+| Ask (RAG)                 | Answers questions about vessel documents with citations using hybrid dense vector + FTS5 BM25 search. Strictly refuses when answers are unsupported by documentation.                                                                                              |
+| Live monitoring           | A simulator speaks **Modbus TCP** and **NMEA 0183**; backend polls it, evaluates alarm limits with sample-driven delay and hysteresis, and broadcasts values and alarms over **SignalR** to an interactive mimic screen and alarm list.                            |
+| Observability             | **Prometheus metrics (`/metrics`)** with Bearer token authentication, tracking HTTP rates/latencies, live connection gauges (`bosun_link_connected`), active tags (`bosun_live_tags`), and LLM usage. Dedicated DB-backed **Readiness Probe (`/ready`)**.          |
+| Audit                     | Immutable audit ledger where each applied change records who approved it, which model proposed it, with which prompt version, and a compact 1-line view with click-to-open detail modal diffs.                                                                     |
 
 ## Stack
 
@@ -68,7 +68,7 @@ One root `.env` (git-ignored; `.env.example` documents every variable). Real env
 | ------------------------------------------------- | -------------------------------------------- |
 | `LLM_PROVIDER`, `LLM_MODEL`, `GEMINI_LLM_API_KEY` | chat, agent, extraction and Ask              |
 | `EMBEDDING_MODEL`, `GEMINI_EMBEDDING_API_KEY`     | knowledge-base search (`EMBEDDING_DIMS=768`) |
-| `DB_PROVIDER`, `DB_CONNECTION`                    | `sqlite` and `Data Source=data/db/bosun.db`     |
+| `DB_PROVIDER`, `DB_CONNECTION`                    | `sqlite` and `Data Source=data/db/bosun.db`  |
 | `METRICS_TOKEN`                                   | Bearer auth token for `/metrics` endpoint    |
 | `BACKEND_PORT`, `FRONTEND_PORT`, `ADMIN_PORT`     | service ports                                |
 | `SIM_MODBUS_PORT`, `SIM_NMEA_PORT`                | simulator ports                              |
@@ -137,6 +137,7 @@ scripts/                      dev, dotnet and demo helpers
 ## Status and known limits
 
 **Built, verified & live in production:**
+
 - High-density virtualized `DataTable` with zebra striping, sticky header, and pinned footer.
 - Maker-Checker change sets and tamper-evident audit ledger with modal JSON diff inspection.
 - Autonomous ReAct Agent with self-healing rule repairs, 11-tool registry, inline run history expansion, and telemetry inspection in Settings.
@@ -147,6 +148,7 @@ scripts/                      dev, dotnet and demo helpers
 - Production Cloud Deployment: Multi-stage Docker image, Render Blueprint with persistent SQLite disk, Cloudflare custom domain.
 
 **Out of scope / deferred:**
+
 - Standalone multi-tenant Admin Console (placeholder SPA built).
 - MCP (Model Context Protocol) remote server.
 - PostgreSQL 17 + pgvector migration (database abstraction is provider-neutral and ready).

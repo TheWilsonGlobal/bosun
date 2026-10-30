@@ -42,24 +42,25 @@ An applied change set reloads the limits. An active alarm takes the new limit, d
 Bosun exports telemetry for external scrapers (Prometheus, VictoriaMetrics, Grafana Agent) via `prometheus-net.AspNetCore` at `/metrics`:
 
 ### Authentication
+
 The `/metrics` endpoint is protected by a Bearer token configured via `METRICS_TOKEN` (or `Metrics:Token` in `appsettings.json`). Requests must supply:
 `Authorization: Bearer <METRICS_TOKEN>`  
 When `METRICS_TOKEN` is unset or empty, `/metrics` returns HTTP 404 to avoid exposing internal metrics by accident.
 
 ### Exported Metrics Catalog
 
-| Metric | Type | Labels | Description |
-| :--- | :--- | :--- | :--- |
-| `bosun_link_connected` | Gauge | `protocol="modbus\|nmea"` | `1` when connected or degraded, `0` when connecting or disconnected. Series is omitted when protocol is disabled. |
-| `bosun_live_tags` | Gauge | None | Number of live operational tags currently streaming across the telemetry pipeline. |
-| `bosun_llm_requests` | Counter | `provider`, `model`, `status` | Total count of LLM inference requests made to Gemini or local providers. |
-| `bosun_llm_tokens` | Counter | `provider`, `model`, `direction="prompt\|candidate\|thought"` | Total count of tokens consumed across model invocations. |
-| `bosun_llm_request_duration_seconds` | Histogram | `provider`, `model` | Request latency distribution for model inference calls. |
-| `http_request_duration_seconds` | Histogram | `code`, `method`, `controller`, `action` | Standard ASP.NET Core HTTP request duration and error rate metrics. |
+| Metric                               | Type      | Labels                                                        | Description                                                                                                       |
+| :----------------------------------- | :-------- | :------------------------------------------------------------ | :---------------------------------------------------------------------------------------------------------------- |
+| `bosun_link_connected`               | Gauge     | `protocol="modbus\|nmea"`                                     | `1` when connected or degraded, `0` when connecting or disconnected. Series is omitted when protocol is disabled. |
+| `bosun_live_tags`                    | Gauge     | None                                                          | Number of live operational tags currently streaming across the telemetry pipeline.                                |
+| `bosun_llm_requests`                 | Counter   | `provider`, `model`, `status`                                 | Total count of LLM inference requests made to Gemini or local providers.                                          |
+| `bosun_llm_tokens`                   | Counter   | `provider`, `model`, `direction="prompt\|candidate\|thought"` | Total count of tokens consumed across model invocations.                                                          |
+| `bosun_llm_request_duration_seconds` | Histogram | `provider`, `model`                                           | Request latency distribution for model inference calls.                                                           |
+| `http_request_duration_seconds`      | Histogram | `code`, `method`, `controller`, `action`                      | Standard ASP.NET Core HTTP request duration and error rate metrics.                                               |
 
 ### Health & Readiness Probes
 
-| Probe Endpoint | Purpose | Criteria |
-| :--- | :--- | :--- |
-| `GET /health` | Liveness check (used by Render and orchestrators) | HTTP 200 when SQLite connection succeeds; 503 if database file is inaccessible. Note: Modbus/NMEA disconnection does not fail liveness. |
-| `GET /ready`<br/>`GET /api/ready` | Readiness check (traffic routing & warmup) | HTTP 200 when SQLite database is responsive AND knowledge base vector index is initialized. |
+| Probe Endpoint                    | Purpose                                           | Criteria                                                                                                                                |
+| :-------------------------------- | :------------------------------------------------ | :-------------------------------------------------------------------------------------------------------------------------------------- |
+| `GET /health`                     | Liveness check (used by Render and orchestrators) | HTTP 200 when SQLite connection succeeds; 503 if database file is inaccessible. Note: Modbus/NMEA disconnection does not fail liveness. |
+| `GET /ready`<br/>`GET /api/ready` | Readiness check (traffic routing & warmup)        | HTTP 200 when SQLite database is responsive AND knowledge base vector index is initialized.                                             |

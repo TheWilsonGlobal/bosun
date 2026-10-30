@@ -16,11 +16,11 @@ make dev
 
 ## Keys and what the errors mean
 
-| Variable                   | Used for                                             |
-| -------------------------- | ---------------------------------------------------- |
-| `GEMINI_LLM_API_KEY`       | chat / agent / /ask (LLM inference)                  |
-| `GEMINI_EMBEDDING_API_KEY` | knowledge base search (vector embeddings)            |
-| `METRICS_TOKEN`            | Bearer token authentication for `/metrics` scraping  |
+| Variable                   | Used for                                            |
+| -------------------------- | --------------------------------------------------- |
+| `GEMINI_LLM_API_KEY`       | chat / agent / /ask (LLM inference)                 |
+| `GEMINI_EMBEDDING_API_KEY` | knowledge base search (vector embeddings)           |
+| `METRICS_TOKEN`            | Bearer token authentication for `/metrics` scraping |
 
 - Empty or missing key: `503 llm_not_configured`. The message names the variable to set.
 - `llm_auth_failed` mentioning "rejected the API key": the provider did not accept the key. Fix the variable that the message names (`[rejected key: ...]`).
