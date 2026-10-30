@@ -1,29 +1,33 @@
 # Bosun
 
-> Engineered by **[TheWilsonGlobal (Wilson Pham)](https://github.com/TheWilsonGlobal)**
+> Engineered by **[TheWilsonGlobal (Wilson Pham)](https://github.com/TheWilsonGlobal)**  
+> **Live Demo**: [https://bosun.wnshare.one](https://bosun.wnshare.one) (Mirror: [https://bosun-mbzr.onrender.com](https://bosun-mbzr.onrender.com))
 
 An AI-assisted configurator for ship automation systems: engineers edit alarm and I/O configuration for a vessel in a fast data grid, describe changes in plain language to an assistant that drafts them, import customer I/O lists from PDF, ask questions about the project's documents, and watch the result live on a simulated engine room.
 
-Bosun is a fictional demo product. It is a portfolio project built to show a .NET + React + PostgreSQL-style stack with practical LLM integration; it uses no real vessel data and no third-party branding.
+Bosun is a portfolio showcase project built to demonstrate a modern industrial .NET 10 + React 19 architecture with practical LLM integration, deterministic rule verification, and high-frequency SCADA telemetry. It uses synthetic maritime data and no third-party branding.
 
 ## What it does
 
 | Area              | What you get                                                                                                                                                                                                          |
 | ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Configurator      | A virtualised data grid over about 5,000 tags (server paging, filters, inline edit). Every edit, by a person or the assistant, becomes a **change set** that is reviewed as a diff and approved before it is applied. |
-| Assistant (agent) | Describe a change in natural language. A plan, act, verify loop calls tools against the configurator API and builds a **draft** change set. It cannot apply anything: a human approves.                               |
-| PDF import        | Extracts tags from variable-layout customer I/O lists (text and scanned pages) into structured rows, checks them against business rules, scores confidence per field and flags rows for review.                       |
-| Ask               | Answers questions about the project's documents with citations (hybrid vector and keyword search). Refuses when the answer is not in the documents.                                                                   |
-| Live monitoring   | A simulator speaks **Modbus TCP** and **NMEA 0183**; the backend polls it, evaluates alarm limits with delay and hysteresis, and pushes values and alarms over **SignalR** to a mimic screen and an alarm list.       |
-| Audit             | Every applied change records who approved it, which model proposed it and with which prompt version.                                                                                                                  |
+| Configurator      | Virtualized `DataTable` over ~5,000 tags with sticky header, pinned footer showing range indicators, inside-body scrolling, and inline edits. Every edit becomes a **change set** reviewed as a diff before application. |
+| Assistant (agent) | Describe a change in natural language. A plan-act-verify-repair loop calls tools against the configurator API and builds a **draft** change set. Cannot directly apply anything: a human approves. Chat history features inline run expansion and step inspection. |
+| Tool Registry & Telemetry | Live diagnostic view in Settings (`/settings`) detailing the **11 registered agent tools** (Read, Write/Propose, Verify) with parameter signatures, safety constraints, and sequential run step/payload inspection. |
+| PDF import        | Extracts tags from variable-layout customer I/O lists (text and scanned pages) into structured rows, checks them against business rules, scores confidence per field, and flags anomalies for review.                 |
+| Ask (RAG)         | Answers questions about vessel documents with citations using hybrid dense vector + FTS5 BM25 search. Strictly refuses when answers are unsupported by documentation.                                                |
+| Live monitoring   | A simulator speaks **Modbus TCP** and **NMEA 0183**; backend polls it, evaluates alarm limits with sample-driven delay and hysteresis, and broadcasts values and alarms over **SignalR** to an interactive mimic screen and alarm list. |
+| Observability     | **Prometheus metrics (`/metrics`)** with Bearer token authentication, tracking HTTP rates/latencies, live connection gauges (`bosun_link_connected`), active tags (`bosun_live_tags`), and LLM usage. Dedicated DB-backed **Readiness Probe (`/ready`)**. |
+| Audit             | Immutable audit ledger where each applied change records who approved it, which model proposed it, with which prompt version, and a compact 1-line view with click-to-open detail modal diffs.                     |
 
 ## Stack
 
-- **Backend:** .NET 10, ASP.NET Core minimal APIs, EF Core 10, SQLite (provider-neutral so PostgreSQL can be added), SignalR
+- **Backend:** .NET 10, ASP.NET Core minimal APIs, EF Core 10, SQLite (WAL mode, provider-neutral for PostgreSQL), SignalR, `prometheus-net.AspNetCore` 8.2.1
 - **Frontend:** React 19, TypeScript (strict), Vite, Tailwind CSS, shadcn/ui, TanStack Table, TanStack Query
-- **AI:** Google Gemini over a thin REST client behind an `ILlmClient` port; structured JSON output, retries, cost logging. Embeddings are 768-dimension vectors.
-- **Tests:** xUnit (real SQLite files, never the EF in-memory provider), Vitest
-- **Tooling:** pnpm workspace for the JS apps, ESLint and Prettier
+- **AI:** Google Gemini (`gemini-3.5-flash-lite`, `gemini-embedding-2`) behind an `ILlmClient` port; structured JSON output, self-repair loops, token logging
+- **Deployment:** Multi-stage `Dockerfile`, `docker-entrypoint.sh`, `render.yaml` Blueprint with persistent disk (`/app/data`), custom domain with Cloudflare SSL
+- **Tests:** 967 .NET tests (100% branch coverage on rules engine) + 305 frontend tests (**1,272+ automated tests total**)
+- **Tooling:** pnpm workspace, ESLint, Prettier, `dotnet format`
 
 ## Quick start
 
@@ -65,6 +69,7 @@ One root `.env` (git-ignored; `.env.example` documents every variable). Real env
 | `LLM_PROVIDER`, `LLM_MODEL`, `GEMINI_LLM_API_KEY` | chat, agent, extraction and Ask              |
 | `EMBEDDING_MODEL`, `GEMINI_EMBEDDING_API_KEY`     | knowledge-base search (`EMBEDDING_DIMS=768`) |
 | `DB_PROVIDER`, `DB_CONNECTION`                    | `sqlite` and `Data Source=data/db/bosun.db`     |
+| `METRICS_TOKEN`                                   | Bearer auth token for `/metrics` endpoint    |
 | `BACKEND_PORT`, `FRONTEND_PORT`, `ADMIN_PORT`     | service ports                                |
 | `SIM_MODBUS_PORT`, `SIM_NMEA_PORT`                | simulator ports                              |
 
