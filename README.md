@@ -131,6 +131,7 @@ scripts/                      dev, dotnet and demo helpers
 
 - [docs/architecture.md](docs/architecture.md): high-level request pipeline, core system modules, SCADA topology, and production deployment
 - [docs/agent.md](docs/agent.md): ReAct reasoning loop, state graph, tool registry, write gate, prompt injection defense, and SignalR streaming
+- [docs/evaluation.md](docs/evaluation.md): comprehensive evaluation architecture, quantitative KPI matrix, benchmark taxonomy, and CLI runner guide
 - [docs/monitoring.md](docs/monitoring.md): the alarm model (states, delay, hysteresis, limit changes) and Prometheus metrics telemetry
 - [docs/running-from-the-repo.md](docs/running-from-the-repo.md): environment variables, key configurations, and error diagnostics
 

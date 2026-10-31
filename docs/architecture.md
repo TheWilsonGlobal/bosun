@@ -149,11 +149,12 @@ flowchart TD
 
 ### 10. Automated Evaluation Suite (`apps/backend/src/Bosun.Evals/` & `evals/`)
 
+- **Comprehensive Evaluation Specification**: Full benchmark architecture, quantitative KPI matrix, dataset taxonomy, and CLI runner guide documented in [docs/evaluation.md](evaluation.md).
 - **Multi-Suite Benchmarks**:
-  - **Agent Reasoning Suite (`evals/agent/cases.yaml`)**: Evaluates net operation accuracy, clarifying questions, and safety refusals.
-  - **RAG Retrieval Suite (`evals/rag/cases.yaml`)**: Measures MRR@k, Hit@k, and relevance threshold adherence across maritime regulations.
+  - **Agent Reasoning Suite (`evals/agent/cases.yaml`)**: Evaluates net operation accuracy, clarifying questions, and safety refusals across $N=3$ runs.
+  - **RAG Retrieval Suite (`evals/rag/cases.yaml`)**: Measures MRR@k, Hit@k, citation fidelity, and unanswerable refusal gating across maritime regulations.
   - **Safety Injection Probes (`evals/safety/cases.yaml`)**: Zero-tolerance penetration test suite validating that hostile document payloads cannot force auto-approvals or alarm resets.
-  - **Document Extraction Benchmarks (`evals/extraction/`)**: Ground-truth comparison of extracted tag names, units, and ranges across clean, multipage, and noisy scanned PDFs.
+  - **Document Extraction Benchmarks (`evals/extraction/`)**: Ground-truth comparison of extracted tag names, units, and ranges across clean, multipage, and noisy scanned PDFs with confidence calibration.
 
 ### 11. Maritime SCADA Workbench UI (`apps/frontend/`)
 
